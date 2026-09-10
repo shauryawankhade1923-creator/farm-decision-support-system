@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Agri-Marketplace: Farm-to-Buyer Flow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #FFFFFF;
+      color: #0F172A;
+      display: flex;
+      justify-content: center;
+      padding: 30px 20px 40px 20px;
+    }
+
+    .canvas {
+      width: 960px;
+      position: relative;
+      background: #FFFFFF;
+      padding-bottom: 30px;
+    }
+
+    /* TOP HEADER */
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 28px;
+    }
+
+    .sih-logo {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sih-text {
+      font-size: 26px;
+      font-weight: 900;
+      color: #1E293B;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .sih-sub {
+      width: 38px;
+      height: 6px;
+      border-top: 2px solid #0284C7;
+      border-bottom: 2px solid #0284C7;
+      margin-top: 3px;
+    }
+
+    .title-box {
+      text-align: center;
+    }
+
+    .main-title {
+      font-size: 25px;
+      font-weight: 900;
+      color: #0F172A;
+      letter-spacing: -0.4px;
+    }
+
+    .sub-title {
+      font-size: 21px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-top: 2px;
+    }
+
+    /* ACTORS / SWIMLANES HEADERS */
+    .lanes-header {
+      display: grid;
+      grid-template-columns: 280px 240px 200px;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding: 0 10px;
+    }
+
+    .actor-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+
+    .actor-farmer {
+      background: #A7F3D0;
+      color: #064E3B;
+      border: 1.5px solid #34D399;
+      width: 200px;
+      margin-left: 90px;
+    }
+
+    .actor-mandi {
+      background: #FED7AA;
+      color: #7C2D12;
+      border: 1.5px solid #FB923C;
+      width: 200px;
+      margin: 0 auto;
+    }
+
+    .actor-buyer {
+      background: #BBF7D0;
+      color: #14532D;
+      border: 1.5px solid #4ADE80;
+      width: 190px;
+      margin-left: auto;
+    }
+
+    /* SVG CONNECTOR OVERLAY */
+    .svg-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* PROCESS BLOCKS */
+    .diagram-body {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 340px 260px 220px;
+      justify-content: space-between;
+      min-height: 1100px;
+      padding: 0 10px;
+    }
+
+    /* NODE BOXES */
+    .node-box {
+      border-radius: 10px;
+      padding: 10px 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .node-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .node-bullets {
+      list-style: none;
+      font-size: 11px;
+      font-weight: 600;
+      color: #334155;
+      line-height: 1.4;
+      padding-left: 8px;
+    }
+
+    .node-bullets li::before {
+      content: "• ";
+      color: #475569;
+      font-weight: 900;
+    }
+
+    /* THEMES */
+    .theme-purple {
+      background: #EDE9FE;
+      border: 1.5px solid #C4B5FD;
+    }
+
+    .theme-orange {
+      background: #FFEDD5;
+      border: 1.5px solid #FDBA74;
+    }
+
+    .theme-cyan {
+      background: #E0F2FE;
+      border: 1.5px solid #7DD3FC;
+    }
+
+    .theme-green {
+      background: #DCFCE7;
+      border: 1.5px solid #86EFAC;
+    }
+
+    .theme-pink {
+      background: #FFE4E6;
+      border: 1.5px solid #FDA4AF;
+    }
+
+    /* COLUMN 1: FARMER NODES */
+    .farmer-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 16px;
+      position: relative;
+    }
+
+    .row-side-by-side {
+      display: flex;
+      gap: 14px;
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    .w-narrow { width: 155px; }
+    .w-standard { width: 220px; }
+
+    /* COLUMN 2: MANDI OPERATOR NODES */
+    .mandi-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+    }
+
+    /* DECISION DIAMOND */
+    .diamond-wrap {
+      width: 150px;
+      height: 150px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .diamond-shape {
+      width: 110px;
+      height: 110px;
+      background: #FEF9C3;
+      border: 2px solid #FACC15;
+      transform: rotate(45deg);
+      position: absolute;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .diamond-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 0 4px;
+    }
+
+    .diamond-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: #713F12;
+      margin-bottom: 3px;
+    }
+
+    .diamond-bullets {
+      list-style: none;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #854D0E;
+      line-height: 1.3;
+    }
+
+    .diamond-bullets li::before {
+      content: "• ";
+    }
+
+    /* COLUMN 3: BUYER NODES */
+    .buyer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 200px;
+    }
+
+    /* BOTTOM FOOTER BLUE LINE */
+    .bottom-accent {
+      width: 100%;
+      height: 5px;
+      background: #0284C7;
+      margin-top: 30px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="canvas">
+
+    <!-- TOP HEADER WITH SIH LOGO -->
+    <div class="header-bar">
+      <div class="sih-logo">
+        <span class="sih-text">SIH</span>
+        <div class="sih-sub"></div>
+      </div>
+      <div class="title-box">
+        <h1 class="main-title">Agri-Marketplace: Farm-to-Buyer Flow</h1>
+        <h2 class="sub-title">(Optimized for Transparency and Efficiency)</h2>
+      </div>
+    </div>
+
+    <!-- 3 ACTOR SWIMLANES HEADERS -->
+    <div class="lanes-header">
+      <div class="actor-pill actor-farmer">
+        <span>👤</span> FARMER
+      </div>
+      <div class="actor-pill actor-mandi">
+        <span>👷</span> MANDI OPERATOR
+      </div>
+      <div class="actor-pill actor-buyer">
+        <span>🛒</span> BUYER
+      </div>
+    </div>
+
+    <!-- DIAGRAM GRID -->
+    <div class="diagram-body">
+
+      <!-- ==================== COLUMN 1: FARMER ==================== -->
+      <div class="farmer-col">
+
+        <!-- Row 1: Get User Input -> Register Produce -->
+        <div class="row-side-by-side" style="margin-top: 10px;">
+          <div class="node-box theme-cyan w-narrow" id="node-input">
+            <div class="node-title">Get User Input</div>
+            <ul class="node-bullets">
+              <li>Location (Region)</li>
+              <li>Season</li>
+              <li>Manual parameters)</li>
+            </ul>
+          </div>
+
+          <div class="node-box theme-purple w-standard" id="node-register">
+            <div class="node-title">Register Produce</div>
+            <ul class="node-bullets">
+              <li>Location (Region)</li>
+              <li>Season</li>
+              <li>(Optional: Manual parameters)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Row 2: Create Verified Lot <- AI Quality & AGMARK Grading -->
+        <div class="row-side-by-side">
+          <div class="node-box theme-purple w-narrow" style="align-self: center;" id="node-verified-lot">
+            <div class="node-title" style="margin: 4px 0;">Create Verified Lot</div>
+          </div>
+
+          <div class="node-box theme-orange w-standard" id="node-agmark">
+            <div class="node-title">AI Quality & AGMARK Grading</div>
+            <ul class="node-bullets">
+              <li>Checked quality parameters</li>
+              <li>Quality parameters</li>
+              <li>Quality parameters</li>
+              <li>Quality parameters & quality parameters</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Node 3: Digital Marketplace -->
+        <div class="node-box theme-purple w-standard" id="node-marketplace">
+          <div class="node-title">Digital Marketplace</div>
+          <ul class="node-bullets">
+            <li>Detect climate data</li>
+            <li>Calculate risk conditions</li>
+          </ul>
+        </div>
+
+        <!-- Node 4: AI/Rule-based Buyer Matching -->
+        <div class="node-box theme-purple w-standard" id="node-matching">
+          <div class="node-title">AI/Rule-based Buyer Matching</div>
+          <ul class="node-bullets">
+            <li>AI/Rule-based Buyer matching</li>
+          </ul>
+        </div>
+
+        <!-- Node 5: Run Random Forest Model -->
+        <div class="node-box theme-orange w-standard" id="node-rf">
+          <div class="node-title">Run Random Forest Model</div>
+          <ul class="node-bullets">
+            <li>Predict best crop</li>
+            <li>Get top 5 crop rankings</li>
+            <li>Calculate confidence scores</li>
+          </ul>
+        </div>
+
+        <!-- Node 6: Smart Freight Pooling -->
+        <div class="node-box theme-purple w-standard" id="node-freight">
+          <div class="node-title">Smart Freight Pooling</div>
+          <ul class="node-bullets">
+            <li>Smart Freight crops</li>
+            <li>Calculaterment pooling</li>
+          </ul>
+        </div>
+
+        <!-- Node 7: QR Mandi Token / Gate Pass -->
+        <div class="node-box theme-purple w-standard" id="node-token">
+          <div class="node-title">QR Mandi Token / Gate Pass</div>
+          <ul class="node-bullets">
+            <li>QR Mand Token / Gate Pass</li>
+          </ul>
+        </div>
+
+        <!-- Node 8: Mandi Weighment -->
+        <div class="node-box theme-purple w-standard" id="node-weighment" style="padding: 14px;">
+          <div class="node-title" style="margin: 0;">Mandi Weighment</div>
+        </div>
+
+        <!-- Node 9: Payment / DBT Settlement -->
+        <div class="node-box theme-purple w-standard" id="node-dbt">
+          <div class="node-title">Payment / DBT Settlement</div>
+          <ul class="node-bullets">
+            <li>SMS / WhatsApp</li>
+            <li>Payment ospories</li>
+          </ul>
+        </div>
+
+        <!-- Node 10: Display Results -->
+        <div class="node-box theme-purple w-standard" id="node-results">
+          <div class="node-title">Display Results</div>
+          <ul class="node-bullets">
+            <li>Recommended crop</li>
+            <li>Top 5 crop predictions</li>
+            <li>Climate & soil details</li>
+            <li>Risk and sowing guidance</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- ==================== COLUMN 2: MANDI OPERATOR ==================== -->
+      <div class="mandi-col">
+
+        <!-- Node M1: QR Scan Vehicle -->
+        <div class="node-box theme-purple w-standard" id="node-scan" style="margin-top: 10px;">
+          <div class="node-title">QR Scan Vehicle</div>
+          <ul class="node-bullets">
+            <li>Vehicle type / types</li>
+            <li>Vehicle type and required</li>
+          </ul>
+        </div>
+
+        <!-- Node M2: Vehicle ID -->
+        <div class="node-box theme-purple w-standard" id="node-vehicle-id">
+          <div class="node-title">Vehicle ID</div>
+          <ul class="node-bullets">
+            <li>Vehicle type</li>
+            <li>Required documents</li>
+            <li>Document, ground tasks</li>
+          </ul>
+        </div>
+
+        <!-- Node M3: Queue Management -->
+        <div class="node-box theme-purple w-standard" id="node-queue">
+          <div class="node-title">Queue Management</div>
+          <ul class="node-bullets">
+            <li>Responded documents</li>
+          </ul>
+        </div>
+
+        <!-- Decision Diamond: Deal Locked -->
+        <div class="diamond-wrap" id="node-deal-locked">
+          <div class="diamond-shape"></div>
+          <div class="diamond-content">
+            <div class="diamond-title">Deal Locked</div>
+            <ul class="diamond-bullets">
+              <li>Predict best crop</li>
+              <li>Get top 5 rankings</li>
+              <li>Calculate confidence scores</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Node M4: Procurement Ledger -->
+        <div class="node-box theme-purple w-standard" id="node-ledger">
+          <div class="node-title">Procurement Ledger</div>
+          <ul class="node-bullets">
+            <li>Crop suitability score</li>
+            <li>Climate compatibility</li>
+            <li>Soil compatibility</li>
+            <li>Sowing window & water requ</li>
+          </ul>
+        </div>
+
+        <!-- Node M5: Invoice Generation -->
+        <div class="node-box theme-purple w-standard" id="node-invoice">
+          <div class="node-title">Invoice Generation</div>
+          <ul class="node-bullets">
+            <li>Crop suitability score</li>
+            <li>Climate & soil details</li>
+            <li>Risk and sowing guidance</li>
+          </ul>
+        </div>
+
+        <!-- Node M6: Payment Processing -->
+        <div class="node-box theme-purple w-standard" id="node-processing">
+          <div class="node-title">Payment Processing</div>
+          <ul class="node-bullets">
+            <li>Payment details</li>
+            <li>Report Analytics</li>
+          </ul>
+        </div>
+
+        <!-- Node M7: Transaction Complete (Terminal Box) -->
+        <div class="node-box theme-pink w-standard" id="node-complete" style="margin-top: 14px;">
+          <div class="node-title" style="color: #9F1239;">Transaction Complete</div>
+          <ul class="node-bullets" style="color: #881337;">
+            <li>Settlement details</li>
+            <li>Top 5 rop predictions</li>
+            <li>Payment generation</li>
+            <li>Report generation reports</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- ==================== COLUMN 3: BUYER ==================== -->
+      <div class="buyer-col">
+
+        <!-- Node B1: Discover Verified Lots -->
+        <div class="node-box theme-green" id="node-discover" style="margin-top: 10px;">
+          <div class="node-title">Discover Verified Lots</div>
+          <ul class="node-bullets">
+            <li>Discover verified Lots</li>
+            <li>Soil data in mandi's Lots</li>
+          </ul>
+        </div>
+
+        <!-- Node B2: Place Bid -->
+        <div class="node-box theme-green" id="node-bid">
+          <div class="node-title">Place Bid</div>
+          <ul class="node-bullets">
+            <li>Competitive bid type</li>
+            <li>Bid bid type</li>
+            <li>Competitive bid process</li>
+          </ul>
+        </div>
+
+        <!-- Node B3: Competitive Bids -->
+        <div class="node-box theme-green" id="node-comp-bids">
+          <div class="node-title">Competitive Bids</div>
+          <ul class="node-bullets">
+            <li>Competitive bid type</li>
+            <li>Competitive bid raw type</li>
+            <li>Competitive bid teo</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- BOTTOM BLUE ACCENT BAR -->
+    <div class="bottom-accent"></div>
+
+    <!-- SVG ARROWS OVERLAY -->
+    <svg class="svg-layer" viewBox="0 0 960 1350" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#1E293B"/>
+        </marker>
+        <marker id="arrow-sm" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 2 L 7 5 L 0 8 z" fill="#1E293B"/>
+        </marker>
+      </defs>
+
+      <!-- ==================== FARMER VERTICAL FLOW ==================== -->
+      <!-- Get User Input -> Register Produce -->
+      <path d="M 165 145 L 228 145" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Register Produce -> AI Quality -->
+      <path d="M 338 185 L 338 210" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- AI Quality -> Create Verified Lot -->
+      <path d="M 230 255 L 167 255" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Create Verified Lot -> Digital Marketplace -->
+      <path d="M 90 280 L 90 345 L 228 345" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- AI Quality -> Digital Marketplace -->
+      <path d="M 338 305 L 338 325" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Digital Marketplace -> Buyer Matching -->
+      <path d="M 338 375 L 338 395" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Buyer Matching -> Random Forest Model -->
+      <path d="M 338 445 L 338 468" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Random Forest Model -> Smart Freight Pooling -->
+      <path d="M 338 560 L 338 585" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Smart Freight Pooling -> QR Mandi Token -->
+      <path d="M 338 640 L 338 662" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- QR Mandi Token -> Weighment -->
+      <path d="M 338 715 L 338 735" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Weighment -> DBT Settlement -->
+      <path d="M 338 785 L 338 805" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- DBT Settlement -> Display Results -->
+      <path d="M 338 870 L 338 890" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Display Results -> Transaction Complete (Curved Arrow at bottom) -->
+      <path d="M 348 970 C 370 1020, 420 1045, 470 1045" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- ==================== MANDI OPERATOR VERTICAL FLOW ==================== -->
+      <!-- Mandi Header -> QR Scan Vehicle -->
+      <path d="M 590 100 L 590 125" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- QR Scan Vehicle -> Vehicle ID -->
+      <path d="M 590 185 L 590 205" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Vehicle ID -> Queue Management -->
+      <path d="M 590 280 L 590 300" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Queue Management -> Deal Locked -->
+      <path d="M 590 355 L 590 395" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Deal Locked --Confirmed--> Smart Freight Pooling -->
+      <path d="M 535 470 L 440 470 L 440 610 L 450 610" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+      <rect x="445" y="460" width="68" height="20" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+      <text x="479" y="474" font-family="Inter, sans-serif" font-size="10" font-weight="800" fill="#334155" text-anchor="middle">Confirmed</text>
+
+      <!-- Deal Locked --Confirmed--> Procurement Ledger -->
+      <path d="M 590 545 L 590 585" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+      <rect x="556" y="555" width="68" height="20" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+      <text x="590" y="569" font-family="Inter, sans-serif" font-size="10" font-weight="800" fill="#334155" text-anchor="middle">Confirmed</text>
+
+      <!-- Procurement Ledger -> Invoice Generation -->
+      <path d="M 590 680 L 590 700" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Invoice Generation -> Payment Processing -->
+      <path d="M 590 785 L 590 805" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Payment Processing -> Transaction Complete -->
+      <path d="M 590 870 L 590 910" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- ==================== BUYER FLOW & CROSS-LANE CONNECTORS ==================== -->
+      <!-- Buyer Header -> Discover Verified Lots -->
+      <path d="M 835 100 L 835 125" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Discover Verified Lots -> Place Bid -->
+      <path d="M 835 185 L 835 205" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Place Bid -> Competitive Bids -->
+      <path d="M 835 280 L 835 300" stroke="#1E293B" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- QR Scan Vehicle -> Discover Verified Lots (Cross Arrow) -->
+      <path d="M 685 145 C 715 145, 715 145, 740 145" stroke="#1E293B" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Competitive Bids -> Queue Management (Cross Arrow) -->
+      <path d="M 740 335 L 690 335" stroke="#1E293B" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+      <!-- Buyer Matching <-> Queue Management (Cross Bridge) -->
+      <path d="M 450 425 L 530 425" stroke="#1E293B" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+    </svg>
+
+  </div>
+
+</body>
+</html>
