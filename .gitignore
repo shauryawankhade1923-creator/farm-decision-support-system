@@ -1,0 +1,21 @@
+# Node & Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+*.log
+
+# Python & Backend
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+venv/
+.env
+
+# Database local testing files
+*.db
+backend/*.db
+
+# OS files
+.DS_Store
+Thumbs.db
