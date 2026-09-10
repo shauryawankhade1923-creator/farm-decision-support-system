@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   Search, Mic, ChevronDown, Clock, TrendingUp, ShieldCheck, 
   Shield, Sun, Moon, CloudRain, Droplets, Wind, Compass, 
@@ -18,6 +18,37 @@ export default function HomeScreen({
   language = "en"
 }) {
   const t = translations[language] || translations.en;
+  // Real-time live date and ticking clock
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const getGreeting = () => {
+    const hour = currentDateTime.getHours();
+    if (hour < 12) return "Hello, Good Morning";
+    if (hour < 17) return "Hello, Good Afternoon";
+    return "Hello, Good Evening";
+  };
+
+  const formattedDate = currentDateTime.toLocaleDateString("en-US", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+
+  const formattedTime = currentDateTime.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  });
+
 
   // Curated prominent districts with real agro-climatic profile and primary crops
   const DISTRICT_CROPS = {
@@ -301,10 +332,13 @@ export default function HomeScreen({
         {/* Top Greeting & Clickable Profile Avatar */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">Hello, Good Morning</h2>
-            <div className="flex items-center gap-1.5 text-emerald-200/90 text-xs font-semibold mt-1">
-              <span>Sunday, 16 March 2026</span>
-              <ChevronDown className="w-3.5 h-3.5 text-emerald-300" />
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">{getGreeting()}</h2>
+            <div className="flex items-center gap-2 text-emerald-200/90 text-xs font-semibold mt-1">
+              <span>{formattedDate}</span>
+              <span className="text-emerald-400/80">•</span>
+              <span className="font-mono bg-emerald-950/50 px-2 py-0.5 rounded-md border border-emerald-500/20 text-emerald-200 text-[11px] font-bold">
+                {formattedTime}
+              </span>
             </div>
           </div>
           
