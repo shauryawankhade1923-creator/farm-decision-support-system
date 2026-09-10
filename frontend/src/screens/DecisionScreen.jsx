@@ -236,14 +236,14 @@ export default function DecisionScreen({
               onClick={onGoToCompare}
               className="flex-1 py-3 rounded-2xl bg-white border border-slate-200/90 hover:bg-slate-50 text-slate-800 text-xs font-bold transition shadow-xs text-center"
             >
-              Compare Alternative Dates
+              {t.btnCompare || "Compare Alternative Options"}
             </button>
             <button
               onClick={onSaveField}
               className="px-4 py-3 rounded-2xl bg-white border border-slate-200/90 hover:bg-slate-50 text-slate-800 text-xs font-bold transition shadow-xs flex items-center gap-1.5"
             >
               <Bookmark className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Save Plot</span>
+              <span>{t.btnSaveField || "Save Plot"}</span>
             </button>
           </div>
         </div>

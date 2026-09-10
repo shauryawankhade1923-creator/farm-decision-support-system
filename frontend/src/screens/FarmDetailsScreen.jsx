@@ -82,7 +82,7 @@ export default function FarmDetailsScreen({
           <ArrowLeft className="w-4 h-4" />
         </button>
 
-        <h2 className="text-base font-black tracking-tight text-slate-900">Farm Details</h2>
+        <h2 className="text-base font-black tracking-tight text-slate-900">{t.formTitle || "Farm Details"}</h2>
 
         <div className="w-10 h-10 rounded-full bg-white border border-slate-200/80 shadow-xs flex items-center justify-center text-slate-700 relative">
           <Bell className="w-4 h-4" />
@@ -231,9 +231,9 @@ export default function FarmDetailsScreen({
               onChange={(e) => setFormData(prev => ({ ...prev, soil_type: e.target.value }))}
               className="w-full text-xs font-bold text-slate-900 bg-transparent focus:outline-none cursor-pointer"
             >
-              <option value="light">Light Sandy Loam</option>
-              <option value="medium">Medium Black Soil</option>
-              <option value="heavy">Deep Heavy Clay (Regur)</option>
+              <option value="light">{t.soilLight || "Light Sandy Loam"}</option>
+              <option value="medium">{t.soilMedium || "Medium Black Soil"}</option>
+              <option value="heavy">{t.soilHeavy || "Deep Heavy Clay (Regur)"}</option>
             </select>
           </div>
         </div>
@@ -284,11 +284,11 @@ export default function FarmDetailsScreen({
           className="w-full py-4 rounded-full bg-[#0B4628] hover:bg-[#0F5E37] text-white font-black text-sm shadow-lg shadow-[#0B4628]/25 transition flex items-center justify-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
         >
           {isLoading ? (
-            <span>Evaluating Agro-Climatic Model...</span>
+            <span>{t.btnChecking || "Evaluating Agro-Climatic Model..."}</span>
           ) : (
             <>
               <Plus className="w-4 h-4 stroke-[3]" />
-              <span>Run Sowing Assessment</span>
+              <span>{t.btnSubmit || "Run Sowing Assessment"}</span>
             </>
           )}
         </button>

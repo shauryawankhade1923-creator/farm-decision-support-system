@@ -7,6 +7,8 @@ import {
 } from "lucide-react";
 import { translations } from "../locales/translations";
 
+import LanguageSelector from "../components/LanguageSelector";
+
 export default function HomeScreen({
   onStartDecision,
   onStartHarvest,
@@ -15,7 +17,8 @@ export default function HomeScreen({
   onGoToHistory,
   onGoToSaved,
   setFormData,
-  language = "en"
+  language = "en",
+  setLanguage
 }) {
   const t = translations[language] || translations.en;
   // Real-time live date and ticking clock
@@ -30,12 +33,15 @@ export default function HomeScreen({
 
   const getGreeting = () => {
     const hour = currentDateTime.getHours();
-    if (hour < 12) return "Hello, Good Morning";
-    if (hour < 17) return "Hello, Good Afternoon";
-    return "Hello, Good Evening";
+    if (hour < 12) return t.greetingMorning || "Hello, Good Morning";
+    if (hour < 17) return t.greetingAfternoon || "Hello, Good Afternoon";
+    return t.greetingEvening || "Hello, Good Evening";
   };
 
-  const formattedDate = currentDateTime.toLocaleDateString("en-US", {
+  const localeMap = { en: "en-IN", mr: "mr-IN", hi: "hi-IN" };
+  const activeLocale = localeMap[language] || "en-IN";
+
+  const formattedDate = currentDateTime.toLocaleDateString(activeLocale, {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -286,8 +292,8 @@ export default function HomeScreen({
   const categories = [
     { 
       id: "duration", 
-      title: "Duration", 
-      badge: "Sowing", 
+      title: t.catDuration || "Duration", 
+      badge: t.badgeSowing || "Sowing", 
       icon: Clock, 
       color: "text-blue-600", 
       bg: "bg-blue-50",
@@ -295,8 +301,8 @@ export default function HomeScreen({
     },
     { 
       id: "return", 
-      title: "Return", 
-      badge: "Yield", 
+      title: t.catReturn || "Return", 
+      badge: t.badgeYield || "Yield", 
       icon: TrendingUp, 
       color: "text-emerald-600", 
       bg: "bg-emerald-50",
@@ -304,8 +310,8 @@ export default function HomeScreen({
     },
     { 
       id: "risk", 
-      title: "Low Risk", 
-      badge: "ICAR Rule", 
+      title: t.catRisk || "Low Risk", 
+      badge: t.badgeICAR || "ICAR Rule", 
       icon: ShieldCheck, 
       color: "text-amber-600", 
       bg: "bg-amber-50",
@@ -313,8 +319,8 @@ export default function HomeScreen({
     },
     { 
       id: "safety", 
-      title: "Safety", 
-      badge: "Shield", 
+      title: t.catSafety || "Safety", 
+      badge: t.badgeShield || "Shield", 
       icon: Shield, 
       color: "text-teal-600", 
       bg: "bg-teal-50",
@@ -329,36 +335,45 @@ export default function HomeScreen({
       <div className="bg-[#0B4628] text-white pt-6 pb-20 px-6 rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Top Greeting & Clickable Profile Avatar */}
-        <div className="flex items-center justify-between">
+        {/* Top Greeting, Clickable Profile Avatar & Language Switcher */}
+        <div className="flex items-center justify-between gap-2">
           <div>
-            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">{getGreeting()}</h2>
-            <div className="flex items-center gap-2 text-emerald-200/90 text-xs font-semibold mt-1">
+            <h2 className="text-lg sm:text-2xl font-black tracking-tight text-white">{getGreeting()}</h2>
+            <div className="flex items-center gap-2 text-emerald-200/90 text-[11px] font-semibold mt-1">
               <span>{formattedDate}</span>
               <span className="text-emerald-400/80">•</span>
-              <span className="font-mono bg-emerald-950/50 px-2 py-0.5 rounded-md border border-emerald-500/20 text-emerald-200 text-[11px] font-bold">
+              <span className="font-mono bg-emerald-950/50 px-1.5 py-0.5 rounded-md border border-emerald-500/20 text-emerald-200 text-[10px] font-bold">
                 {formattedTime}
               </span>
             </div>
           </div>
           
-          <button 
-            onClick={onGoToHistory}
-            className="w-12 h-12 rounded-full border-2 border-emerald-400/60 overflow-hidden shadow-md bg-emerald-900 flex items-center justify-center cursor-pointer hover:scale-105 transition"
-            title="View Profile & Farmer Feedback History"
-          >
-            <img 
-              src="/user_avatar.jpg" 
-              alt="Farmer Profile" 
-              className="w-full h-full object-cover"
-            />
-          </button>
+          <div className="flex items-center gap-2">
+            {setLanguage && (
+              <LanguageSelector
+                language={language}
+                setLanguage={setLanguage}
+                variant="pill"
+              />
+            )}
+            <button 
+              onClick={onGoToHistory}
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-emerald-400/60 overflow-hidden shadow-md bg-emerald-900 flex items-center justify-center cursor-pointer hover:scale-105 transition shrink-0"
+              title="View Profile & Farmer Feedback History"
+            >
+              <img 
+                src="/user_avatar.jpg" 
+                alt="Farmer Profile" 
+                className="w-full h-full object-cover"
+              />
+            </button>
+          </div>
         </div>
 
         {/* District Selector Dropdown & Search Bar */}
         <div className="mt-5 space-y-2.5">
           <div className="flex items-center justify-between text-xs text-emerald-200 font-bold px-1">
-            <span>Select Maharashtra Agricultural District:</span>
+            <span>{t.selectDistrict || "Select Maharashtra Agricultural District:"}</span>
             <span className="text-[10px] bg-emerald-700/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
               {currentDistrictData.state}
             </span>
@@ -414,15 +429,15 @@ export default function HomeScreen({
           {/* 4 Micro-telemetry Metrics for selected district */}
           <div className="grid grid-cols-4 gap-2 pt-2 border-t border-slate-100 text-center">
             <div>
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Humidity</span>
+              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">{t.humidity || "Humidity"}</span>
               <span className="text-xs sm:text-sm font-black text-slate-800 mt-0.5 block">{currentDistrictData.humidity}</span>
             </div>
             <div>
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Precip</span>
+              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">{t.rain7d || "Precip"}</span>
               <span className="text-xs sm:text-sm font-black text-slate-800 mt-0.5 block">{currentDistrictData.rain7d}</span>
             </div>
             <div>
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Soil Type</span>
+              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">{t.soilType || "Soil Type"}</span>
               <span className="text-xs sm:text-sm font-black text-emerald-700 uppercase mt-0.5 block">{currentDistrictData.soil}</span>
             </div>
             <div>
@@ -544,7 +559,7 @@ export default function HomeScreen({
                 </div>
 
                 <button className="w-full py-2.5 rounded-xl bg-[#0B4628] hover:bg-[#0F5E37] text-white text-xs font-bold transition shadow-sm flex items-center justify-center gap-1">
-                  <span>Evaluate for {selectedDistrict}</span>
+                  <span>{t.btnCheckSowing || "Evaluate for " + selectedDistrict}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>

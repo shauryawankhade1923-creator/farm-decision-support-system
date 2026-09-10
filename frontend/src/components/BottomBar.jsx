@@ -1,12 +1,14 @@
 import React from "react";
-import { Home, Sprout, BarChart2, User, Wheat, Bookmark } from "lucide-react";
+import { Home, Sprout, BarChart2, User } from "lucide-react";
+import { translations } from "../locales/translations";
 
-export default function BottomBar({ currentScreen, onNavigate, flowMode }) {
+export default function BottomBar({ currentScreen, onNavigate, flowMode, language = "en" }) {
+  const t = translations[language] || translations.en;
   const tabs = [
-    { id: "home", label: "Home", icon: Home, screen: "home" },
-    { id: "farms", label: "All Farms", icon: Sprout, screen: "saved_fields" },
-    { id: "statistic", label: "Statistic", icon: BarChart2, screen: "compare" },
-    { id: "profile", label: "My Profile", icon: User, screen: "history" }
+    { id: "home", label: t.navHome || "Home", icon: Home, screen: "home" },
+    { id: "farms", label: t.navSaved || "All Farms", icon: Sprout, screen: "saved_fields" },
+    { id: "statistic", label: t.navStatistic || "Statistic", icon: BarChart2, screen: "compare" },
+    { id: "profile", label: t.navProfile || "My Profile", icon: User, screen: "history" }
   ];
 
   return (
