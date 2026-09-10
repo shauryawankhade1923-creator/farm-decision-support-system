@@ -164,32 +164,80 @@ Hardcoded agro-climatic rules provide baseline safety bounds (e.g., minimum 40mm
 
 ---
 
-## 6. System Architecture Diagram
+## 6. System Architecture & Data Flowchart
 
-```
-+-------------------------------------------------------------------------+
-|                              FARMER CLIENT                              |
-|           Mobile / Desktop Browser (React 19 + Tailwind CSS)            |
-+------------------------------------+------------------------------------+
-                                     |
-               +---------------------+---------------------+
-               |                                           |
-               v (Online / Local Dev)                      v (Standalone / Public Vercel)
-+-------------------------------+             +---------------------------------+
-|        FASTAPI BACKEND        |             |   AUTONOMOUS CLIENT ENGINE      |
-|    (Python ASGI Service)      |             |     (clientDecisionEngine.js)   |
-+---------------+---------------+             +----------------+----------------+
-                |                                              |
-                +----------------------+-----------------------+
-                                       |
-                   +-------------------+-------------------+
-                   |                                       |
-                   v                                       v
-+--------------------------------------+   +------------------------------------+
-|         EXTERNAL SERVICES            |   |         PERSISTENCE LAYER          |
-|  * Open-Meteo API (Live Weather)     |   |  * SQLite3 (farm_support.db)       |
-|  * Nominatim OSM (Geocoding)         |   |  * Browser LocalStorage (Offline)  |
-+--------------------------------------+   +------------------------------------+
+```mermaid
+flowchart LR
+    %% Column 1: Data Sources
+    subgraph S1["1. Data Sources (Input Layer)"]
+        direction TB
+        D1["⛅ Weather & Climate Data\n• Temp, Humidity, Rain\n• 7-10 Day Forecast\n(Open-Meteo API)"]
+        D2["🌱 Soil Data\n• Light, Medium, Heavy Clay\n• Moisture Retention\n(User / Regional Maps)"]
+        D3["📍 Location Data\n• Lat/Lng & Agri Hubs\n• Pune, Nagpur, Nashik...\n(OpenStreetMap)"]
+        D4["🌾 Crop & Farm Data\n• Target Crop & Acres\n• Rainfed vs. Irrigated\n(Farmer Input)"]
+        D5["💰 Market & Advisory\n• ICAR Sowing Calendars\n• APMC Market Baselines"]
+        D6["👤 User Preferences\n• English, Marathi, Hindi\n• Saved Plot Profiles"]
+    end
+
+    %% Column 2: Backend & Processing
+    subgraph S2["2. Backend & Data Processing"]
+        direction TB
+        B1["⚡ API Layer (FastAPI)\n• Pydantic v2 validation\n• Async route handling\n• CORS & Rate Defense"]
+        B2["⚙️ Data Preprocessing\n• Rainfall cumulative sums\n• Dry-gap window scans\n• Matrix feature builder"]
+        B3["🗄️ Database Storage\n• Saved field profiles\n• Consultation records\n• SQLite3 / LocalStorage"]
+        B4["🌐 External Services\n• Open-Meteo REST service\n• Nominatim Geocoding\n• Synthetic fallback buffer"]
+    end
+
+    %% Column 3: AI / ML Engine
+    subgraph S3["3. AI / ML Intelligence Layer"]
+        direction TB
+        AI1["🧠 Sowing Model (Random Forest)\n• Emergence Probability %\n• Top feature driver weights\n• ROC-AUC 0.84 validation"]
+        AI2["🔬 ICAR Rules Engine\n• Min rainfall thresholds\n• Sowing calendar windows\n• Soil texture compatibility"]
+        AI3["⚠️ Climate Risk Engine\n• 3-day germination dry gap\n• Excessive heat scan\n• Harvest rainfall risk"]
+        AI4["🌾 Harvest Maturity Model\n• Days since sowing tracker\n• Pod shattering defense\n• Post-harvest drying days"]
+        AI5["🤖 AI Explainer (XAI)\n• Plain-language reasoning\n• Localized in EN / MR / HI\n• Transparent breakdown"]
+    end
+
+    %% Column 4: Frontend Web App
+    subgraph S4["4. Frontend (React 19 / Vite)"]
+        direction TB
+        F1["💻 User Interface\n• Mobile-frame UI (max-w-xl)\n• Overlapping telemetry cards\n• 4-tab sticky bottom nav"]
+        F2["📱 Mobile Responsive\n• Fast 750ms Vite build\n• Touch-friendly controls\n• PWA ready styling"]
+        F3["🌐 Multi-Language\n• English, मराठी, हिंदी\n• 1-tap persistent switcher"]
+        F4["⚡ Autonomous Engine\n• clientDecisionEngine.js\n• Zero-error browser fallback\n• Direct Open-Meteo fetch"]
+    end
+
+    %% Column 5: End Users (Output Layer)
+    subgraph S5["5. End Users (Output Layer)"]
+        direction TB
+        O1["🎯 Definitive Verdict\n• SOW NOW (Green)\n• WAIT A FEW DAYS (Amber)\n• CONSIDER OTHER CROP (Red)"]
+        O2["📊 4 Strategic Choices\n• Sow Now vs. Wait\n• Pre-Sowing Irrigation\n• Resilient Crop Switch"]
+        O3["🌾 Harvest Advisory\n• Harvest before rain alert\n• Sun-drying days needed\n• Grain defense protocol"]
+        O4["📑 Plot Bookmarks\n• Saved field profiles\n• 1-click live re-evaluation"]
+        O5["⭐ Ground-Truth Review\n• Germination rating & logs\n• Closed continuous loop"]
+    end
+
+    %% Column 6: Cross Cutting
+    subgraph S6["6. Cross-Cutting Components (Across All Layers)"]
+        direction LR
+        CC1["🛡️ Security & Frictionless Access\nZero login/SSO walls"]
+        CC2["🔄 Error Handling & Fallback\nDual-engine resilience"]
+        CC3["☁️ Global Deployment\nVercel Edge Global CDN"]
+        CC4["📈 Metrics & Transparency\nFull ICAR score audits"]
+        CC5["🔁 Model Retraining\nFarmer feedback loops"]
+    end
+
+    %% Connections
+    S1 -->|Raw Telemetry & Inputs| S2
+    S2 -->|Clean Normalized Features| S3
+    S3 -->|Scores, Probabilities & XAI| S4
+    S4 -->|Personalized Actions & Alerts| S5
+
+    S6 -. Applies to .-> S1
+    S6 -. Applies to .-> S2
+    S6 -. Applies to .-> S3
+    S6 -. Applies to .-> S4
+    S6 -. Applies to .-> S5
 ```
 
 ---

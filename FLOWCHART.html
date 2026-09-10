@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Climate & Farm Decision Support System - Architecture Flowchart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      
+      --c-input: #10B981;
+      --c-input-light: #ECFDF5;
+      --c-input-border: #A7F3D0;
+      
+      --c-backend: #2563EB;
+      --c-backend-light: #EFF6FF;
+      --c-backend-border: #BFDBFE;
+      
+      --c-ai: #7C3AED;
+      --c-ai-light: #F5F3FF;
+      --c-ai-border: #DDD6FE;
+      
+      --c-frontend: #0284C7;
+      --c-frontend-light: #F0F9FF;
+      --c-frontend-border: #BAE6FD;
+      
+      --c-output: #EA580C;
+      --c-output-light: #FFF7ED;
+      --c-output-border: #FED7AA;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      padding: 32px 20px 60px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 1480px;
+    }
+
+    /* HEADER */
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header-title-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 6px;
+    }
+
+    .leaf-icon {
+      font-size: 28px;
+      color: #10B981;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #0F172A;
+    }
+
+    .header .subtitle {
+      font-size: 14px;
+      font-weight: 700;
+      color: #475569;
+      letter-spacing: 0.3px;
+      margin-bottom: 14px;
+    }
+
+    .header .pill {
+      display: inline-block;
+      background: #0B4628;
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 6px 22px;
+      border-radius: 9999px;
+      box-shadow: 0 4px 14px rgba(11, 70, 40, 0.25);
+    }
+
+    /* ACTION BAR */
+    .action-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: #F1F5F9;
+      border-color: #CBD5E1;
+    }
+
+    /* MAIN GRID (5 COLUMNS) */
+    .flowchart-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(260px, 1fr));
+      gap: 16px;
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .column {
+      background: #FFFFFF;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .column:hover {
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .col-header {
+      padding: 14px 16px;
+      color: #FFFFFF;
+      text-align: center;
+    }
+
+    .col-header h3 {
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+      text-transform: uppercase;
+    }
+
+    .col-header p {
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    .col-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    /* COLOR THEMES FOR HEADERS */
+    .col-1 .col-header { background: linear-gradient(135deg, #059669, #10B981); }
+    .col-2 .col-header { background: linear-gradient(135deg, #1D4ED8, #2563EB); }
+    .col-3 .col-header { background: linear-gradient(135deg, #6D28D9, #7C3AED); }
+    .col-4 .col-header { background: linear-gradient(135deg, #0369A1, #0284C7); }
+    .col-5 .col-header { background: linear-gradient(135deg, #C2410C, #EA580C); }
+
+    /* CARD ITEMS */
+    .card-item {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      transition: all 0.2s;
+    }
+
+    .card-item:hover {
+      background: #FFFFFF;
+      border-color: #CBD5E1;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .card-icon {
+      font-size: 20px;
+      line-height: 1;
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .card-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 3px;
+    }
+
+    .card-bullets {
+      list-style: none;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    .card-bullets li::before {
+      content: "• ";
+      color: #94A3B8;
+      font-weight: 900;
+    }
+
+    .card-footer-tag {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #64748B;
+      margin-top: 4px;
+      display: block;
+      font-style: italic;
+    }
+
+    /* BADGE PILL IN CARDS */
+    .sub-badge {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #E2E8F0;
+      color: #334155;
+      margin-top: 4px;
+    }
+
+    /* HYBRID BANNER IN COL 3 */
+    .hybrid-tag {
+      text-align: center;
+      background: #F5F3FF;
+      border: 1px dashed #7C3AED;
+      color: #6D28D9;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 8px;
+      border-radius: 10px;
+      margin-top: auto;
+    }
+
+    /* SECTION 6: CROSS CUTTING */
+    .cross-cutting-section {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px 20px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      margin-bottom: 24px;
+    }
+
+    .cross-title {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: #0F172A;
+      letter-spacing: -0.2px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    .cross-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .cross-card {
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid #E2E8F0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cc-1 { background: #F0FDF4; border-color: #BBF7D0; }
+    .cc-2 { background: #FAF5FF; border-color: #E9D5FF; }
+    .cc-3 { background: #FEFCE8; border-color: #FEF08A; }
+    .cc-4 { background: #F0F9FF; border-color: #BAE6FD; }
+    .cc-5 { background: #FDF2F8; border-color: #FBCFE8; }
+
+    .cross-card-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 4px;
+    }
+
+    .cross-bullets {
+      list-style: none;
+      font-size: 10px;
+      font-weight: 600;
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    .cross-bullets li::before {
+      content: "• ";
+      color: #94A3B8;
+    }
+
+    /* FOOTER */
+    .footer-bar {
+      text-align: center;
+      background: #0B4628;
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 12px 24px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 4px 14px rgba(11, 70, 40, 0.25);
+    }
+
+    /* RESPONSIVENESS */
+    @media (max-width: 1200px) {
+      .flowchart-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .cross-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .flowchart-grid {
+        grid-template-columns: 1fr;
+      }
+      .cross-grid {
+        grid-template-columns: 1fr;
+      }
+      .header h1 {
+        font-size: 24px;
+      }
+    }
+
+    /* PRINT STYLES */
+    @media print {
+      body {
+        padding: 0;
+        background: #FFFFFF;
+      }
+      .action-bar {
+        display: none;
+      }
+      .column, .cross-cutting-section {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+
+    <!-- TOP HEADER -->
+    <header class="header">
+      <div class="header-title-wrap">
+        <span class="leaf-icon">🍃</span>
+        <h1>AI Climate & Farm Decision Support System</h1>
+        <span class="leaf-icon">🍃</span>
+      </div>
+      <div class="subtitle">Smarter Decisions | Healthier Crops | Sustainable Farming</div>
+      <div class="pill">System Architecture & Data Flow</div>
+    </header>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-bar">
+      <button class="btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+      <button class="btn" onclick="navigator.clipboard.writeText(window.location.href)">🔗 Copy Link</button>
+    </div>
+
+    <!-- 5 HORIZONTAL FLOWCHART COLUMNS -->
+    <div class="flowchart-grid">
+
+      <!-- COLUMN 1: DATA SOURCES -->
+      <div class="column col-1">
+        <div class="col-header">
+          <h3>1. Data Sources (Input Layer)</h3>
+          <p>Real-time + Historical + User Data</p>
+        </div>
+        <div class="col-body">
+
+          <div class="card-item">
+            <span class="card-icon">⛅</span>
+            <div class="card-content">
+              <div class="card-title">Weather & Climate Data</div>
+              <ul class="card-bullets">
+                <li>Temperature, Humidity</li>
+                <li>Rainfall (7-10 Day Forecast)</li>
+                <li>Precipitation probability</li>
+              </ul>
+              <span class="card-footer-tag">(Open-Meteo API / IMD Telemetry)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">🌱</span>
+            <div class="card-content">
+              <div class="card-title">Soil Data</div>
+              <ul class="card-bullets">
+                <li>Light sandy / Medium black / Heavy clay</li>
+                <li>Moisture retention index</li>
+                <li>Organic & drainage buffer</li>
+              </ul>
+              <span class="card-footer-tag">(User Input / Soil Health Maps)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">📍</span>
+            <div class="card-content">
+              <div class="card-title">Location Data</div>
+              <ul class="card-bullets">
+                <li>GPS Coordinates (Lat / Lng)</li>
+                <li>Agri Hubs (Pune, Nagpur, Nashik...)</li>
+                <li>Agro-Climatic Zone Mapping</li>
+              </ul>
+              <span class="card-footer-tag">(OpenStreetMap / GeoCoding)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">🌾</span>
+            <div class="card-content">
+              <div class="card-title">Crop & Farm Data</div>
+              <ul class="card-bullets">
+                <li>Target Crop (Soybean, Cotton, Wheat...)</li>
+                <li>Land Size (Acres) & Season</li>
+                <li>Irrigation Capacity (Rainfed / Irrigated)</li>
+              </ul>
+              <span class="card-footer-tag">(Farmer Profile Input)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">🍃</span>
+            <div class="card-content">
+              <div class="card-title">Plant Image Data</div>
+              <ul class="card-bullets">
+                <li>Leaf & stem condition</li>
+                <li>Foliar disease visual signs</li>
+              </ul>
+              <span class="sub-badge">Future Roadmap</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">💰</span>
+            <div class="card-content">
+              <div class="card-title">Market & Govt Data</div>
+              <ul class="card-bullets">
+                <li>APMC Mandi spot prices</li>
+                <li>ICAR seasonal protocols</li>
+              </ul>
+              <span class="card-footer-tag">(Government Portals & KVK Calendars)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">👤</span>
+            <div class="card-content">
+              <div class="card-title">User Preferences</div>
+              <ul class="card-bullets">
+                <li>Language (English, मराठी, हिंदी)</li>
+                <li>Risk tolerance threshold</li>
+              </ul>
+              <span class="card-footer-tag">(Client LocalStorage Memory)</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- COLUMN 2: BACKEND & DATA PROCESSING -->
+      <div class="column col-2">
+        <div class="col-header">
+          <h3>2. Backend & Processing</h3>
+          <p>(Server & Pipeline Layer)</p>
+        </div>
+        <div class="col-body">
+
+          <div class="card-item">
+            <span class="card-icon">⚡</span>
+            <div class="card-content">
+              <div class="card-title">API Layer (FastAPI / ASGI)</div>
+              <ul class="card-bullets">
+                <li>Pydantic v2 schemas</li>
+                <li>CORS middleware & rate limits</li>
+                <li>Async route dispatchers</li>
+              </ul>
+              <span class="card-footer-tag">(Uvicorn ASGI Engine)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">⚙️</span>
+            <div class="card-content">
+              <div class="card-title">Data Preprocessing</div>
+              <ul class="card-bullets">
+                <li>Normalize rainfall trajectories</li>
+                <li>Dry-spell consecutive gap detection</li>
+                <li>Feature vector matrix builder</li>
+              </ul>
+              <span class="card-footer-tag">(Pandas & NumPy Pipelines)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">🗄️</span>
+            <div class="card-content">
+              <div class="card-title">Database Storage</div>
+              <ul class="card-bullets">
+                <li>Saved field plot profiles</li>
+                <li>Farmer consultation history</li>
+                <li>Post-sowing outcome feedback</li>
+              </ul>
+              <span class="card-footer-tag">(SQLite3 farm_support.db)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">🌐</span>
+            <div class="card-content">
+              <div class="card-title">External APIs Integration</div>
+              <ul class="card-bullets">
+                <li>Open-Meteo 10-day forecast service</li>
+                <li>Nominatim OSM geocoder</li>
+                <li>Offline synthetic fallback buffer</li>
+              </ul>
+              <span class="card-footer-tag">(Async HTTPX Handlers)</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- COLUMN 3: AI / ML ENGINE -->
+      <div class="column col-3">
+        <div class="col-header">
+          <h3>3. AI / ML Engine</h3>
+          <p>(Intelligence Layer)</p>
+        </div>
+        <div class="col-body">
+
+          <div class="card-item">
+            <span class="card-icon">🧠</span>
+            <div class="card-content">
+              <div class="card-title">Emergence & Sowing Model</div>
+              <ul class="card-bullets">
+                <li>Random Forest Classifier v1.0</li>
+                <li>Emergence probability % (ROC-AUC 0.84)</li>
+                <li>Top feature importance drivers</li>
+              </ul>
+              <span class="card-footer-tag">(Scikit-Learn & Joblib Artifacts)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">🔬</span>
+            <div class="card-content">
+              <div class="card-title">ICAR Agronomic Rules Engine</div>
+              <ul class="card-bullets">
+                <li>Crop minimum moisture thresholds</li>
+                <li>Seasonal calendar windows</li>
+                <li>Soil texture compatibility score</li>
+              </ul>
+              <span class="card-footer-tag">(Calibrated KVK Crop Tables)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">⚠️</span>
+            <div class="card-content">
+              <div class="card-title">Climate Risk Analysis</div>
+              <ul class="card-bullets">
+                <li>Germination 3-day dry gap risk</li>
+                <li>High temperature desiccation scan</li>
+                <li>Harvest rainfall hazard detection</li>
+              </ul>
+              <span class="card-footer-tag">(Dynamic Rolling Window Scan)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">🌾</span>
+            <div class="card-content">
+              <div class="card-title">Harvest Maturity Model</div>
+              <ul class="card-bullets">
+                <li>Days since sowing tracking</li>
+                <li>Physiological maturity verification</li>
+                <li>Post-harvest drying sun hours</li>
+              </ul>
+              <span class="card-footer-tag">(Crop Specific Starch Index)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">🤖</span>
+            <div class="card-content">
+              <div class="card-title">AI Explainer (XAI)</div>
+              <ul class="card-bullets">
+                <li>Plain-language transparent reasons</li>
+                <li>Localized advisory generation</li>
+                <li>No complicated black-box metrics</li>
+              </ul>
+              <span class="card-footer-tag">(Multilingual Advisory Module)</span>
+            </div>
+          </div>
+
+          <div class="hybrid-tag">
+            Rules + ML + Dynamic Optimization<br>
+            <strong>(Hybrid Safety & Reliability)</strong>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- COLUMN 4: FRONTEND WEB APP -->
+      <div class="column col-4">
+        <div class="col-header">
+          <h3>4. Frontend (Web App)</h3>
+          <p>(React 19 / Vite / Tailwind)</p>
+        </div>
+        <div class="col-body">
+
+          <div class="card-item">
+            <span class="card-icon">💻</span>
+            <div class="card-content">
+              <div class="card-title">User Interface</div>
+              <ul class="card-bullets">
+                <li>Clean mobile-frame layout (max-w-xl)</li>
+                <li>Overlapping weather telemetry cards</li>
+                <li>4-tab sticky bottom navigation</li>
+              </ul>
+              <span class="card-footer-tag">(Tailwind CSS v4 & Lucide Icons)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">📱</span>
+            <div class="card-content">
+              <div class="card-title">Mobile Responsive</div>
+              <ul class="card-bullets">
+                <li>Optimized for low-end smartphones</li>
+                <li>Fast 700ms build execution</li>
+                <li>Touch-first sliders and counters</li>
+              </ul>
+              <span class="card-footer-tag">(PWA-Ready Web Client)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">🌐</span>
+            <div class="card-content">
+              <div class="card-title">Multi-Language Switcher</div>
+              <ul class="card-bullets">
+                <li>English (All India)</li>
+                <li>मराठी (Maharashtra Regional)</li>
+                <li>हिंदी (National)</li>
+              </ul>
+              <span class="card-footer-tag">(1-Tap Persistent Pill & Modal)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">⚡</span>
+            <div class="card-content">
+              <div class="card-title">Autonomous Client Engine</div>
+              <ul class="card-bullets">
+                <li>clientDecisionEngine.js embedded</li>
+                <li>Direct Open-Meteo browser queries</li>
+                <li>Zero localhost error tolerance</li>
+              </ul>
+              <span class="card-footer-tag">(Instant & Offline Capable)</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- COLUMN 5: END USERS & OUTPUT -->
+      <div class="column col-5">
+        <div class="col-header">
+          <h3>5. End Users (Outputs)</h3>
+          <p>(Farmers & Stakeholders)</p>
+        </div>
+        <div class="col-body">
+
+          <div class="card-item">
+            <span class="card-icon">🎯</span>
+            <div class="card-content">
+              <div class="card-title">Definitive Sowing Verdict</div>
+              <ul class="card-bullets">
+                <li>SOW NOW (Green)</li>
+                <li>WAIT A FEW DAYS (Amber)</li>
+                <li>CONSIDER ANOTHER CROP (Red)</li>
+              </ul>
+              <span class="card-footer-tag">(Confidence & Date Range)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">📊</span>
+            <div class="card-content">
+              <div class="card-title">4 Strategic Alternatives</div>
+              <ul class="card-bullets">
+                <li>Sow Now vs. Wait a Few Days</li>
+                <li>Pre-Sowing Irrigation evaluation</li>
+                <li>Switch to resilient crop suggestion</li>
+              </ul>
+              <span class="card-footer-tag">(Ranked Comparison Matrix)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">🌾</span>
+            <div class="card-content">
+              <div class="card-title">Harvest Emergency Advisory</div>
+              <ul class="card-bullets">
+                <li>Harvest Before Rain alert</li>
+                <li>Safe sun-drying days needed</li>
+                <li>Storage protection checklist</li>
+              </ul>
+              <span class="card-footer-tag">(Grain Quality Defense)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">📑</span>
+            <div class="card-content">
+              <div class="card-title">Saved Field Bookmarks</div>
+              <ul class="card-bullets">
+                <li>Save plot soil & crop profiles</li>
+                <li>1-click live re-evaluation</li>
+              </ul>
+              <span class="card-footer-tag">(Fast Re-Checking)</span>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <span class="card-icon">⭐</span>
+            <div class="card-content">
+              <div class="card-title">Ground-Truth Feedback</div>
+              <ul class="card-bullets">
+                <li>Log germination success %</li>
+                <li>Track past consultation history</li>
+              </ul>
+              <span class="card-footer-tag">(Closed Continuous Learning Loop)</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECTION 6: CROSS-CUTTING COMPONENTS -->
+    <div class="cross-cutting-section">
+      <div class="cross-title">6. Cross-Cutting Components (Across All System Layers)</div>
+      
+      <div class="cross-grid">
+        
+        <div class="cross-card cc-1">
+          <div class="cross-card-header">
+            <span>🛡️</span> Security & Frictionless Access
+          </div>
+          <ul class="cross-bullets">
+            <li>Zero SSO / login roadblocks</li>
+            <li>No credential tracking barriers</li>
+            <li>HTTPS end-to-end transport</li>
+          </ul>
+        </div>
+
+        <div class="cross-card cc-2">
+          <div class="cross-card-header">
+            <span>🔄</span> Resilient Error Handling
+          </div>
+          <ul class="cross-bullets">
+            <li>Dual-engine architecture</li>
+            <li>Autonomous in-browser fallback</li>
+            <li>No blocking alert() popups</li>
+          </ul>
+        </div>
+
+        <div class="cross-card cc-3">
+          <div class="cross-card-header">
+            <span>☁️</span> Cloud & Global Deployment
+          </div>
+          <ul class="cross-bullets">
+            <li>Vercel Edge global CDN</li>
+            <li>Zero-cost serverless hosting</li>
+            <li>Automated GitHub sync</li>
+          </ul>
+        </div>
+
+        <div class="cross-card cc-4">
+          <div class="cross-card-header">
+            <span>📈</span> Monitoring & Transparency
+          </div>
+          <ul class="cross-bullets">
+            <li>Transparent score breakdowns</li>
+            <li>Open-Meteo telemetry audit</li>
+            <li>Feature driver weights display</li>
+          </ul>
+        </div>
+
+        <div class="cross-card cc-5">
+          <div class="cross-card-header">
+            <span>🔁</span> Continuous Improvement
+          </div>
+          <ul class="cross-bullets">
+            <li>Farmer germination feedback</li>
+            <li>Retraining datasets archive</li>
+            <li>Regional KVK rule calibration</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BOTTOM MOTTO BANNER -->
+    <div class="footer-bar">
+      <span>🌱 From Data</span>
+      <span>➔</span>
+      <span>💡 To Insight</span>
+      <span>➔</span>
+      <span>🚜 To Action</span>
+      <span>➔</span>
+      <span>🌾 For a Better Tomorrow</span>
+    </div>
+
+  </div>
+
+</body>
+</html>
