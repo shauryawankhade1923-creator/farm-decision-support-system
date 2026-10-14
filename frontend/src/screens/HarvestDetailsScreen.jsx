@@ -39,6 +39,18 @@ export default function HarvestDetailsScreen({
     ],
     Groundnut: [
       "/crops/groundnut_harvest.jpg"
+    ],
+    Gram: [
+      "/crops/gram_chickpea.jpg"
+    ],
+    Pigeonpea: [
+      "/crops/pigeonpea_tur.jpg"
+    ],
+    Jowar: [
+      "/crops/jowar_sorghum.jpg"
+    ],
+    Bajra: [
+      "/crops/bajra_millet.jpg"
     ]
   };
 

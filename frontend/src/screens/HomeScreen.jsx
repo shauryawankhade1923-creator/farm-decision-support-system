@@ -93,7 +93,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "High Yielding",
           moisture: "35-50 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         },
         {
           id: "Groundnut",
@@ -111,7 +111,7 @@ export default function HomeScreen({
           window: "15 Sept - 15 Oct",
           status: "Drought Resilient",
           moisture: "25-35 mm",
-          image: "/crops/maize_corn_cobs.jpg"
+          image: "/crops/jowar_sorghum.jpg"
         }
       ]
     },
@@ -150,7 +150,7 @@ export default function HomeScreen({
           window: "15 June - 05 July",
           status: "High Protein",
           moisture: "50-70 mm",
-          image: "/crops/soybean_plant.jpg"
+          image: "/crops/pigeonpea_tur.jpg"
         },
         {
           id: "Gram",
@@ -159,7 +159,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "Residual Moisture",
           moisture: "35-50 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         },
         {
           id: "Wheat",
@@ -216,7 +216,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "High Yielding",
           moisture: "35-50 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         },
         {
           id: "Bajra",
@@ -225,7 +225,7 @@ export default function HomeScreen({
           window: "20 June - 15 July",
           status: "Light Soil Specialist",
           moisture: "25-35 mm",
-          image: "/crops/wheat_ears.jpg"
+          image: "/crops/bajra_millet.jpg"
         }
       ]
     },
@@ -264,7 +264,7 @@ export default function HomeScreen({
           window: "20 June - 05 July",
           status: "High Protein",
           moisture: "50-70 mm",
-          image: "/crops/soybean_plant.jpg"
+          image: "/crops/pigeonpea_tur.jpg"
         },
         {
           id: "Gram",
@@ -273,7 +273,7 @@ export default function HomeScreen({
           window: "15 Oct - 15 Nov",
           status: "Wilt Resistant",
           moisture: "35-45 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         },
         {
           id: "Jowar",
@@ -282,7 +282,7 @@ export default function HomeScreen({
           window: "15 Sept - 10 Oct",
           status: "Drought Resilient",
           moisture: "25-35 mm",
-          image: "/crops/maize_corn_cobs.jpg"
+          image: "/crops/jowar_sorghum.jpg"
         }
       ]
     },
@@ -303,7 +303,7 @@ export default function HomeScreen({
           window: "15 Sept - 15 Oct",
           status: "Drought Resilient",
           moisture: "25-35 mm",
-          image: "/crops/maize_corn_cobs.jpg"
+          image: "/crops/jowar_sorghum.jpg"
         },
         {
           id: "Groundnut",
@@ -321,7 +321,7 @@ export default function HomeScreen({
           window: "10 Oct - 05 Nov",
           status: "Low Water Need",
           moisture: "30-40 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         },
         {
           id: "Maize",
@@ -339,7 +339,7 @@ export default function HomeScreen({
           window: "20 June - 10 July",
           status: "Dryland Pulse",
           moisture: "45-60 mm",
-          image: "/crops/soybean_plant.jpg"
+          image: "/crops/pigeonpea_tur.jpg"
         }
       ]
     },
@@ -378,7 +378,7 @@ export default function HomeScreen({
           window: "15 June - 10 July",
           status: "Light Soil Specialist",
           moisture: "25-35 mm",
-          image: "/crops/wheat_ears.jpg"
+          image: "/crops/bajra_millet.jpg"
         },
         {
           id: "Gram",
@@ -387,7 +387,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "High Yielding",
           moisture: "35-50 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         },
         {
           id: "Jowar",
@@ -396,7 +396,7 @@ export default function HomeScreen({
           window: "15 Sept - 15 Oct",
           status: "Drought Resilient",
           moisture: "25-35 mm",
-          image: "/crops/maize_corn_cobs.jpg"
+          image: "/crops/jowar_sorghum.jpg"
         }
       ]
     },
@@ -435,7 +435,7 @@ export default function HomeScreen({
           window: "15 June - 05 July",
           status: "High Protein",
           moisture: "50-70 mm",
-          image: "/crops/soybean_plant.jpg"
+          image: "/crops/pigeonpea_tur.jpg"
         },
         {
           id: "Gram",
@@ -444,7 +444,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "Wilt Resistant",
           moisture: "35-45 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         }
       ]
     },
@@ -483,7 +483,7 @@ export default function HomeScreen({
           window: "15 June - 05 July",
           status: "High Protein",
           moisture: "50-70 mm",
-          image: "/crops/soybean_plant.jpg"
+          image: "/crops/pigeonpea_tur.jpg"
         },
         {
           id: "Gram",
@@ -492,7 +492,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "Residual Moisture",
           moisture: "35-50 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         }
       ]
     },
@@ -531,7 +531,7 @@ export default function HomeScreen({
           window: "15 June - 05 July",
           status: "High Protein",
           moisture: "50-70 mm",
-          image: "/crops/soybean_plant.jpg"
+          image: "/crops/pigeonpea_tur.jpg"
         },
         {
           id: "Wheat",
@@ -588,7 +588,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "Wilt Resistant",
           moisture: "35-45 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         }
       ]
     },
@@ -636,7 +636,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "High Yielding",
           moisture: "35-50 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         }
       ]
     },
@@ -675,7 +675,7 @@ export default function HomeScreen({
           window: "15 Sept - 15 Oct",
           status: "Drought Resilient",
           moisture: "25-35 mm",
-          image: "/crops/maize_corn_cobs.jpg"
+          image: "/crops/jowar_sorghum.jpg"
         },
         {
           id: "Gram",
@@ -684,7 +684,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "High Yielding",
           moisture: "35-50 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         },
         {
           id: "Wheat",
@@ -732,7 +732,7 @@ export default function HomeScreen({
           window: "15 Sept - 15 Oct",
           status: "Drought Resilient",
           moisture: "25-35 mm",
-          image: "/crops/maize_corn_cobs.jpg"
+          image: "/crops/jowar_sorghum.jpg"
         },
         {
           id: "Maize",
@@ -750,7 +750,7 @@ export default function HomeScreen({
           window: "10 Oct - 05 Nov",
           status: "Low Water Need",
           moisture: "30-40 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         }
       ]
     },
@@ -771,7 +771,7 @@ export default function HomeScreen({
           window: "15 June - 10 July",
           status: "Light Soil Specialist",
           moisture: "25-35 mm",
-          image: "/crops/wheat_ears.jpg"
+          image: "/crops/bajra_millet.jpg"
         },
         {
           id: "Soybean",
@@ -789,7 +789,7 @@ export default function HomeScreen({
           window: "15 Sept - 15 Oct",
           status: "Drought Resilient",
           moisture: "25-35 mm",
-          image: "/crops/maize_corn_cobs.jpg"
+          image: "/crops/jowar_sorghum.jpg"
         },
         {
           id: "Gram",
@@ -798,7 +798,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "High Yielding",
           moisture: "35-50 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         },
         {
           id: "Wheat",
@@ -846,7 +846,7 @@ export default function HomeScreen({
           window: "15 June - 10 July",
           status: "Light Soil Specialist",
           moisture: "25-35 mm",
-          image: "/crops/wheat_ears.jpg"
+          image: "/crops/bajra_millet.jpg"
         },
         {
           id: "Soybean",
@@ -894,7 +894,7 @@ export default function HomeScreen({
           window: "15 June - 10 July",
           status: "Light Soil Specialist",
           moisture: "25-35 mm",
-          image: "/crops/wheat_ears.jpg"
+          image: "/crops/bajra_millet.jpg"
         },
         {
           id: "Maize",
@@ -921,7 +921,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "Low Water Need",
           moisture: "35-45 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         }
       ]
     },
@@ -960,7 +960,7 @@ export default function HomeScreen({
           window: "15 June - 05 July",
           status: "High Protein",
           moisture: "50-70 mm",
-          image: "/crops/soybean_plant.jpg"
+          image: "/crops/pigeonpea_tur.jpg"
         },
         {
           id: "Bajra",
@@ -969,7 +969,7 @@ export default function HomeScreen({
           window: "15 June - 10 July",
           status: "Light Soil Specialist",
           moisture: "25-35 mm",
-          image: "/crops/wheat_ears.jpg"
+          image: "/crops/bajra_millet.jpg"
         },
         {
           id: "Gram",
@@ -978,7 +978,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "High Yielding",
           moisture: "35-50 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         }
       ]
     },
@@ -1017,7 +1017,7 @@ export default function HomeScreen({
           window: "15 June - 05 July",
           status: "High Protein",
           moisture: "50-70 mm",
-          image: "/crops/soybean_plant.jpg"
+          image: "/crops/pigeonpea_tur.jpg"
         },
         {
           id: "Jowar",
@@ -1026,7 +1026,7 @@ export default function HomeScreen({
           window: "15 Sept - 15 Oct",
           status: "Drought Resilient",
           moisture: "25-35 mm",
-          image: "/crops/maize_corn_cobs.jpg"
+          image: "/crops/jowar_sorghum.jpg"
         },
         {
           id: "Bajra",
@@ -1035,7 +1035,7 @@ export default function HomeScreen({
           window: "15 June - 10 July",
           status: "Light Soil Specialist",
           moisture: "25-35 mm",
-          image: "/crops/wheat_ears.jpg"
+          image: "/crops/bajra_millet.jpg"
         }
       ]
     },
@@ -1065,7 +1065,7 @@ export default function HomeScreen({
           window: "15 June - 05 July",
           status: "High Protein",
           moisture: "50-70 mm",
-          image: "/crops/soybean_plant.jpg"
+          image: "/crops/pigeonpea_tur.jpg"
         },
         {
           id: "Gram",
@@ -1074,7 +1074,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "High Yielding",
           moisture: "35-50 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         },
         {
           id: "Jowar",
@@ -1083,7 +1083,7 @@ export default function HomeScreen({
           window: "15 Sept - 15 Oct",
           status: "Drought Resilient",
           moisture: "25-35 mm",
-          image: "/crops/maize_corn_cobs.jpg"
+          image: "/crops/jowar_sorghum.jpg"
         },
         {
           id: "Groundnut",
@@ -1131,7 +1131,7 @@ export default function HomeScreen({
           window: "15 June - 05 July",
           status: "High Protein",
           moisture: "50-70 mm",
-          image: "/crops/soybean_plant.jpg"
+          image: "/crops/pigeonpea_tur.jpg"
         },
         {
           id: "Gram",
@@ -1140,7 +1140,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "High Yielding",
           moisture: "35-50 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         },
         {
           id: "Jowar",
@@ -1149,7 +1149,7 @@ export default function HomeScreen({
           window: "15 Sept - 15 Oct",
           status: "Drought Resilient",
           moisture: "25-35 mm",
-          image: "/crops/maize_corn_cobs.jpg"
+          image: "/crops/jowar_sorghum.jpg"
         }
       ]
     },
@@ -1188,7 +1188,7 @@ export default function HomeScreen({
           window: "15 June - 05 July",
           status: "High Protein",
           moisture: "50-70 mm",
-          image: "/crops/soybean_plant.jpg"
+          image: "/crops/pigeonpea_tur.jpg"
         },
         {
           id: "Gram",
@@ -1197,7 +1197,7 @@ export default function HomeScreen({
           window: "15 Oct - 10 Nov",
           status: "Wilt Resistant",
           moisture: "35-45 mm",
-          image: "/crops/groundnut_harvest.jpg"
+          image: "/crops/gram_chickpea.jpg"
         },
         {
           id: "Wheat",
