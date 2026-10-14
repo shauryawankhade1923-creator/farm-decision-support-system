@@ -328,42 +328,154 @@ export default function HomeScreen({
     }
   ];
 
+  const getLocalizedDistrict = (d) => {
+    if (!d) return "";
+    const map = {
+      mr: {
+        "Pune": "पुणे",
+        "Nagpur": "नागपूर",
+        "Nashik": "नाशिक",
+        "Akola": "अकोला",
+        "Solapur": "सोलापूर",
+        "Chhatrapati Sambhajinagar": "छत्रपती संभाजीनगर",
+        "Baramati": "बारामती",
+        "Amravati": "अमरावती",
+        "Yavatmal": "यवतमाळ",
+        "Nanded": "नांदेड",
+        "Latur": "लातूर",
+        "Jalna": "जालना",
+        "Kolhapur": "कोल्हापूर"
+      },
+      hi: {
+        "Pune": "पुणे",
+        "Nagpur": "नागपुर",
+        "Nashik": "नाशिक",
+        "Akola": "अकोला",
+        "Solapur": "सोलापुर",
+        "Chhatrapati Sambhajinagar": "छत्रपति संभाजीनगर",
+        "Baramati": "बारामती",
+        "Amravati": "अमरावती",
+        "Yavatmal": "यवतमाल",
+        "Nanded": "नांदेड़",
+        "Latur": "लातूर",
+        "Jalna": "जालना",
+        "Kolhapur": "कोल्हापुर"
+      }
+    };
+    return map[language]?.[d] || d;
+  };
+
   const getLocalizedRegion = (r) => {
     if (!r) return "";
-    if (r.includes("Western")) return t.regWesternMaha || r;
-    if (r.includes("Central Vidarbha")) return t.regCentralVidarbha || r;
-    if (r.includes("Vidarbha")) return t.regVidarbha || r;
-    if (r.includes("North")) return t.regNorthMaha || r;
-    if (r.includes("Southern")) return t.regSouthMaha || r;
-    if (r.includes("Marathwada")) return t.regMarathwada || r;
+    if (r.includes("Western")) return t.regWesternMaha || (language === "mr" ? "पश्चिम महाराष्ट्र" : language === "hi" ? "पश्चिम महाराष्ट्र" : r);
+    if (r.includes("Central Vidarbha")) return t.regCentralVidarbha || (language === "mr" ? "मध्य विदर्भ" : language === "hi" ? "मध्य विदर्भ" : r);
+    if (r.includes("Vidarbha")) return t.regVidarbha || (language === "mr" ? "विदर्भ विभाग" : language === "hi" ? "विदर्भ क्षेत्र" : r);
+    if (r.includes("North")) return t.regNorthMaha || (language === "mr" ? "उत्तर महाराष्ट्र" : language === "hi" ? "उत्तर महाराष्ट्र" : r);
+    if (r.includes("Southern")) return t.regSouthMaha || (language === "mr" ? "दक्षिण महाराष्ट्र" : language === "hi" ? "दक्षिण महाराष्ट्र" : r);
+    if (r.includes("Marathwada")) return t.regMarathwada || (language === "mr" ? "मराठवाडा" : language === "hi" ? "मराठवाड़ा" : r);
     return r;
   };
 
   const getLocalizedWeather = (w) => {
     if (!w) return "";
-    if (w.includes("Partly Sunny")) return t.weatherPartlySunny || w;
-    if (w.includes("Sunny & Warm")) return t.weatherSunnyWarm || w;
-    if (w.includes("Pleasant")) return t.weatherPleasant || w;
-    if (w.includes("Warm & Dry")) return t.weatherWarmDry || w;
-    if (w.includes("Clear")) return t.weatherClearSkies || w;
-    if (w.includes("Partly Cloudy")) return t.weatherPartlyCloudy || w;
+    if (w.includes("Partly Sunny")) return t.weatherPartlySunny || (language === "mr" ? "अंशतः सूर्यप्रकाश" : language === "hi" ? "आंशिक धूप" : w);
+    if (w.includes("Sunny & Warm")) return t.weatherSunnyWarm || (language === "mr" ? "उष्ण व निरभ्र" : language === "hi" ? "उष्ण व साफ" : w);
+    if (w.includes("Pleasant")) return t.weatherPleasant || (language === "mr" ? "आल्हाददायक हवामान" : language === "hi" ? "सुहावना मौसम" : w);
+    if (w.includes("Warm & Dry")) return t.weatherWarmDry || (language === "mr" ? "उष्ण व कोरडे" : language === "hi" ? "गर्म व सूखा" : w);
+    if (w.includes("Clear")) return t.weatherClearSkies || (language === "mr" ? "स्वच्छ आकाश" : language === "hi" ? "साफ आसमान" : w);
+    if (w.includes("Partly Cloudy")) return t.weatherPartlyCloudy || (language === "mr" ? "अंशतः ढगाळ" : language === "hi" ? "आंशिक बादल" : w);
     return w;
   };
 
   const getLocalizedSoil = (s) => {
-    if (s === "light") return t.soilLight || "Light";
-    if (s === "medium") return t.soilMedium || "Medium";
-    if (s === "heavy") return t.soilHeavy || "Heavy";
+    if (!s) return "";
+    const lower = s.toLowerCase();
+    if (lower === "light") return language === "mr" ? "हलकी जमीन" : language === "hi" ? "हल्की मिट्टी" : "Light Soil";
+    if (lower === "medium") return language === "mr" ? "मध्यम काळी" : language === "hi" ? "मध्यम काली" : "Medium Black";
+    if (lower === "heavy") return language === "mr" ? "भारी काळी" : language === "hi" ? "भारी काली" : "Heavy Clay";
     return s;
   };
 
   const getLocalizedCropName = (crop) => {
-    if (crop.id === "Soybean") return language === "mr" ? "सोयाबीन" : language === "hi" ? "सोयाबीन" : crop.name;
-    if (crop.id === "Cotton") return language === "mr" ? "कापूस (बीटी कॉटन)" : language === "hi" ? "कपास (बीटी कॉटन)" : crop.name;
-    if (crop.id === "Maize") return language === "mr" ? "मका" : language === "hi" ? "मक्का" : crop.name;
-    if (crop.id === "Wheat") return language === "mr" ? "गहू" : language === "hi" ? "गेहूं" : crop.name;
-    if (crop.id === "Groundnut") return language === "mr" ? "भुईमूग" : language === "hi" ? "मूंगफली" : crop.name;
-    return crop.name;
+    if (!crop) return "";
+    const name = crop.name || crop.id;
+    if (language === "mr") {
+      if (name.includes("Soybean (JS 335)")) return "सोयाबीन (JS 335)";
+      if (name.includes("Soybean (JS 9305)")) return "सोयाबीन (JS 9305)";
+      if (name.includes("Soybean (JS 95-60)")) return "सोयाबीन (JS 95-60)";
+      if (name.includes("Soybean (MACS 1407)")) return "सोयाबीन (MACS 1407)";
+      if (name.includes("Durum Wheat (Sharbati)")) return "डुरम गहू (शरबती)";
+      if (name.includes("Lokwan Wheat")) return "लोकवन गहू";
+      if (name.includes("Groundnut (JL 24)")) return "भुईमूग (JL 24)";
+      if (name.includes("Groundnut (TAG 24)")) return "भुईमूग (TAG 24)";
+      if (name.includes("Bt Cotton (Bollgard II)")) return "बीटी कापूस (बोलगार्ड II)";
+      if (name.includes("Hybrid Cotton (Ajeet 155 / Rasi)")) return "संकरित कापूस (अजित १५५ / राशी)";
+      if (name.includes("Hybrid Cotton (Dr. PDKV)")) return "संकरित कापूस (डॉ. पंजाबराव देशमुख)";
+      if (name.includes("Maize (Pioneer / African Tall)")) return "मका (पायोनियर / आफ्रिकन टॉल)";
+      if (name.includes("Maize (African Tall / Pioneer)")) return "मका (आफ्रिकन टॉल / पायोनियर)";
+      if (crop.id === "Soybean") return "सोयाबीन";
+      if (crop.id === "Cotton") return "कापूस";
+      if (crop.id === "Maize") return "मका";
+      if (crop.id === "Wheat") return "गहू";
+      if (crop.id === "Groundnut") return "भुईमूग";
+    }
+    if (language === "hi") {
+      if (name.includes("Soybean (JS 335)")) return "सोयाबीन (JS 335)";
+      if (name.includes("Soybean (JS 9305)")) return "सोयाबीन (JS 9305)";
+      if (name.includes("Soybean (JS 95-60)")) return "सोयाबीन (JS 95-60)";
+      if (name.includes("Soybean (MACS 1407)")) return "सोयाबीन (MACS 1407)";
+      if (name.includes("Durum Wheat (Sharbati)")) return "डूरम गेहूं (शरबती)";
+      if (name.includes("Lokwan Wheat")) return "लोकवन गेहूं";
+      if (name.includes("Groundnut (JL 24)")) return "मूंगफली (JL 24)";
+      if (name.includes("Groundnut (TAG 24)")) return "मूंगफली (TAG 24)";
+      if (name.includes("Bt Cotton (Bollgard II)")) return "बीटी कपास (बोलगार्ड II)";
+      if (name.includes("Hybrid Cotton (Ajeet 155 / Rasi)")) return "संकरित कपास (अजीत 155 / रासी)";
+      if (name.includes("Hybrid Cotton (Dr. PDKV)")) return "संकरित कपास (डॉ. PDKV)";
+      if (name.includes("Maize (Pioneer / African Tall)")) return "मक्का (पायोनियर / अफ्रीकन टॉल)";
+      if (name.includes("Maize (African Tall / Pioneer)")) return "मक्का (अफ्रीकन टॉल / पायोनियर)";
+      if (crop.id === "Soybean") return "सोयाबीन";
+      if (crop.id === "Cotton") return "कपास";
+      if (crop.id === "Maize") return "मक्का";
+      if (crop.id === "Wheat") return "गेहूं";
+      if (crop.id === "Groundnut") return "मूंगफली";
+    }
+    return name;
+  };
+
+  const getLocalizedWindow = (w) => {
+    if (!w) return "";
+    if (language === "mr") {
+      return w
+        .replace(/June/gi, "जून")
+        .replace(/July/gi, "जुलै")
+        .replace(/Nov/gi, "नोव्हेंबर")
+        .replace(/Oct/gi, "ऑक्टोबर");
+    }
+    if (language === "hi") {
+      return w
+        .replace(/June/gi, "जून")
+        .replace(/July/gi, "जुलाई")
+        .replace(/Nov/gi, "नवंबर")
+        .replace(/Oct/gi, "अक्टूबर");
+    }
+    return w;
+  };
+
+  const getLocalizedMoisture = (m) => {
+    if (!m) return "";
+    if (language === "mr") {
+      return m
+        .replace("Residual / Canal", "कालवा / ओलावा")
+        .replace("Pre-sown Irrigation", "पेरणीपूर्व सिंचन")
+        .replace(/mm/gi, "मिमी");
+    }
+    if (language === "hi") {
+      return m
+        .replace("Residual / Canal", "नहर / संरक्षित नमी")
+        .replace("Pre-sown Irrigation", "बुवाई पूर्व सिंचाई")
+        .replace(/mm/gi, "मिमी");
+    }
+    return m;
   };
 
   const getLocalizedStatus = (status) => {
@@ -504,7 +616,7 @@ export default function HomeScreen({
             >
               {Object.keys(DISTRICT_CROPS).map((dist) => (
                 <option key={dist} value={dist} className="text-slate-900 font-bold">
-                  {dist} ({getLocalizedRegion(DISTRICT_CROPS[dist].state)})
+                  {getLocalizedDistrict(dist)} ({getLocalizedRegion(DISTRICT_CROPS[dist].state)})
                 </option>
               ))}
             </select>
@@ -520,7 +632,7 @@ export default function HomeScreen({
             <div>
               <div className="flex items-center gap-1.5 text-slate-500 text-xs font-bold">
                 <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-                <span>{selectedDistrict}, {getLocalizedRegion(currentDistrictData.state)}</span>
+                <span>{getLocalizedDistrict(selectedDistrict)}, {getLocalizedRegion(currentDistrictData.state)}</span>
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight">
@@ -625,10 +737,14 @@ export default function HomeScreen({
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-black text-slate-900 tracking-tight">
-              {t.cropsGrownIn || "Crops Grown in"} {selectedDistrict}
+              {t.cropsGrownIn || "Crops Grown in"} {getLocalizedDistrict(selectedDistrict)}
             </h3>
             <span className="text-[11px] text-slate-500 font-medium">
-              {t.calibratedTo || "Calibrated to soil & rainfall"}
+              {language === "mr" 
+                ? `${getLocalizedDistrict(selectedDistrict)}च्या जमिनीनुसार व पावसाच्या अंदाजानुसार` 
+                : language === "hi" 
+                ? `${getLocalizedDistrict(selectedDistrict)} की मिट्टी और बारिश के अनुकूलित` 
+                : (t.calibratedTo || "Calibrated to soil & rainfall")}
             </span>
           </div>
           <button 
@@ -666,11 +782,11 @@ export default function HomeScreen({
                 <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-500">
                   <div>
                     <span className="text-[10px] block text-slate-400">{t.sowingWindow || "Sowing Window"}</span>
-                    <span className="font-bold text-slate-800">{crop.window}</span>
+                    <span className="font-bold text-slate-800">{getLocalizedWindow(crop.window)}</span>
                   </div>
                   <div className="text-right">
                     <span className="text-[10px] block text-slate-400">{t.rainThreshold || "Rain Threshold"}</span>
-                    <span className="font-bold text-emerald-700">{crop.moisture}</span>
+                    <span className="font-bold text-emerald-700">{getLocalizedMoisture(crop.moisture)}</span>
                   </div>
                 </div>
 
