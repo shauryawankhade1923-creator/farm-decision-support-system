@@ -87,6 +87,15 @@ export default function HomeScreen({
           image: "/crops/wheat_golden.jpg"
         },
         {
+          id: "Gram",
+          name: "Gram (Digvijay)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "High Yielding",
+          moisture: "35-50 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
           id: "Groundnut",
           name: "Groundnut (JL 24)",
           category: "Kharif Legume",
@@ -94,11 +103,20 @@ export default function HomeScreen({
           status: "Well-Drained Loam",
           moisture: "30-40 mm",
           image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Jowar",
+          name: "Rabi Jowar (Maldandi M 35-1)",
+          category: "Rabi Grain",
+          window: "15 Sept - 15 Oct",
+          status: "Drought Resilient",
+          moisture: "25-35 mm",
+          image: "/crops/maize_corn_cobs.jpg"
         }
       ]
     },
     "Nagpur": {
-      state: "Vidarbha Region",
+      state: "Eastern Vidarbha",
       lat: 21.1458,
       lng: 79.0882,
       soil: "heavy",
@@ -124,6 +142,33 @@ export default function HomeScreen({
           status: "Short Duration",
           moisture: "45-60 mm",
           image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Pigeonpea",
+          name: "Pigeonpea / Tur (BSMR 736)",
+          category: "Intercrop Pulse",
+          window: "15 June - 05 July",
+          status: "High Protein",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_plant.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Vijay / Digvijay)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "Residual Moisture",
+          moisture: "35-50 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Wheat",
+          name: "Lokwan Wheat",
+          category: "Winter Grain",
+          window: "05 - 25 Nov",
+          status: "Cool Nights",
+          moisture: "Pre-sown Irrigation",
+          image: "/crops/wheat_golden.jpg"
         }
       ]
     },
@@ -163,6 +208,24 @@ export default function HomeScreen({
           status: "Optimal Rain",
           moisture: "50-70 mm",
           image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Digvijay)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "High Yielding",
+          moisture: "35-50 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Bajra",
+          name: "Bajra (Shraddha / Saburi)",
+          category: "Kharif Millet",
+          window: "20 June - 15 July",
+          status: "Light Soil Specialist",
+          moisture: "25-35 mm",
+          image: "/crops/wheat_ears.jpg"
         }
       ]
     },
@@ -193,6 +256,33 @@ export default function HomeScreen({
           status: "Fast Ripening",
           moisture: "40-55 mm",
           image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Pigeonpea",
+          name: "Pigeonpea / Tur (Asha / BDN 711)",
+          category: "Intercrop Pulse",
+          window: "20 June - 05 July",
+          status: "High Protein",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_plant.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Jaki 9218)",
+          category: "Rabi Legume",
+          window: "15 Oct - 15 Nov",
+          status: "Wilt Resistant",
+          moisture: "35-45 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Jowar",
+          name: "Rabi Jowar (Maldandi)",
+          category: "Rabi Grain",
+          window: "15 Sept - 10 Oct",
+          status: "Drought Resilient",
+          moisture: "25-35 mm",
+          image: "/crops/maize_corn_cobs.jpg"
         }
       ]
     },
@@ -207,11 +297,29 @@ export default function HomeScreen({
       humidity: "58%",
       crops: [
         {
+          id: "Jowar",
+          name: "Rabi Jowar (Maldandi M 35-1)",
+          category: "Rabi Grain",
+          window: "15 Sept - 15 Oct",
+          status: "Drought Resilient",
+          moisture: "25-35 mm",
+          image: "/crops/maize_corn_cobs.jpg"
+        },
+        {
           id: "Groundnut",
           name: "Groundnut (TAG 24)",
           category: "Semi-Arid Legume",
           window: "15 June - 10 July",
           status: "Light Soil Specialist",
+          moisture: "30-40 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Vijay)",
+          category: "Rabi Legume",
+          window: "10 Oct - 05 Nov",
+          status: "Low Water Need",
           moisture: "30-40 mm",
           image: "/crops/groundnut_harvest.jpg"
         },
@@ -223,6 +331,15 @@ export default function HomeScreen({
           status: "Drought Resilient",
           moisture: "25-35 mm",
           image: "/crops/maize_corn_cobs.jpg"
+        },
+        {
+          id: "Pigeonpea",
+          name: "Pigeonpea / Tur (BSMR 853)",
+          category: "Intercrop Pulse",
+          window: "20 June - 10 July",
+          status: "Dryland Pulse",
+          moisture: "45-60 mm",
+          image: "/crops/soybean_plant.jpg"
         }
       ]
     },
@@ -238,8 +355,8 @@ export default function HomeScreen({
       crops: [
         {
           id: "Cotton",
-          name: "Bt Cotton",
-          category: "Cash Crop",
+          name: "Bt Cotton (Ajeet 155 / Rasi)",
+          category: "Black Soil Cash Crop",
           window: "20 June - 05 July",
           status: "Black Soil Tracts",
           moisture: "70-90 mm",
@@ -247,12 +364,849 @@ export default function HomeScreen({
         },
         {
           id: "Soybean",
-          name: "Soybean",
+          name: "Soybean (JS 335)",
           category: "Kharif Staple",
           window: "15 - 30 June",
           status: "Monsoon Dependent",
           moisture: "50-70 mm",
           image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Bajra",
+          name: "Bajra (Shraddha)",
+          category: "Kharif Millet",
+          window: "15 June - 10 July",
+          status: "Light Soil Specialist",
+          moisture: "25-35 mm",
+          image: "/crops/wheat_ears.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Digvijay)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "High Yielding",
+          moisture: "35-50 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Jowar",
+          name: "Rabi Jowar (Maldandi)",
+          category: "Rabi Grain",
+          window: "15 Sept - 15 Oct",
+          status: "Drought Resilient",
+          moisture: "25-35 mm",
+          image: "/crops/maize_corn_cobs.jpg"
+        }
+      ]
+    },
+    "Amravati": {
+      state: "Vidarbha Region",
+      lat: 20.9374,
+      lng: 77.7796,
+      soil: "heavy",
+      temp: "30°C",
+      weather: "Warm & Dry",
+      rain7d: "1.2mm",
+      humidity: "52%",
+      crops: [
+        {
+          id: "Soybean",
+          name: "Soybean (JS 335)",
+          category: "Kharif Oilseed",
+          window: "15 - 28 June",
+          status: "Regional Dominance",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Cotton",
+          name: "Bt Cotton (Bollgard II)",
+          category: "Black Soil Cash Crop",
+          window: "20 June - 05 July",
+          status: "Deep Black Regur",
+          moisture: "75-95 mm",
+          image: "/crops/cotton_bolls.jpg"
+        },
+        {
+          id: "Pigeonpea",
+          name: "Pigeonpea / Tur (BSMR 736)",
+          category: "Intercrop Pulse",
+          window: "15 June - 05 July",
+          status: "High Protein",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_plant.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Jaki 9218)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "Wilt Resistant",
+          moisture: "35-45 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        }
+      ]
+    },
+    "Yavatmal": {
+      state: "Vidarbha Region",
+      lat: 20.3888,
+      lng: 78.1204,
+      soil: "heavy",
+      temp: "31°C",
+      weather: "Sunny & Warm",
+      rain7d: "0.9mm",
+      humidity: "50%",
+      crops: [
+        {
+          id: "Cotton",
+          name: "Bt Cotton (Bollgard II)",
+          category: "Black Soil Cash Crop",
+          window: "20 June - 08 July",
+          status: "Regional Dominance",
+          moisture: "80-100 mm",
+          image: "/crops/cotton_bolls.jpg"
+        },
+        {
+          id: "Soybean",
+          name: "Soybean (JS 95-60)",
+          category: "Early Kharif",
+          window: "18 June - 02 July",
+          status: "Fast Ripening",
+          moisture: "40-55 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Pigeonpea",
+          name: "Pigeonpea / Tur (Asha)",
+          category: "Intercrop Pulse",
+          window: "15 June - 05 July",
+          status: "High Protein",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_plant.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Vijay)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "Residual Moisture",
+          moisture: "35-50 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        }
+      ]
+    },
+    "Wardha": {
+      state: "Vidarbha Region",
+      lat: 20.7453,
+      lng: 78.6022,
+      soil: "heavy",
+      temp: "29°C",
+      weather: "Partly Sunny",
+      rain7d: "1.8mm",
+      humidity: "55%",
+      crops: [
+        {
+          id: "Cotton",
+          name: "Bt Cotton (Bollgard II)",
+          category: "Black Soil Cash Crop",
+          window: "20 June - 05 July",
+          status: "Regional Dominance",
+          moisture: "75-100 mm",
+          image: "/crops/cotton_bolls.jpg"
+        },
+        {
+          id: "Soybean",
+          name: "Soybean (JS 335)",
+          category: "Kharif Oilseed",
+          window: "15 - 28 June",
+          status: "High Sowing Area",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Pigeonpea",
+          name: "Pigeonpea / Tur (BSMR 736)",
+          category: "Intercrop Pulse",
+          window: "15 June - 05 July",
+          status: "High Protein",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_plant.jpg"
+        },
+        {
+          id: "Wheat",
+          name: "Lokwan Wheat",
+          category: "Winter Grain",
+          window: "05 - 25 Nov",
+          status: "Cool Nights",
+          moisture: "Pre-sown Irrigation",
+          image: "/crops/wheat_golden.jpg"
+        }
+      ]
+    },
+    "Buldhana": {
+      state: "Vidarbha Region",
+      lat: 20.5293,
+      lng: 76.1843,
+      soil: "heavy",
+      temp: "28°C",
+      weather: "Partly Cloudy",
+      rain7d: "2.3mm",
+      humidity: "58%",
+      crops: [
+        {
+          id: "Soybean",
+          name: "Soybean (JS 95-60)",
+          category: "Kharif Oilseed",
+          window: "18 June - 02 July",
+          status: "Fast Ripening",
+          moisture: "45-60 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Cotton",
+          name: "Bt Cotton (Bollgard II)",
+          category: "Black Soil Cash Crop",
+          window: "20 June - 05 July",
+          status: "Black Soil Tracts",
+          moisture: "75-95 mm",
+          image: "/crops/cotton_bolls.jpg"
+        },
+        {
+          id: "Maize",
+          name: "Hybrid Sweet Corn / Maize",
+          category: "Grain & Fodder",
+          window: "15 June - 10 July",
+          status: "High Vigor",
+          moisture: "30-50 mm",
+          image: "/crops/maize_corn_cobs.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Jaki 9218)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "Wilt Resistant",
+          moisture: "35-45 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        }
+      ]
+    },
+    "Kolhapur": {
+      state: "Western Maharashtra",
+      lat: 16.7050,
+      lng: 74.2433,
+      soil: "heavy",
+      temp: "26°C",
+      weather: "Pleasant",
+      rain7d: "8.5mm",
+      humidity: "76%",
+      crops: [
+        {
+          id: "Soybean",
+          name: "Soybean (Phule Sangam KDS 726)",
+          category: "High Protein",
+          window: "10 - 25 June",
+          status: "High Sowing Area",
+          moisture: "60-80 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Groundnut",
+          name: "Groundnut (JL 24)",
+          category: "Kharif Legume",
+          window: "15 June - 05 July",
+          status: "Well-Drained Loam",
+          moisture: "35-45 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Wheat",
+          name: "Lokwan Wheat",
+          category: "Winter Grain",
+          window: "01 - 20 Nov",
+          status: "Irrigated Plots",
+          moisture: "Pre-sown Irrigation",
+          image: "/crops/wheat_golden.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Digvijay)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "High Yielding",
+          moisture: "35-50 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        }
+      ]
+    },
+    "Satara": {
+      state: "Western Maharashtra",
+      lat: 17.6805,
+      lng: 73.9997,
+      soil: "medium",
+      temp: "24°C",
+      weather: "Partly Sunny",
+      rain7d: "5.1mm",
+      humidity: "70%",
+      crops: [
+        {
+          id: "Soybean",
+          name: "Soybean (Phule Sangam)",
+          category: "Kharif Oilseed",
+          window: "15 - 30 June",
+          status: "High Sowing Area",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Groundnut",
+          name: "Groundnut (TAG 24)",
+          category: "Semi-Arid Legume",
+          window: "15 June - 05 July",
+          status: "Light Soil Specialist",
+          moisture: "30-40 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Jowar",
+          name: "Rabi Jowar (Maldandi)",
+          category: "Rabi Grain",
+          window: "15 Sept - 15 Oct",
+          status: "Drought Resilient",
+          moisture: "25-35 mm",
+          image: "/crops/maize_corn_cobs.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Digvijay)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "High Yielding",
+          moisture: "35-50 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Wheat",
+          name: "Lokwan Wheat",
+          category: "Winter Grain",
+          window: "05 - 20 Nov",
+          status: "Cool Nights",
+          moisture: "Pre-sown Irrigation",
+          image: "/crops/wheat_golden.jpg"
+        }
+      ]
+    },
+    "Sangli": {
+      state: "Southern Maharashtra",
+      lat: 16.8524,
+      lng: 74.5815,
+      soil: "medium",
+      temp: "27°C",
+      weather: "Clear Skies",
+      rain7d: "3.0mm",
+      humidity: "64%",
+      crops: [
+        {
+          id: "Soybean",
+          name: "Soybean (JS 335)",
+          category: "Kharif Oilseed",
+          window: "15 - 28 June",
+          status: "High Sowing Area",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Groundnut",
+          name: "Groundnut (JL 24)",
+          category: "Kharif Legume",
+          window: "15 June - 05 July",
+          status: "Well-Drained Loam",
+          moisture: "30-40 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Jowar",
+          name: "Rabi Jowar (Maldandi M 35-1)",
+          category: "Rabi Grain",
+          window: "15 Sept - 15 Oct",
+          status: "Drought Resilient",
+          moisture: "25-35 mm",
+          image: "/crops/maize_corn_cobs.jpg"
+        },
+        {
+          id: "Maize",
+          name: "Maize (African Tall / Pioneer)",
+          category: "Fodder & Grain",
+          window: "20 June - 15 July",
+          status: "High Vigor",
+          moisture: "30-45 mm",
+          image: "/crops/maize_corn_cobs.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Vijay)",
+          category: "Rabi Legume",
+          window: "10 Oct - 05 Nov",
+          status: "Low Water Need",
+          moisture: "30-40 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        }
+      ]
+    },
+    "Ahmednagar": {
+      state: "Western Maharashtra",
+      lat: 19.0948,
+      lng: 74.7480,
+      soil: "medium",
+      temp: "26°C",
+      weather: "Partly Sunny",
+      rain7d: "2.8mm",
+      humidity: "60%",
+      crops: [
+        {
+          id: "Bajra",
+          name: "Bajra (Shraddha / Saburi)",
+          category: "Kharif Millet",
+          window: "15 June - 10 July",
+          status: "Light Soil Specialist",
+          moisture: "25-35 mm",
+          image: "/crops/wheat_ears.jpg"
+        },
+        {
+          id: "Soybean",
+          name: "Soybean (JS 335)",
+          category: "Kharif Oilseed",
+          window: "15 - 30 June",
+          status: "High Sowing Area",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Jowar",
+          name: "Rabi Jowar (Maldandi M 35-1)",
+          category: "Rabi Grain",
+          window: "15 Sept - 15 Oct",
+          status: "Drought Resilient",
+          moisture: "25-35 mm",
+          image: "/crops/maize_corn_cobs.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Digvijay)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "High Yielding",
+          moisture: "35-50 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Wheat",
+          name: "Lokwan Wheat",
+          category: "Winter Grain",
+          window: "05 - 25 Nov",
+          status: "Cool Nights",
+          moisture: "Pre-sown Irrigation",
+          image: "/crops/wheat_golden.jpg"
+        }
+      ]
+    },
+    "Jalgaon": {
+      state: "Khandesh (North Maharashtra)",
+      lat: 21.0077,
+      lng: 75.5626,
+      soil: "heavy",
+      temp: "30°C",
+      weather: "Sunny & Warm",
+      rain7d: "2.5mm",
+      humidity: "56%",
+      crops: [
+        {
+          id: "Cotton",
+          name: "Bt Cotton (Bollgard II)",
+          category: "Black Soil Cash Crop",
+          window: "20 June - 05 July",
+          status: "Regional Dominance",
+          moisture: "75-100 mm",
+          image: "/crops/cotton_bolls.jpg"
+        },
+        {
+          id: "Maize",
+          name: "Hybrid Sweet Corn / Maize",
+          category: "Grain & Fodder",
+          window: "10 June - 10 July",
+          status: "High Vigor",
+          moisture: "30-50 mm",
+          image: "/crops/maize_corn_cobs.jpg"
+        },
+        {
+          id: "Bajra",
+          name: "Bajra (Shraddha)",
+          category: "Kharif Millet",
+          window: "15 June - 10 July",
+          status: "Light Soil Specialist",
+          moisture: "25-35 mm",
+          image: "/crops/wheat_ears.jpg"
+        },
+        {
+          id: "Soybean",
+          name: "Soybean (JS 335)",
+          category: "Kharif Oilseed",
+          window: "18 June - 02 July",
+          status: "High Sowing Area",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Wheat",
+          name: "Lokwan Wheat",
+          category: "Winter Grain",
+          window: "05 - 25 Nov",
+          status: "Cool Nights",
+          moisture: "Pre-sown Irrigation",
+          image: "/crops/wheat_golden.jpg"
+        }
+      ]
+    },
+    "Dhule": {
+      state: "Khandesh (North Maharashtra)",
+      lat: 20.9042,
+      lng: 74.7749,
+      soil: "medium",
+      temp: "29°C",
+      weather: "Warm & Dry",
+      rain7d: "1.9mm",
+      humidity: "53%",
+      crops: [
+        {
+          id: "Cotton",
+          name: "Bt Cotton (Bollgard II)",
+          category: "Black Soil Cash Crop",
+          window: "20 June - 05 July",
+          status: "Black Soil Tracts",
+          moisture: "75-95 mm",
+          image: "/crops/cotton_bolls.jpg"
+        },
+        {
+          id: "Bajra",
+          name: "Bajra (Saburi)",
+          category: "Kharif Millet",
+          window: "15 June - 10 July",
+          status: "Light Soil Specialist",
+          moisture: "25-35 mm",
+          image: "/crops/wheat_ears.jpg"
+        },
+        {
+          id: "Maize",
+          name: "Hybrid Sweet Corn / Maize",
+          category: "Grain & Fodder",
+          window: "15 June - 10 July",
+          status: "High Vigor",
+          moisture: "30-50 mm",
+          image: "/crops/maize_corn_cobs.jpg"
+        },
+        {
+          id: "Groundnut",
+          name: "Groundnut (JL 24)",
+          category: "Kharif Legume",
+          window: "20 June - 05 July",
+          status: "Well-Drained Loam",
+          moisture: "30-40 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Vijay)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "Low Water Need",
+          moisture: "35-45 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        }
+      ]
+    },
+    "Jalna": {
+      state: "Marathwada",
+      lat: 19.8410,
+      lng: 75.8864,
+      soil: "medium",
+      temp: "28°C",
+      weather: "Partly Sunny",
+      rain7d: "2.6mm",
+      humidity: "59%",
+      crops: [
+        {
+          id: "Cotton",
+          name: "Bt Cotton (Bollgard II)",
+          category: "Black Soil Cash Crop",
+          window: "20 June - 05 July",
+          status: "Regional Dominance",
+          moisture: "75-95 mm",
+          image: "/crops/cotton_bolls.jpg"
+        },
+        {
+          id: "Soybean",
+          name: "Soybean (JS 335)",
+          category: "Kharif Oilseed",
+          window: "15 - 30 June",
+          status: "High Sowing Area",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Pigeonpea",
+          name: "Pigeonpea / Tur (BSMR 736)",
+          category: "Intercrop Pulse",
+          window: "15 June - 05 July",
+          status: "High Protein",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_plant.jpg"
+        },
+        {
+          id: "Bajra",
+          name: "Bajra (Shraddha)",
+          category: "Kharif Millet",
+          window: "15 June - 10 July",
+          status: "Light Soil Specialist",
+          moisture: "25-35 mm",
+          image: "/crops/wheat_ears.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Digvijay)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "High Yielding",
+          moisture: "35-50 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        }
+      ]
+    },
+    "Beed": {
+      state: "Marathwada",
+      lat: 18.9891,
+      lng: 75.7601,
+      soil: "medium",
+      temp: "29°C",
+      weather: "Warm & Dry",
+      rain7d: "1.7mm",
+      humidity: "54%",
+      crops: [
+        {
+          id: "Cotton",
+          name: "Bt Cotton (Bollgard II)",
+          category: "Black Soil Cash Crop",
+          window: "20 June - 08 July",
+          status: "Black Soil Tracts",
+          moisture: "75-95 mm",
+          image: "/crops/cotton_bolls.jpg"
+        },
+        {
+          id: "Soybean",
+          name: "Soybean (JS 95-60)",
+          category: "Drought Tolerant",
+          window: "18 June - 02 July",
+          status: "Fast Ripening",
+          moisture: "40-55 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Pigeonpea",
+          name: "Pigeonpea / Tur (Asha)",
+          category: "Intercrop Pulse",
+          window: "15 June - 05 July",
+          status: "High Protein",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_plant.jpg"
+        },
+        {
+          id: "Jowar",
+          name: "Rabi Jowar (Maldandi)",
+          category: "Rabi Grain",
+          window: "15 Sept - 15 Oct",
+          status: "Drought Resilient",
+          moisture: "25-35 mm",
+          image: "/crops/maize_corn_cobs.jpg"
+        },
+        {
+          id: "Bajra",
+          name: "Bajra (Shraddha)",
+          category: "Kharif Millet",
+          window: "15 June - 10 July",
+          status: "Light Soil Specialist",
+          moisture: "25-35 mm",
+          image: "/crops/wheat_ears.jpg"
+        }
+      ]
+    },
+    "Latur": {
+      state: "Marathwada",
+      lat: 18.4088,
+      lng: 76.5604,
+      soil: "medium",
+      temp: "28°C",
+      weather: "Clear Skies",
+      rain7d: "2.9mm",
+      humidity: "61%",
+      crops: [
+        {
+          id: "Soybean",
+          name: "Soybean (JS 335)",
+          category: "Kharif Oilseed",
+          window: "15 - 30 June",
+          status: "Regional Dominance",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Pigeonpea",
+          name: "Pigeonpea / Tur (BSMR 736)",
+          category: "Intercrop Pulse",
+          window: "15 June - 05 July",
+          status: "High Protein",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_plant.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Vijay / Digvijay)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "High Yielding",
+          moisture: "35-50 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Jowar",
+          name: "Rabi Jowar (Maldandi)",
+          category: "Rabi Grain",
+          window: "15 Sept - 15 Oct",
+          status: "Drought Resilient",
+          moisture: "25-35 mm",
+          image: "/crops/maize_corn_cobs.jpg"
+        },
+        {
+          id: "Groundnut",
+          name: "Groundnut (JL 24)",
+          category: "Kharif Legume",
+          window: "20 June - 05 July",
+          status: "Well-Drained Loam",
+          moisture: "30-40 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        }
+      ]
+    },
+    "Nanded": {
+      state: "Marathwada",
+      lat: 19.1383,
+      lng: 77.3210,
+      soil: "heavy",
+      temp: "29°C",
+      weather: "Partly Sunny",
+      rain7d: "3.1mm",
+      humidity: "63%",
+      crops: [
+        {
+          id: "Cotton",
+          name: "Bt Cotton (Bollgard II)",
+          category: "Black Soil Cash Crop",
+          window: "20 June - 05 July",
+          status: "Regional Dominance",
+          moisture: "75-100 mm",
+          image: "/crops/cotton_bolls.jpg"
+        },
+        {
+          id: "Soybean",
+          name: "Soybean (JS 335)",
+          category: "Kharif Oilseed",
+          window: "15 - 30 June",
+          status: "High Sowing Area",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Pigeonpea",
+          name: "Pigeonpea / Tur (BSMR 736)",
+          category: "Intercrop Pulse",
+          window: "15 June - 05 July",
+          status: "High Protein",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_plant.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Digvijay)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "High Yielding",
+          moisture: "35-50 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Jowar",
+          name: "Rabi Jowar (Maldandi)",
+          category: "Rabi Grain",
+          window: "15 Sept - 15 Oct",
+          status: "Drought Resilient",
+          moisture: "25-35 mm",
+          image: "/crops/maize_corn_cobs.jpg"
+        }
+      ]
+    },
+    "Chandrapur": {
+      state: "Eastern Vidarbha",
+      lat: 19.9615,
+      lng: 79.2961,
+      soil: "heavy",
+      temp: "30°C",
+      weather: "Warm & Dry",
+      rain7d: "2.0mm",
+      humidity: "55%",
+      crops: [
+        {
+          id: "Cotton",
+          name: "Bt Cotton (Bollgard II)",
+          category: "Black Soil Cash Crop",
+          window: "20 June - 05 July",
+          status: "Regional Dominance",
+          moisture: "75-100 mm",
+          image: "/crops/cotton_bolls.jpg"
+        },
+        {
+          id: "Soybean",
+          name: "Soybean (JS 335)",
+          category: "Kharif Oilseed",
+          window: "15 - 28 June",
+          status: "High Sowing Area",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_field.jpg"
+        },
+        {
+          id: "Pigeonpea",
+          name: "Pigeonpea / Tur (BSMR 736)",
+          category: "Intercrop Pulse",
+          window: "15 June - 05 July",
+          status: "High Protein",
+          moisture: "50-70 mm",
+          image: "/crops/soybean_plant.jpg"
+        },
+        {
+          id: "Gram",
+          name: "Gram (Jaki 9218)",
+          category: "Rabi Legume",
+          window: "15 Oct - 10 Nov",
+          status: "Wilt Resistant",
+          moisture: "35-45 mm",
+          image: "/crops/groundnut_harvest.jpg"
+        },
+        {
+          id: "Wheat",
+          name: "Lokwan Wheat",
+          category: "Winter Grain",
+          window: "05 - 25 Nov",
+          status: "Cool Nights",
+          moisture: "Pre-sown Irrigation",
+          image: "/crops/wheat_golden.jpg"
         }
       ]
     }
@@ -341,10 +1295,19 @@ export default function HomeScreen({
         "Baramati": "बारामती",
         "Amravati": "अमरावती",
         "Yavatmal": "यवतमाळ",
-        "Nanded": "नांदेड",
-        "Latur": "लातूर",
+        "Wardha": "वर्धा",
+        "Buldhana": "बुलढाणा",
+        "Kolhapur": "कोल्हापूर",
+        "Satara": "सातारा",
+        "Sangli": "सांगली",
+        "Ahmednagar": "अहमदनगर",
+        "Jalgaon": "जळगाव",
+        "Dhule": "धुळे",
         "Jalna": "जालना",
-        "Kolhapur": "कोल्हापूर"
+        "Beed": "बीड",
+        "Latur": "लातूर",
+        "Nanded": "नांदेड",
+        "Chandrapur": "चंद्रपूर"
       },
       hi: {
         "Pune": "पुणे",
@@ -356,10 +1319,19 @@ export default function HomeScreen({
         "Baramati": "बारामती",
         "Amravati": "अमरावती",
         "Yavatmal": "यवतमाल",
-        "Nanded": "नांदेड़",
-        "Latur": "लातूर",
+        "Wardha": "वर्धा",
+        "Buldhana": "बुलढाणा",
+        "Kolhapur": "कोल्हापुर",
+        "Satara": "सतारा",
+        "Sangli": "सांगली",
+        "Ahmednagar": "अहमदनगर",
+        "Jalgaon": "जलगांव",
+        "Dhule": "धुले",
         "Jalna": "जालना",
-        "Kolhapur": "कोल्हापुर"
+        "Beed": "बीड",
+        "Latur": "लातूर",
+        "Nanded": "नांदेड़",
+        "Chandrapur": "चंद्रपुर"
       }
     };
     return map[language]?.[d] || d;
@@ -369,7 +1341,9 @@ export default function HomeScreen({
     if (!r) return "";
     if (r.includes("Western")) return t.regWesternMaha || (language === "mr" ? "पश्चिम महाराष्ट्र" : language === "hi" ? "पश्चिम महाराष्ट्र" : r);
     if (r.includes("Central Vidarbha")) return t.regCentralVidarbha || (language === "mr" ? "मध्य विदर्भ" : language === "hi" ? "मध्य विदर्भ" : r);
+    if (r.includes("Eastern Vidarbha")) return t.regEasternVidarbha || (language === "mr" ? "पूर्व विदर्भ" : language === "hi" ? "पूर्वी विदर्भ" : r);
     if (r.includes("Vidarbha")) return t.regVidarbha || (language === "mr" ? "विदर्भ विभाग" : language === "hi" ? "विदर्भ क्षेत्र" : r);
+    if (r.includes("Khandesh")) return t.regKhandesh || (language === "mr" ? "खान्देश (उत्तर महाराष्ट्र)" : language === "hi" ? "खानदेश (उत्तर महाराष्ट्र)" : r);
     if (r.includes("North")) return t.regNorthMaha || (language === "mr" ? "उत्तर महाराष्ट्र" : language === "hi" ? "उत्तर महाराष्ट्र" : r);
     if (r.includes("Southern")) return t.regSouthMaha || (language === "mr" ? "दक्षिण महाराष्ट्र" : language === "hi" ? "दक्षिण महाराष्ट्र" : r);
     if (r.includes("Marathwada")) return t.regMarathwada || (language === "mr" ? "मराठवाडा" : language === "hi" ? "मराठवाड़ा" : r);
@@ -404,40 +1378,78 @@ export default function HomeScreen({
       if (name.includes("Soybean (JS 9305)")) return "सोयाबीन (JS 9305)";
       if (name.includes("Soybean (JS 95-60)")) return "सोयाबीन (JS 95-60)";
       if (name.includes("Soybean (MACS 1407)")) return "सोयाबीन (MACS 1407)";
+      if (name.includes("Soybean (Phule Sangam KDS 726)")) return "सोयाबीन (फुले संगम KDS 726)";
+      if (name.includes("Soybean (Phule Sangam)")) return "सोयाबीन (फुले संगम)";
       if (name.includes("Durum Wheat (Sharbati)")) return "डुरम गहू (शरबती)";
       if (name.includes("Lokwan Wheat")) return "लोकवन गहू";
       if (name.includes("Groundnut (JL 24)")) return "भुईमूग (JL 24)";
       if (name.includes("Groundnut (TAG 24)")) return "भुईमूग (TAG 24)";
       if (name.includes("Bt Cotton (Bollgard II)")) return "बीटी कापूस (बोलगार्ड II)";
-      if (name.includes("Hybrid Cotton (Ajeet 155 / Rasi)")) return "संकरित कापूस (अजित १५५ / राशी)";
+      if (name.includes("Bt Cotton (Ajeet 155 / Rasi)")) return "बीटी कापूस (अजित १५५ / राशी)";
       if (name.includes("Hybrid Cotton (Dr. PDKV)")) return "संकरित कापूस (डॉ. पंजाबराव देशमुख)";
-      if (name.includes("Maize (Pioneer / African Tall)")) return "मका (पायोनियर / आफ्रिकन टॉल)";
+      if (name.includes("Hybrid Sweet Corn / Maize")) return "मका (गोड / संकरित)";
       if (name.includes("Maize (African Tall / Pioneer)")) return "मका (आफ्रिकन टॉल / पायोनियर)";
+      if (name.includes("Gram (Digvijay)")) return "हरभरा (दिग्विजय)";
+      if (name.includes("Gram (Vijay / Digvijay)")) return "हरभरा (विजय / दिग्विजय)";
+      if (name.includes("Gram (Vijay)")) return "हरभरा (विजय)";
+      if (name.includes("Gram (Jaki 9218)")) return "हरभरा (जाकी ९२१८)";
+      if (name.includes("Pigeonpea / Tur (BSMR 736)")) return "तूर (BSMR ७३६)";
+      if (name.includes("Pigeonpea / Tur (Asha)")) return "तूर (आशा)";
+      if (name.includes("Pigeonpea / Tur (Asha / BDN 711)")) return "तूर (आशा / BDN ७११)";
+      if (name.includes("Pigeonpea / Tur (BSMR 853)")) return "तूर (BSMR ८५३)";
+      if (name.includes("Rabi Jowar (Maldandi M 35-1)")) return "रब्बी ज्वारी (मालदांडी M ३५-१)";
+      if (name.includes("Rabi Jowar (Maldandi)")) return "रब्बी ज्वारी (मालदांडी)";
+      if (name.includes("Bajra (Shraddha / Saburi)")) return "बाजरी (श्रद्धा / सबुरी)";
+      if (name.includes("Bajra (Shraddha)")) return "बाजरी (श्रद्धा)";
+      if (name.includes("Bajra (Saburi)")) return "बाजरी (सबुरी)";
       if (crop.id === "Soybean") return "सोयाबीन";
       if (crop.id === "Cotton") return "कापूस";
       if (crop.id === "Maize") return "मका";
       if (crop.id === "Wheat") return "गहू";
       if (crop.id === "Groundnut") return "भुईमूग";
+      if (crop.id === "Gram") return "हरभरा";
+      if (crop.id === "Pigeonpea") return "तूर";
+      if (crop.id === "Jowar") return "ज्वारी";
+      if (crop.id === "Bajra") return "बाजरी";
     }
     if (language === "hi") {
       if (name.includes("Soybean (JS 335)")) return "सोयाबीन (JS 335)";
       if (name.includes("Soybean (JS 9305)")) return "सोयाबीन (JS 9305)";
       if (name.includes("Soybean (JS 95-60)")) return "सोयाबीन (JS 95-60)";
       if (name.includes("Soybean (MACS 1407)")) return "सोयाबीन (MACS 1407)";
+      if (name.includes("Soybean (Phule Sangam KDS 726)")) return "सोयाबीन (फुले संगम KDS 726)";
+      if (name.includes("Soybean (Phule Sangam)")) return "सोयाबीन (फुले संगम)";
       if (name.includes("Durum Wheat (Sharbati)")) return "डूरम गेहूं (शरबती)";
       if (name.includes("Lokwan Wheat")) return "लोकवन गेहूं";
       if (name.includes("Groundnut (JL 24)")) return "मूंगफली (JL 24)";
       if (name.includes("Groundnut (TAG 24)")) return "मूंगफली (TAG 24)";
       if (name.includes("Bt Cotton (Bollgard II)")) return "बीटी कपास (बोलगार्ड II)";
-      if (name.includes("Hybrid Cotton (Ajeet 155 / Rasi)")) return "संकरित कपास (अजीत 155 / रासी)";
+      if (name.includes("Bt Cotton (Ajeet 155 / Rasi)")) return "बीटी कपास (अजीत 155 / रासी)";
       if (name.includes("Hybrid Cotton (Dr. PDKV)")) return "संकरित कपास (डॉ. PDKV)";
-      if (name.includes("Maize (Pioneer / African Tall)")) return "मक्का (पायोनियर / अफ्रीकन टॉल)";
+      if (name.includes("Hybrid Sweet Corn / Maize")) return "मक्का (हाइब्रिड / स्वीट कॉर्न)";
       if (name.includes("Maize (African Tall / Pioneer)")) return "मक्का (अफ्रीकन टॉल / पायोनियर)";
+      if (name.includes("Gram (Digvijay)")) return "चना (दिग्विजय)";
+      if (name.includes("Gram (Vijay / Digvijay)")) return "चना (विजय / दिग्विजय)";
+      if (name.includes("Gram (Vijay)")) return "चना (विजय)";
+      if (name.includes("Gram (Jaki 9218)")) return "चना (जाकी 9218)";
+      if (name.includes("Pigeonpea / Tur (BSMR 736)")) return "अरहर / तूर (BSMR 736)";
+      if (name.includes("Pigeonpea / Tur (Asha)")) return "अरहर / तूर (आशा)";
+      if (name.includes("Pigeonpea / Tur (Asha / BDN 711)")) return "अरहर / तूर (आशा / BDN 711)";
+      if (name.includes("Pigeonpea / Tur (BSMR 853)")) return "अरहर / तूर (BSMR 853)";
+      if (name.includes("Rabi Jowar (Maldandi M 35-1)")) return "रबी ज्वार (मालदांडी M 35-1)";
+      if (name.includes("Rabi Jowar (Maldandi)")) return "रबी ज्वार (मालदांडी)";
+      if (name.includes("Bajra (Shraddha / Saburi)")) return "बाजरा (श्रद्धा / सबुरी)";
+      if (name.includes("Bajra (Shraddha)")) return "बाजरा (श्रद्धा)";
+      if (name.includes("Bajra (Saburi)")) return "बाजरा (सबुरी)";
       if (crop.id === "Soybean") return "सोयाबीन";
       if (crop.id === "Cotton") return "कपास";
       if (crop.id === "Maize") return "मक्का";
       if (crop.id === "Wheat") return "गेहूं";
       if (crop.id === "Groundnut") return "मूंगफली";
+      if (crop.id === "Gram") return "चना";
+      if (crop.id === "Pigeonpea") return "अरहर / तूर";
+      if (crop.id === "Jowar") return "ज्वार";
+      if (crop.id === "Bajra") return "बाजरा";
     }
     return name;
   };
@@ -448,6 +1460,7 @@ export default function HomeScreen({
       return w
         .replace(/June/gi, "जून")
         .replace(/July/gi, "जुलै")
+        .replace(/Sept|September/gi, "सप्टेंबर")
         .replace(/Nov/gi, "नोव्हेंबर")
         .replace(/Oct/gi, "ऑक्टोबर");
     }
@@ -455,6 +1468,7 @@ export default function HomeScreen({
       return w
         .replace(/June/gi, "जून")
         .replace(/July/gi, "जुलाई")
+        .replace(/Sept|September/gi, "सितंबर")
         .replace(/Nov/gi, "नवंबर")
         .replace(/Oct/gi, "अक्टूबर");
     }
@@ -484,32 +1498,42 @@ export default function HomeScreen({
       mr: {
         "High Sowing Area": "प्रमुख पेरणी क्षेत्र",
         "Irrigated Plots": "बागायत क्षेत्र",
+        "High Yielding": "अधिक उत्पादन देणारे",
         "Well-Drained Loam": "निचरा होणारी जमीन",
+        "Drought Resilient": "दुष्काळ सहनशील",
         "Regional Dominance": "प्रादेशिक मुख्य पीक",
         "Short Duration": "कमी कालावधी वाण",
-        "High Vigor": "जोमदार वाढ",
+        "Residual Moisture": "ओलाव्यावर येणारे",
         "Cool Nights": "थंड हवामान",
+        "High Vigor": "जोमदार वाढ",
         "Optimal Rain": "योग्य पाऊस",
+        "Light Soil Specialist": "हलक्या जमिनीत उत्तम",
         "Deep Black Regur": "काळी कसदार जमीन",
         "Fast Ripening": "जलद पक्व होणारे",
-        "Light Soil Specialist": "हलक्या जमिनीत उत्तम",
-        "Drought Resilient": "दुष्काळ सहनशील",
+        "Wilt Resistant": "मर रोग प्रतिकारक",
+        "Low Water Need": "कमी पाण्याची गरज",
+        "Dryland Pulse": "कोरडवाहू कडधान्य",
         "Black Soil Tracts": "काळी जमीन पट्टा",
         "Monsoon Dependent": "पावसावर अवलंबून"
       },
       hi: {
         "High Sowing Area": "प्रमुख बुवाई क्षेत्र",
         "Irrigated Plots": "सिंचित क्षेत्र",
+        "High Yielding": "उच्च उपज देने वाली",
         "Well-Drained Loam": "उचित जल निकासी",
+        "Drought Resilient": "सूखा सहनशील",
         "Regional Dominance": "क्षेत्रीय मुख्य फसल",
         "Short Duration": "कम अवधि की किस्म",
-        "High Vigor": "तीव्र विकास",
+        "Residual Moisture": "संरक्षित नमी पर",
         "Cool Nights": "ठंडा मौसम",
+        "High Vigor": "तीव्र विकास",
         "Optimal Rain": "अनुकूल बारिश",
+        "Light Soil Specialist": "हल्की मिट्टी में उत्तम",
         "Deep Black Regur": "काली उपजाऊ मिट्टी",
         "Fast Ripening": "जल्दी पकने वाली",
-        "Light Soil Specialist": "हल्की मिट्टी में उत्तम",
-        "Drought Resilient": "सूखा सहनशील",
+        "Wilt Resistant": "उकठा रोग प्रतिरोधी",
+        "Low Water Need": "कम पानी की आवश्यकता",
+        "Dryland Pulse": "शुष्क क्षेत्र दलहन",
         "Black Soil Tracts": "काली मिट्टी क्षेत्र",
         "Monsoon Dependent": "वर्षा आधारित"
       }
@@ -523,12 +1547,16 @@ export default function HomeScreen({
       mr: {
         "Kharif Oilseed": "खरीप गळीत धान्य",
         "Rabi Cereal": "रब्बी धान्य",
+        "Rabi Legume": "रब्बी कडधान्य",
         "Kharif Legume": "खरीप कडधान्य",
+        "Rabi Grain": "रब्बी तृणधान्य",
         "Black Soil Cash Crop": "काळी जमीन नगदी पीक",
         "Early Kharif": "हंगाम पूर्व खरीप",
+        "Intercrop Pulse": "आंतरपीक कडधान्य",
         "Grain & Fodder": "धान्य व चारा",
         "Winter Grain": "हिवाळी धान्य",
         "High Protein": "उच्च प्रथिने",
+        "Kharif Millet": "खरीप भरडधान्य (मिलेट्स)",
         "Rainfed Cotton": "जिरायती कापूस",
         "Drought Tolerant": "कमी पाण्यावर येणारे",
         "Semi-Arid Legume": "निम-कोरडवाहू कडधान्य",
@@ -539,12 +1567,16 @@ export default function HomeScreen({
       hi: {
         "Kharif Oilseed": "खरीफ तिलहन",
         "Rabi Cereal": "रबी खाद्यान्न",
+        "Rabi Legume": "रबी दलहन",
         "Kharif Legume": "खरीफ दलहन",
+        "Rabi Grain": "रबी अनाज",
         "Black Soil Cash Crop": "काली मिट्टी नकदी फसल",
         "Early Kharif": "अगेती खरीफ",
+        "Intercrop Pulse": "इंटरक्रॉप दलहन",
         "Grain & Fodder": "अनाज व चारा",
         "Winter Grain": "शीतकालीन अनाज",
         "High Protein": "उच्च प्रोटीन",
+        "Kharif Millet": "खरीफ मिलेट्स / बाजरा",
         "Rainfed Cotton": "वर्षा आधारित कपास",
         "Drought Tolerant": "सूखा सहनशील",
         "Semi-Arid Legume": "अर्ध-शुष्क दलहन",

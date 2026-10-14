@@ -45,6 +45,8 @@ export const translations = {
     "regCentralVidarbha": "Central Vidarbha",
     "regSouthMaha": "Southern Maharashtra",
     "regMarathwada": "Marathwada",
+    "regKhandesh": "Khandesh (North Maharashtra)",
+    "regEasternVidarbha": "Eastern Vidarbha",
 
     // Categories & Modes
     "catDuration": "Duration",
@@ -76,6 +78,10 @@ export const translations = {
     "cropMaize": "Maize / Corn",
     "cropWheat": "Wheat",
     "cropGroundnut": "Groundnut",
+    "cropGram": "Gram / Chickpea",
+    "cropTur": "Pigeonpea (Tur)",
+    "cropJowar": "Sorghum / Jowar",
+    "cropBajra": "Pearl Millet (Bajra)",
 
     // Sowing Form
     "formTitle": "Farm Details",
@@ -300,6 +306,8 @@ export const translations = {
     "regCentralVidarbha": "मध्य विदर्भ",
     "regSouthMaha": "दक्षिण महाराष्ट्र",
     "regMarathwada": "मराठवाडा",
+    "regKhandesh": "खान्देश (उत्तर महाराष्ट्र)",
+    "regEasternVidarbha": "पूर्व विदर्भ",
 
     // Categories & Modes
     "catDuration": "पेरणी नियोजन",
@@ -331,6 +339,10 @@ export const translations = {
     "cropMaize": "मका",
     "cropWheat": "गहू",
     "cropGroundnut": "भुईमूग",
+    "cropGram": "हरभरा (चना)",
+    "cropTur": "तूर (अरहर)",
+    "cropJowar": "ज्वारी (रब्बी/खरीप)",
+    "cropBajra": "बाजरी",
 
     // Sowing Form
     "formTitle": "शेताचा तपशील",
@@ -555,6 +567,8 @@ export const translations = {
     "regCentralVidarbha": "मध्य विदर्भ",
     "regSouthMaha": "दक्षिण महाराष्ट्र",
     "regMarathwada": "मराठवाड़ा",
+    "regKhandesh": "खानदेश (उत्तर महाराष्ट्र)",
+    "regEasternVidarbha": "पूर्वी विदर्भ",
 
     // Categories & Modes
     "catDuration": "बुवाई योजना",
@@ -586,6 +600,10 @@ export const translations = {
     "cropMaize": "मक्का",
     "cropWheat": "गेहूं",
     "cropGroundnut": "मूंगफली",
+    "cropGram": "चना (हरभरा)",
+    "cropTur": "अरहर / तूर",
+    "cropJowar": "ज्वार (रबी/खरीफ)",
+    "cropBajra": "बाजरा",
 
     // Sowing Form
     "formTitle": "खेत का विवरण",

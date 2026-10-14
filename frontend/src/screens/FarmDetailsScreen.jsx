@@ -73,6 +73,30 @@ export default function FarmDetailsScreen({
       label: language === "mr" ? "भुईमूग (JL 24)" : language === "hi" ? "मूंगफली (JL 24)" : "Groundnut (JL 24)", 
       price: `₹2,800/${t.acresUnit || "acre"}`, 
       rating: "4.6 (85)" 
+    },
+    { 
+      id: "Gram", 
+      label: language === "mr" ? "हरभरा (विजय / दिग्विजय)" : language === "hi" ? "चना (दिग्विजय)" : "Gram / Chickpea (Digvijay)", 
+      price: `₹2,200/${t.acresUnit || "acre"}`, 
+      rating: "4.8 (160)" 
+    },
+    { 
+      id: "Pigeonpea", 
+      label: language === "mr" ? "तूर (BSMR 736 / आशा)" : language === "hi" ? "तूर / अरहर (आशा)" : "Pigeonpea / Tur (Asha)", 
+      price: `₹2,600/${t.acresUnit || "acre"}`, 
+      rating: "4.7 (120)" 
+    },
+    { 
+      id: "Jowar", 
+      label: language === "mr" ? "ज्वारी (मालदांडी M 35-1)" : language === "hi" ? "ज्वार (मालदांडी)" : "Rabi Jowar (Maldandi)", 
+      price: `₹1,750/${t.acresUnit || "acre"}`, 
+      rating: "4.9 (230)" 
+    },
+    { 
+      id: "Bajra", 
+      label: language === "mr" ? "बाजरी (श्रद्धा / सबुरी)" : language === "hi" ? "बाजरा (सबुरी)" : "Pearl Millet / Bajra", 
+      price: `₹1,500/${t.acresUnit || "acre"}`, 
+      rating: "4.6 (90)" 
     }
   ];
 

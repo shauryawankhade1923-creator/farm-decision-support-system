@@ -38,6 +38,10 @@ export default function DecisionScreen({
     if (cropName.includes("Maize")) return language === "mr" ? "मका" : language === "hi" ? "मक्का" : cropName;
     if (cropName.includes("Wheat")) return language === "mr" ? "गहू" : language === "hi" ? "गेहूं" : cropName;
     if (cropName.includes("Groundnut")) return language === "mr" ? "भुईमूग" : language === "hi" ? "मूंगफली" : cropName;
+    if (cropName.includes("Gram") || cropName.includes("Chickpea")) return language === "mr" ? "हरभरा" : language === "hi" ? "चना" : cropName;
+    if (cropName.includes("Pigeonpea") || cropName.includes("Tur")) return language === "mr" ? "तूर" : language === "hi" ? "अरहर" : cropName;
+    if (cropName.includes("Jowar") || cropName.includes("Sorghum")) return language === "mr" ? "ज्वारी" : language === "hi" ? "ज्वार" : cropName;
+    if (cropName.includes("Bajra") || cropName.includes("Pearl Millet")) return language === "mr" ? "बाजरी" : language === "hi" ? "बाजरा" : cropName;
     return cropName;
   };
 

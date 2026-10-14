@@ -27,24 +27,40 @@ export default function ExplanationScreen({
     if (lower.includes("maize") || lower.includes("corn")) return t.cropMaize || "मका";
     if (lower.includes("wheat")) return t.cropWheat || "गहू";
     if (lower.includes("groundnut")) return t.cropGroundnut || "भुईमूग";
+    if (lower.includes("gram") || lower.includes("chickpea")) return t.cropGram || "हरभरा";
+    if (lower.includes("pigeonpea") || lower.includes("tur")) return t.cropTur || "तूर";
+    if (lower.includes("jowar") || lower.includes("sorghum")) return t.cropJowar || "ज्वारी";
+    if (lower.includes("bajra") || lower.includes("millet")) return t.cropBajra || "बाजरी";
     return cropName;
   };
 
   const getLocalizedRegion = (loc) => {
     if (!loc) return "";
     const lower = loc.toLowerCase();
-    if (lower.includes("nagpur")) return t.regionNagpur || "नागपूर";
-    if (lower.includes("amravati")) return t.regionAmravati || "अमरावती";
-    if (lower.includes("yavatmal")) return t.regionYavatmal || "यवतमाळ";
-    if (lower.includes("akola")) return t.regionAkola || "अकोला";
-    if (lower.includes("aurangabad") || lower.includes("chhatrapati")) return t.regionSambhajinagar || "छत्रपती संभाजीनगर";
-    if (lower.includes("nanded")) return t.regionNanded || "नांदेड";
-    if (lower.includes("latur")) return t.regionLatur || "लातूर";
-    if (lower.includes("jalna")) return t.regionJalna || "जालना";
-    if (lower.includes("pune")) return t.regionPune || "पुणे";
-    if (lower.includes("nashik")) return t.regionNashik || "नाशिक";
-    if (lower.includes("solapur")) return t.regionSolapur || "सोलापूर";
-    if (lower.includes("kolhapur")) return t.regionKolhapur || "कोल्हापूर";
+    const isMr = language === "mr";
+    const isHi = language === "hi";
+
+    if (lower.includes("nagpur")) return isMr ? "नागपूर" : isHi ? "नागपुर" : loc;
+    if (lower.includes("amravati")) return isMr ? "अमरावती" : isHi ? "अमरावती" : loc;
+    if (lower.includes("yavatmal")) return isMr ? "यवतमाळ" : isHi ? "यवतमाल" : loc;
+    if (lower.includes("akola")) return isMr ? "अकोला" : isHi ? "अकोला" : loc;
+    if (lower.includes("aurangabad") || lower.includes("chhatrapati") || lower.includes("sambhajinagar")) return isMr ? "छत्रपती संभाजीनगर" : isHi ? "छत्रपति संभाजीनगर" : loc;
+    if (lower.includes("nanded")) return isMr ? "नांदेड" : isHi ? "नांदेड़" : loc;
+    if (lower.includes("latur")) return isMr ? "लातूर" : isHi ? "लातूर" : loc;
+    if (lower.includes("jalna")) return isMr ? "जालना" : isHi ? "जालना" : loc;
+    if (lower.includes("beed")) return isMr ? "बीड" : isHi ? "बीड" : loc;
+    if (lower.includes("pune")) return isMr ? "पुणे" : isHi ? "पुणे" : loc;
+    if (lower.includes("nashik")) return isMr ? "नाशिक" : isHi ? "नाशिक" : loc;
+    if (lower.includes("solapur")) return isMr ? "सोलापूर" : isHi ? "सोलापुर" : loc;
+    if (lower.includes("kolhapur")) return isMr ? "कोल्हापूर" : isHi ? "कोल्हापुर" : loc;
+    if (lower.includes("satara")) return isMr ? "सातारा" : isHi ? "सतारा" : loc;
+    if (lower.includes("sangli")) return isMr ? "सांगली" : isHi ? "सांगली" : loc;
+    if (lower.includes("ahmednagar")) return isMr ? "अहमदनगर" : isHi ? "अहमदनगर" : loc;
+    if (lower.includes("jalgaon")) return isMr ? "जळगाव" : isHi ? "जलगांव" : loc;
+    if (lower.includes("dhule")) return isMr ? "धुळे" : isHi ? "धुले" : loc;
+    if (lower.includes("wardha")) return isMr ? "वर्धा" : isHi ? "वर्धा" : loc;
+    if (lower.includes("buldhana")) return isMr ? "बुलढाणा" : isHi ? "बुलढाणा" : loc;
+    if (lower.includes("chandrapur")) return isMr ? "चंद्रपूर" : isHi ? "चंद्रपुर" : loc;
     return loc;
   };
 

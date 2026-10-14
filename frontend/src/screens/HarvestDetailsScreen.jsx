@@ -72,6 +72,30 @@ export default function HarvestDetailsScreen({
       label: language === "mr" ? "भुईमूग (पक्व शेंगा)" : language === "hi" ? "मूंगफली (पकी फलियां)" : "Groundnut Mature Pods", 
       maturity: language === "mr" ? "१०५-१२० दिवस" : language === "hi" ? "१०५-१२० दिन" : "105-120 Days", 
       rating: "4.6 (78)" 
+    },
+    { 
+      id: "Gram", 
+      label: language === "mr" ? "हरभरा (वाळलेले घाटे)" : language === "hi" ? "चना (सूखे दाने/घाटे)" : "Gram Mature Pods", 
+      maturity: language === "mr" ? "९५-१०५ दिवस" : language === "hi" ? "९५-१०५ दिन" : "95-105 Days", 
+      rating: "4.8 (142)" 
+    },
+    { 
+      id: "Pigeonpea", 
+      label: language === "mr" ? "तूर (तपकिरी शेंगा)" : language === "hi" ? "अरहर / तूर (पकी फलियां)" : "Pigeonpea Dry Pods", 
+      maturity: language === "mr" ? "१४०-१६० दिवस" : language === "hi" ? "१४०-१६० दिन" : "140-160 Days", 
+      rating: "4.7 (115)" 
+    },
+    { 
+      id: "Jowar", 
+      label: language === "mr" ? "रब्बी ज्वारी (पक्व कणसे)" : language === "hi" ? "रबी ज्वार (पके भुट्टे)" : "Rabi Jowar Heads", 
+      maturity: language === "mr" ? "११०-१२५ दिवस" : language === "hi" ? "११०-१२५ दिन" : "110-125 Days", 
+      rating: "4.9 (210)" 
+    },
+    { 
+      id: "Bajra", 
+      label: language === "mr" ? "बाजरी (कापणीयोग्य ताटे)" : language === "hi" ? "बाजरा (कटाई योग्य सिट्टे)" : "Bajra Mature Heads", 
+      maturity: language === "mr" ? "८०-९० दिवस" : language === "hi" ? "८०-९० दिन" : "80-90 Days", 
+      rating: "4.6 (88)" 
     }
   ];
 
