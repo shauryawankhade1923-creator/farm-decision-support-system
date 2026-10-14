@@ -22,9 +22,46 @@ export default function SavedFieldsScreen({ onSelectField, onNewCheck, language 
     loadFields();
   }, []);
 
+  const getLocalizedCropName = (cropName) => {
+    if (!cropName) return "";
+    const lower = cropName.toLowerCase();
+    if (lower.includes("soybean")) return t.cropSoybean || "सोयाबीन";
+    if (lower.includes("cotton")) return t.cropCotton || "कापूस";
+    if (lower.includes("maize") || lower.includes("corn")) return t.cropMaize || "मका";
+    if (lower.includes("wheat")) return t.cropWheat || "गहू";
+    if (lower.includes("groundnut")) return t.cropGroundnut || "भुईमूग";
+    return cropName;
+  };
+
+  const getLocalizedRegion = (loc) => {
+    if (!loc) return "";
+    const lower = loc.toLowerCase();
+    if (lower.includes("nagpur")) return t.regionNagpur || "नागपूर";
+    if (lower.includes("amravati")) return t.regionAmravati || "अमरावती";
+    if (lower.includes("yavatmal")) return t.regionYavatmal || "यवतमाळ";
+    if (lower.includes("akola")) return t.regionAkola || "अकोला";
+    if (lower.includes("aurangabad") || lower.includes("chhatrapati")) return t.regionSambhajinagar || "छत्रपती संभाजीनगर";
+    if (lower.includes("nanded")) return t.regionNanded || "नांदेड";
+    if (lower.includes("latur")) return t.regionLatur || "लातूर";
+    if (lower.includes("jalna")) return t.regionJalna || "जालना";
+    if (lower.includes("pune")) return t.regionPune || "पुणे";
+    if (lower.includes("nashik")) return t.regionNashik || "नाशिक";
+    if (lower.includes("solapur")) return t.regionSolapur || "सोलापूर";
+    if (lower.includes("kolhapur")) return t.regionKolhapur || "कोल्हापूर";
+    return loc;
+  };
+
+  const getLocalizedSoil = (soil) => {
+    if (!soil) return "";
+    const lower = soil.toLowerCase();
+    if (lower.includes("light") || lower.includes("sandy")) return t.soilLight || "हलकी / वालुकामय";
+    if (lower.includes("heavy") || lower.includes("clay") || lower.includes("regur")) return t.soilHeavy || "भारी काळी (रेगूर)";
+    return t.soilMedium || "मध्यम काळी जमीन";
+  };
+
   const handleDelete = async (id, e) => {
     e.stopPropagation();
-    if (window.confirm("Remove this field profile?")) {
+    if (window.confirm(t.deleteFieldConfirm || "Remove this field profile?")) {
       const ok = await deleteField(id);
       if (ok) {
         setFields(fields.filter((f) => f.id !== id));
@@ -50,21 +87,21 @@ export default function SavedFieldsScreen({ onSelectField, onNewCheck, language 
           className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-black px-5 py-2.5 rounded-full shadow-md shadow-orange-500/20 transition flex items-center gap-2 cursor-pointer"
         >
           <Sprout className="w-4 h-4" />
-          <span>New Field Assessment</span>
+          <span>{t.newFieldAssessment || "New Field Assessment"}</span>
         </button>
       </div>
 
       {loading ? (
         <div className="py-12 text-center text-slate-500 text-sm">
           <div className="w-6 h-6 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-          Loading saved field profiles...
+          {t.loadingSavedFields || "Loading saved field profiles..."}
         </div>
       ) : fields.length === 0 ? (
         <div className="bg-white rounded-[2.5rem] p-12 text-center border border-slate-200/90 shadow-sm space-y-4">
           <div className="w-14 h-14 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center mx-auto border border-orange-100">
             <Bookmark className="w-7 h-7" />
           </div>
-          <h3 className="font-black text-slate-900 text-lg">No Saved Fields Yet</h3>
+          <h3 className="font-black text-slate-900 text-lg">{t.noSavedFieldsYet || "No Saved Fields Yet"}</h3>
           <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto font-medium">
             {t.emptySaved}
           </p>
@@ -72,7 +109,7 @@ export default function SavedFieldsScreen({ onSelectField, onNewCheck, language 
             onClick={onNewCheck}
             className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-black px-6 py-3 rounded-full text-xs transition inline-flex items-center gap-2 cursor-pointer shadow-md shadow-orange-500/20"
           >
-            <span>Assess a Field Now</span>
+            <span>{t.assessFieldNow || "Assess a Field Now"}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -100,23 +137,23 @@ export default function SavedFieldsScreen({ onSelectField, onNewCheck, language 
 
                 <div className="flex items-center gap-2 text-xs font-bold text-slate-600 mb-3">
                   <MapPin className="w-3.5 h-3.5 text-orange-500" />
-                  <span>{f.location}</span>
+                  <span>{getLocalizedRegion(f.location)}</span>
                   <span className="text-slate-300">•</span>
-                  <span className="text-orange-600 font-extrabold">{f.crop}</span>
+                  <span className="text-orange-600 font-extrabold">{getLocalizedCropName(f.crop)}</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-xs text-slate-600 bg-slate-50/80 p-3 rounded-2xl border border-slate-100">
                   <div className="flex items-center gap-1.5">
                     <Droplets className="w-3.5 h-3.5 text-sky-600" />
-                    <span>{f.irrigation_available ? "Irrigated" : "Rainfed"}</span>
+                    <span>{f.irrigation_available ? (t.irrigated || "Irrigated") : (t.rainfed || "Rainfed")}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5 text-amber-600" />
-                    <span className="capitalize">{f.soil_type} Soil</span>
+                    <span>{getLocalizedSoil(f.soil_type)}</span>
                   </div>
                   {f.land_size_acres && (
                     <div className="col-span-2 text-[11px] text-slate-400 pt-1">
-                      Plot size: {f.land_size_acres} Acres
+                      {t.plotSize || "Plot size:"} {f.land_size_acres} {t.acresUnit || "Acres"}
                     </div>
                   )}
                 </div>

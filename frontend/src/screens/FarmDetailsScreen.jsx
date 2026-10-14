@@ -44,11 +44,36 @@ export default function FarmDetailsScreen({
   };
 
   const currentCropsList = [
-    { id: "Soybean", label: "Soybean (सोयाबीन)", price: "₹2,400/acre", rating: "4.9 (192)" },
-    { id: "Cotton", label: "Bt Cotton (कापूस)", price: "₹3,100/acre", rating: "4.8 (145)" },
-    { id: "Maize", label: "Maize / Corn (मका)", price: "₹1,850/acre", rating: "4.7 (98)" },
-    { id: "Wheat", label: "Wheat (गहू)", price: "₹2,100/acre", rating: "4.9 (210)" },
-    { id: "Groundnut", label: "Groundnut (भुईमूग)", price: "₹2,800/acre", rating: "4.6 (85)" }
+    { 
+      id: "Soybean", 
+      label: language === "mr" ? "सोयाबीन (JS 335)" : language === "hi" ? "सोयाबीन (JS 335)" : "Soybean (JS 335)", 
+      price: `₹2,400/${t.acresUnit || "acre"}`, 
+      rating: "4.9 (192)" 
+    },
+    { 
+      id: "Cotton", 
+      label: language === "mr" ? "कापूस (बीटी कॉटन)" : language === "hi" ? "कपास (बीटी कॉटन)" : "Bt Cotton (Bollgard II)", 
+      price: `₹3,100/${t.acresUnit || "acre"}`, 
+      rating: "4.8 (145)" 
+    },
+    { 
+      id: "Maize", 
+      label: language === "mr" ? "मका (संकरित)" : language === "hi" ? "मक्का (हाइब्रिड)" : "Maize / Corn (Hybrid)", 
+      price: `₹1,850/${t.acresUnit || "acre"}`, 
+      rating: "4.7 (98)" 
+    },
+    { 
+      id: "Wheat", 
+      label: language === "mr" ? "गहू (शरबती)" : language === "hi" ? "गेहूं (शरबती)" : "Wheat (Sharbati)", 
+      price: `₹2,100/${t.acresUnit || "acre"}`, 
+      rating: "4.9 (210)" 
+    },
+    { 
+      id: "Groundnut", 
+      label: language === "mr" ? "भुईमूग (JL 24)" : language === "hi" ? "मूंगफली (JL 24)" : "Groundnut (JL 24)", 
+      price: `₹2,800/${t.acresUnit || "acre"}`, 
+      rating: "4.6 (85)" 
+    }
   ];
 
   const currentCropMeta = currentCropsList.find(c => c.id === formData.crop) || currentCropsList[0];
@@ -62,11 +87,21 @@ export default function FarmDetailsScreen({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.location || !formData.crop) {
-      setValidationError("Please fill all required field parameters.");
+      setValidationError(t.validationError || "Please fill all required field parameters.");
       return;
     }
     setValidationError("");
     onSubmit();
+  };
+
+  const getCropDescription = () => {
+    if (language === "mr") {
+      return `${currentCropMeta.label} पिकासाठी यशस्वी उगवणीकरिता किमान ५०-७५ मिमी संचयी पाऊस आणि जमिनीत चांगला ओलावा आवश्यक असतो. आमचे ICAR कृषी नियम आणि मशीन लर्निंग मॉडेल जमिनीची पाणी धरून ठेवण्याची क्षमता आणि १० दिवसांचा पावसाचा अंदाज तपासून अचूक निर्णय देतात.`;
+    }
+    if (language === "hi") {
+      return `${currentCropMeta.label} की सफल बुवाई और अंकुरण के लिए कम से कम ५०-७५ मिमी संचयी वर्षा और मिट्टी में पर्याप्त नमी जरूरी है। हमारा ICAR कृषि नियम और मशीन लर्निंग मॉडल मिट्टी की नमी और १० दिनों के वर्षा पूर्वानुमान का सत्यापन करता है।`;
+    }
+    return `${formData.crop} requires optimal cumulative rainfall of at least 50-75mm for successful seed germination. Our ICAR agro-climatic rules and Random Forest machine learning models continuously cross-verify soil saturation and 10-day rainfall dry spells.`;
   };
 
   return (
@@ -140,7 +175,7 @@ export default function FarmDetailsScreen({
               {currentCropMeta.label}
             </h3>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs font-bold text-emerald-700">ICAR Certified Protocol</span>
+              <span className="text-xs font-bold text-emerald-700">{t.icarProtocol || "ICAR Certified Protocol"}</span>
               <span className="text-slate-300">•</span>
               <span className="text-xs font-bold text-slate-500 flex items-center gap-1">
                 <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
@@ -160,7 +195,7 @@ export default function FarmDetailsScreen({
                 <Minus className="w-3 h-3" />
               </button>
               <span className="text-xs font-black text-slate-900 px-1">
-                {formData.land_size_acres || 3} ac
+                {formData.land_size_acres || 3} {t.acresUnit || "ac"}
               </span>
               <button
                 type="button"
@@ -175,15 +210,15 @@ export default function FarmDetailsScreen({
 
         {/* 4. DESCRIPTION */}
         <div className="space-y-2">
-          <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Crop Description & Water Needs</h4>
+          <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">{t.cropDescTitle || "Crop Description & Water Needs"}</h4>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-            {formData.crop} requires optimal cumulative rainfall of at least 50-75mm for successful seed germination. Our ICAR agro-climatic rules and Random Forest machine learning models continuously cross-verify soil saturation and 10-day rainfall dry spells.
+            {getCropDescription()}
           </p>
         </div>
 
         {/* 5. CROP SELECTOR CHIPS */}
         <div className="space-y-2">
-          <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Select Target Crop</h4>
+          <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">{t.selectTargetCrop || "Select Target Crop"}</h4>
           <div className="flex flex-wrap gap-2">
             {currentCropsList.map((c) => (
               <button
@@ -199,7 +234,7 @@ export default function FarmDetailsScreen({
                     : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
                 }`}
               >
-                {c.id}
+                {c.label}
               </button>
             ))}
           </div>
@@ -210,13 +245,13 @@ export default function FarmDetailsScreen({
           <div className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs space-y-1.5">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block flex items-center gap-1">
               <MapPin className="w-3 h-3 text-emerald-600" />
-              Target Location
+              {t.targetLocation || "Target Location"}
             </span>
             <input
               type="text"
               value={formData.location}
               onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-              placeholder="e.g. Pune, Akola"
+              placeholder={t.phLocation || "e.g. Pune, Akola"}
               className="w-full text-xs font-bold text-slate-900 bg-transparent focus:outline-none"
             />
           </div>
@@ -224,7 +259,7 @@ export default function FarmDetailsScreen({
           <div className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs space-y-1.5">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block flex items-center gap-1">
               <Layers className="w-3 h-3 text-emerald-600" />
-              Soil Type
+              {t.lblSoil || "Soil Type"}
             </span>
             <select
               value={formData.soil_type}
@@ -251,10 +286,10 @@ export default function FarmDetailsScreen({
           >
             <span className="flex items-center gap-1.5">
               <Droplets className="w-3.5 h-3.5 text-blue-500" />
-              Irrigation
+              {t.irrigation || "Irrigation"}
             </span>
             <span className="text-[10px] px-2 py-0.5 rounded-md bg-white border border-slate-200 font-black">
-              {formData.irrigation_available ? "YES" : "NO"}
+              {formData.irrigation_available ? (t.yes || "YES") : (t.no || "NO")}
             </span>
           </button>
 
@@ -269,10 +304,10 @@ export default function FarmDetailsScreen({
           >
             <span className="flex items-center gap-1.5">
               <Tractor className="w-3.5 h-3.5 text-amber-500" />
-              Plowed
+              {t.plowed || "Plowed"}
             </span>
             <span className="text-[10px] px-2 py-0.5 rounded-md bg-white border border-slate-200 font-black">
-              {formData.field_prepared ? "READY" : "WAIT"}
+              {formData.field_prepared ? (t.ready || "READY") : (t.pending || "WAIT")}
             </span>
           </button>
         </div>

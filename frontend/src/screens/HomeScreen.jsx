@@ -328,6 +328,122 @@ export default function HomeScreen({
     }
   ];
 
+  const getLocalizedRegion = (r) => {
+    if (!r) return "";
+    if (r.includes("Western")) return t.regWesternMaha || r;
+    if (r.includes("Central Vidarbha")) return t.regCentralVidarbha || r;
+    if (r.includes("Vidarbha")) return t.regVidarbha || r;
+    if (r.includes("North")) return t.regNorthMaha || r;
+    if (r.includes("Southern")) return t.regSouthMaha || r;
+    if (r.includes("Marathwada")) return t.regMarathwada || r;
+    return r;
+  };
+
+  const getLocalizedWeather = (w) => {
+    if (!w) return "";
+    if (w.includes("Partly Sunny")) return t.weatherPartlySunny || w;
+    if (w.includes("Sunny & Warm")) return t.weatherSunnyWarm || w;
+    if (w.includes("Pleasant")) return t.weatherPleasant || w;
+    if (w.includes("Warm & Dry")) return t.weatherWarmDry || w;
+    if (w.includes("Clear")) return t.weatherClearSkies || w;
+    if (w.includes("Partly Cloudy")) return t.weatherPartlyCloudy || w;
+    return w;
+  };
+
+  const getLocalizedSoil = (s) => {
+    if (s === "light") return t.soilLight || "Light";
+    if (s === "medium") return t.soilMedium || "Medium";
+    if (s === "heavy") return t.soilHeavy || "Heavy";
+    return s;
+  };
+
+  const getLocalizedCropName = (crop) => {
+    if (crop.id === "Soybean") return language === "mr" ? "सोयाबीन" : language === "hi" ? "सोयाबीन" : crop.name;
+    if (crop.id === "Cotton") return language === "mr" ? "कापूस (बीटी कॉटन)" : language === "hi" ? "कपास (बीटी कॉटन)" : crop.name;
+    if (crop.id === "Maize") return language === "mr" ? "मका" : language === "hi" ? "मक्का" : crop.name;
+    if (crop.id === "Wheat") return language === "mr" ? "गहू" : language === "hi" ? "गेहूं" : crop.name;
+    if (crop.id === "Groundnut") return language === "mr" ? "भुईमूग" : language === "hi" ? "मूंगफली" : crop.name;
+    return crop.name;
+  };
+
+  const getLocalizedStatus = (status) => {
+    if (!status) return "";
+    const map = {
+      mr: {
+        "High Sowing Area": "प्रमुख पेरणी क्षेत्र",
+        "Irrigated Plots": "बागायत क्षेत्र",
+        "Well-Drained Loam": "निचरा होणारी जमीन",
+        "Regional Dominance": "प्रादेशिक मुख्य पीक",
+        "Short Duration": "कमी कालावधी वाण",
+        "High Vigor": "जोमदार वाढ",
+        "Cool Nights": "थंड हवामान",
+        "Optimal Rain": "योग्य पाऊस",
+        "Deep Black Regur": "काळी कसदार जमीन",
+        "Fast Ripening": "जलद पक्व होणारे",
+        "Light Soil Specialist": "हलक्या जमिनीत उत्तम",
+        "Drought Resilient": "दुष्काळ सहनशील",
+        "Black Soil Tracts": "काळी जमीन पट्टा",
+        "Monsoon Dependent": "पावसावर अवलंबून"
+      },
+      hi: {
+        "High Sowing Area": "प्रमुख बुवाई क्षेत्र",
+        "Irrigated Plots": "सिंचित क्षेत्र",
+        "Well-Drained Loam": "उचित जल निकासी",
+        "Regional Dominance": "क्षेत्रीय मुख्य फसल",
+        "Short Duration": "कम अवधि की किस्म",
+        "High Vigor": "तीव्र विकास",
+        "Cool Nights": "ठंडा मौसम",
+        "Optimal Rain": "अनुकूल बारिश",
+        "Deep Black Regur": "काली उपजाऊ मिट्टी",
+        "Fast Ripening": "जल्दी पकने वाली",
+        "Light Soil Specialist": "हल्की मिट्टी में उत्तम",
+        "Drought Resilient": "सूखा सहनशील",
+        "Black Soil Tracts": "काली मिट्टी क्षेत्र",
+        "Monsoon Dependent": "वर्षा आधारित"
+      }
+    };
+    return map[language]?.[status] || status;
+  };
+
+  const getLocalizedCategory = (cat) => {
+    if (!cat) return "";
+    const map = {
+      mr: {
+        "Kharif Oilseed": "खरीप गळीत धान्य",
+        "Rabi Cereal": "रब्बी धान्य",
+        "Kharif Legume": "खरीप कडधान्य",
+        "Black Soil Cash Crop": "काळी जमीन नगदी पीक",
+        "Early Kharif": "हंगाम पूर्व खरीप",
+        "Grain & Fodder": "धान्य व चारा",
+        "Winter Grain": "हिवाळी धान्य",
+        "High Protein": "उच्च प्रथिने",
+        "Rainfed Cotton": "जिरायती कापूस",
+        "Drought Tolerant": "कमी पाण्यावर येणारे",
+        "Semi-Arid Legume": "निम-कोरडवाहू कडधान्य",
+        "Fodder & Grain": "चारा व धान्य",
+        "Cash Crop": "नगदी पीक",
+        "Kharif Staple": "खरीप मुख्य पीक"
+      },
+      hi: {
+        "Kharif Oilseed": "खरीफ तिलहन",
+        "Rabi Cereal": "रबी खाद्यान्न",
+        "Kharif Legume": "खरीफ दलहन",
+        "Black Soil Cash Crop": "काली मिट्टी नकदी फसल",
+        "Early Kharif": "अगेती खरीफ",
+        "Grain & Fodder": "अनाज व चारा",
+        "Winter Grain": "शीतकालीन अनाज",
+        "High Protein": "उच्च प्रोटीन",
+        "Rainfed Cotton": "वर्षा आधारित कपास",
+        "Drought Tolerant": "सूखा सहनशील",
+        "Semi-Arid Legume": "अर्ध-शुष्क दलहन",
+        "Fodder & Grain": "चारा व अनाज",
+        "Cash Crop": "नकदी फसल",
+        "Kharif Staple": "खरीफ मुख्य फसल"
+      }
+    };
+    return map[language]?.[cat] || cat;
+  };
+
   return (
     <div className="w-full max-w-xl mx-auto pb-24 font-sans text-slate-800 antialiased">
       
@@ -375,7 +491,7 @@ export default function HomeScreen({
           <div className="flex items-center justify-between text-xs text-emerald-200 font-bold px-1">
             <span>{t.selectDistrict || "Select Maharashtra Agricultural District:"}</span>
             <span className="text-[10px] bg-emerald-700/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
-              {currentDistrictData.state}
+              {getLocalizedRegion(currentDistrictData.state)}
             </span>
           </div>
 
@@ -388,7 +504,7 @@ export default function HomeScreen({
             >
               {Object.keys(DISTRICT_CROPS).map((dist) => (
                 <option key={dist} value={dist} className="text-slate-900 font-bold">
-                  {dist} District ({DISTRICT_CROPS[dist].state})
+                  {dist} ({getLocalizedRegion(DISTRICT_CROPS[dist].state)})
                 </option>
               ))}
             </select>
@@ -404,14 +520,14 @@ export default function HomeScreen({
             <div>
               <div className="flex items-center gap-1.5 text-slate-500 text-xs font-bold">
                 <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-                <span>{selectedDistrict}, {currentDistrictData.state}</span>
+                <span>{selectedDistrict}, {getLocalizedRegion(currentDistrictData.state)}</span>
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight">
                   {currentDistrictData.temp}
                 </span>
                 <span className="text-xs font-bold text-slate-400">
-                  {currentDistrictData.weather}
+                  {getLocalizedWeather(currentDistrictData.weather)}
                 </span>
               </div>
             </div>
@@ -438,10 +554,10 @@ export default function HomeScreen({
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">{t.soilType || "Soil Type"}</span>
-              <span className="text-xs sm:text-sm font-black text-emerald-700 uppercase mt-0.5 block">{currentDistrictData.soil}</span>
+              <span className="text-xs sm:text-sm font-black text-emerald-700 uppercase mt-0.5 block">{getLocalizedSoil(currentDistrictData.soil)}</span>
             </div>
             <div>
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Wind</span>
+              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">{t.wind || "Wind"}</span>
               <span className="text-xs sm:text-sm font-black text-slate-800 mt-0.5 block">3 m/s</span>
             </div>
           </div>
@@ -450,7 +566,7 @@ export default function HomeScreen({
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
             <div className="text-left">
               <span className="text-slate-800 font-black text-xs block">5:45 am</span>
-              <span className="text-[10px] text-slate-400 font-bold">Sunrise</span>
+              <span className="text-[10px] text-slate-400 font-bold">{t.sunrise || "Sunrise"}</span>
             </div>
 
             <div className="flex-1 mx-4 relative flex flex-col items-center">
@@ -468,7 +584,7 @@ export default function HomeScreen({
 
             <div className="text-right">
               <span className="text-slate-800 font-black text-xs block">6:42 pm</span>
-              <span className="text-[10px] text-slate-400 font-bold">Sunset</span>
+              <span className="text-[10px] text-slate-400 font-bold">{t.sunset || "Sunset"}</span>
             </div>
           </div>
 
@@ -478,8 +594,8 @@ export default function HomeScreen({
       {/* 3. INVEST BY CATEGORY */}
       <div className="px-6 mt-8 space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-black text-slate-900 tracking-tight">Decision Advisory Modes</h3>
-          <span className="text-xs font-bold text-emerald-700 cursor-pointer hover:underline">Instant Guide</span>
+          <h3 className="text-base font-black text-slate-900 tracking-tight">{t.decisionModesTitle || "Decision Advisory Modes"}</h3>
+          <span className="text-xs font-bold text-emerald-700 cursor-pointer hover:underline">{t.instantGuide || "Instant Guide"}</span>
         </div>
 
         <div className="grid grid-cols-4 gap-3">
@@ -509,17 +625,17 @@ export default function HomeScreen({
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-black text-slate-900 tracking-tight">
-              Crops Grown in {selectedDistrict}
+              {t.cropsGrownIn || "Crops Grown in"} {selectedDistrict}
             </h3>
             <span className="text-[11px] text-slate-500 font-medium">
-              Calibrated to {selectedDistrict}'s {currentDistrictData.soil} soil & rainfall
+              {t.calibratedTo || "Calibrated to soil & rainfall"}
             </span>
           </div>
           <button 
             onClick={onStartDecision} 
             className="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-0.5"
           >
-            All Crops <ArrowRight className="w-3 h-3" />
+            {t.allCrops || "All Crops"} <ArrowRight className="w-3 h-3" />
           </button>
         </div>
 
@@ -537,29 +653,29 @@ export default function HomeScreen({
                   className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                 />
                 <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-full bg-slate-900/70 backdrop-blur-md text-white text-[10px] font-bold">
-                  {crop.status}
+                  {getLocalizedStatus(crop.status)}
                 </div>
               </div>
 
               <div className="p-4 space-y-3">
                 <div>
-                  <span className="text-[10px] font-black text-emerald-700 uppercase tracking-wider">{crop.category}</span>
-                  <h4 className="text-sm font-black text-slate-900 mt-0.5">{crop.name}</h4>
+                  <span className="text-[10px] font-black text-emerald-700 uppercase tracking-wider">{getLocalizedCategory(crop.category)}</span>
+                  <h4 className="text-sm font-black text-slate-900 mt-0.5">{getLocalizedCropName(crop)}</h4>
                 </div>
 
                 <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-500">
                   <div>
-                    <span className="text-[10px] block text-slate-400">Sowing Window</span>
+                    <span className="text-[10px] block text-slate-400">{t.sowingWindow || "Sowing Window"}</span>
                     <span className="font-bold text-slate-800">{crop.window}</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] block text-slate-400">Rain Threshold</span>
+                    <span className="text-[10px] block text-slate-400">{t.rainThreshold || "Rain Threshold"}</span>
                     <span className="font-bold text-emerald-700">{crop.moisture}</span>
                   </div>
                 </div>
 
                 <button className="w-full py-2.5 rounded-xl bg-[#0B4628] hover:bg-[#0F5E37] text-white text-xs font-bold transition shadow-sm flex items-center justify-center gap-1">
-                  <span>{t.btnCheckSowing || "Evaluate for " + selectedDistrict}</span>
+                  <span>{t.btnCheckSowing || "Assess Sowing ->"}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>

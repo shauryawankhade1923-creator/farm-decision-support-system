@@ -31,47 +31,57 @@ export default function DecisionScreen({
     ml_prediction 
   } = decision;
 
+  const getLocalizedCropName = (cropName) => {
+    if (!cropName) return "";
+    if (cropName.includes("Soybean")) return language === "mr" ? "सोयाबीन" : language === "hi" ? "सोयाबीन" : cropName;
+    if (cropName.includes("Cotton")) return language === "mr" ? "कापूस" : language === "hi" ? "कपास" : cropName;
+    if (cropName.includes("Maize")) return language === "mr" ? "मका" : language === "hi" ? "मक्का" : cropName;
+    if (cropName.includes("Wheat")) return language === "mr" ? "गहू" : language === "hi" ? "गेहूं" : cropName;
+    if (cropName.includes("Groundnut")) return language === "mr" ? "भुईमूग" : language === "hi" ? "मूंगफली" : cropName;
+    return cropName;
+  };
+
   const getVerdictStyle = () => {
     switch (verdict) {
       case "HARVEST BEFORE INCOMING RAIN":
         return {
           bannerBg: "bg-rose-800",
-          headline: "HARVEST BEFORE INCOMING RAIN",
-          sub: "Heavy rainfall threatens within 48h! Advance harvest immediately.",
+          headline: t.harvestBeforeRainHeadline || "HARVEST BEFORE INCOMING RAIN",
+          sub: t.harvestBeforeRainSub || "Heavy rainfall threatens within 48h! Advance harvest immediately.",
           icon: AlertTriangle,
           statusColor: "text-rose-400"
         };
       case "HARVEST NOW":
         return {
           bannerBg: "bg-[#0B4628]",
-          headline: "HARVEST NOW - EXCELLENT WINDOW",
-          sub: "Crop is physiologically mature and weather offers a safe dry window.",
+          headline: t.harvestNowHeadline || "HARVEST NOW - EXCELLENT WINDOW",
+          sub: t.harvestNowSub || "Crop is physiologically mature and weather offers a safe dry window.",
           icon: CheckCircle2,
           statusColor: "text-emerald-300"
         };
       case "SOW NOW":
         return {
           bannerBg: "bg-[#0B4628]",
-          headline: "Today is a good day to sow.",
-          sub: "Soil moisture and weather conditions are aligned for rapid emergence.",
+          headline: t.sowNowHeadline || "Today is a good day to sow.",
+          sub: t.sowNowSub || "Soil moisture and weather conditions are aligned for rapid emergence.",
           icon: CheckCircle2,
           statusColor: "text-emerald-300"
         };
       case "WAIT":
         return {
           bannerBg: "bg-amber-800",
-          headline: "WAIT - DRY SPELL OR RAIN RISK",
+          headline: t.waitHeadline || "WAIT - DRY SPELL OR RAIN RISK",
           sub: flowMode === "harvest" 
-            ? "Crop not yet fully mature or post-harvest drying days inadequate."
-            : "Moisture deficit or dry gap detected in 7-day forecast. Postpone sowing.",
+            ? (t.waitSubHarvest || "Crop not yet fully mature or post-harvest drying days inadequate.")
+            : (t.waitSubSowing || "Moisture deficit or dry gap detected in 7-day forecast. Postpone sowing."),
           icon: Clock,
           statusColor: "text-amber-300"
         };
       default:
         return {
           bannerBg: "bg-rose-800",
-          headline: "CHANGE CROP OR POSTPONE",
-          sub: "High seasonal mortality risk for this specific crop under current moisture.",
+          headline: t.changeCropHeadline || "CHANGE CROP OR POSTPONE",
+          sub: t.changeCropSub || "High seasonal mortality risk for this specific crop under current moisture.",
           icon: AlertTriangle,
           statusColor: "text-rose-300"
         };
@@ -84,26 +94,32 @@ export default function DecisionScreen({
   const notesList = [
     {
       id: 1,
-      date: "Today . Live Telemetry",
+      date: t.noteLiveTelemetry || "Today • Live Telemetry",
       image: "/crops/soybean_pod.jpg",
-      title: `${farmerInput.crop}: ${verdict}`,
+      title: `${getLocalizedCropName(farmerInput.crop)}: ${vStyle.headline}`,
       text: summary?.reason || vStyle.sub
     },
     {
       id: 2,
-      date: "10-Day Horizon . Agronomy Rule",
+      date: t.noteAgronomyRule || "10-Day Horizon • Agronomy Rule",
       image: "/crops/wheat_golden.jpg",
-      title: `Recommended Window: ${recommended_window?.start_date || "Immediate"} to ${recommended_window?.end_date || "Next Week"}`,
-      text: summary?.risk_explanation || "Advisory based on ICAR agro-climatic rules and regional rainfall accumulation thresholds."
+      title: `${t.recWindowLabel || "Recommended Window"}: ${recommended_window?.start_date || (t.immediate || "Immediate")} - ${recommended_window?.end_date || (t.nextWeek || "Next Week")}`,
+      text: summary?.risk_explanation || t.ruleAdvisoryDesc || "Advisory based on ICAR agro-climatic rules and regional rainfall accumulation thresholds."
     },
     {
       id: 3,
-      date: "Machine Learning Confidence",
+      date: t.noteMlConfidence || "Machine Learning Confidence",
       image: "/crops/cotton_bolls.jpg",
-      title: `Confidence: ${confidence_pct}%`,
+      title: `${t.confidenceLabel || "Confidence"}: ${confidence_pct}%`,
       text: ml_prediction 
-        ? `Trained Random Forest Classifier predicts: ${ml_prediction.predicted_class} with ${ml_prediction.success_probability_pct}% emergence probability.`
-        : `Rule evaluation confirmed with ${confidence_pct}% agronomic confidence index.`
+        ? (language === "mr" 
+            ? `प्रशिक्षित रँडम फॉरेस्ट मॉडेल अंदाज: ${ml_prediction.predicted_class} (${ml_prediction.success_probability_pct}% उगवण संभाव्यता).` 
+            : language === "hi" 
+            ? `प्रशिक्षित रैंडम फॉरेस्ट मॉडल अनुमान: ${ml_prediction.predicted_class} (${ml_prediction.success_probability_pct}% अंकुरण संभावना)।` 
+            : `Trained Random Forest Classifier predicts: ${ml_prediction.predicted_class} with ${ml_prediction.success_probability_pct}% emergence probability.`)
+        : (language === "mr" 
+            ? `ICAR कृषी नियमांनुसार ${confidence_pct}% विश्वासार्हता निर्देशांक.` 
+            : `Rule evaluation confirmed with ${confidence_pct}% agronomic confidence index.`)
     }
   ];
 
@@ -120,7 +136,7 @@ export default function DecisionScreen({
           <ArrowLeft className="w-4 h-4" />
         </button>
 
-        <h2 className="text-base font-black tracking-tight text-slate-900">Today's Weather & Decision</h2>
+        <h2 className="text-base font-black tracking-tight text-slate-900">{t.decisionScreenTitle || "Today's Weather & Decision"}</h2>
 
         <div className="w-10 h-10 rounded-full bg-white border border-slate-200/80 shadow-xs flex items-center justify-center text-slate-700 relative">
           <Bell className="w-4 h-4" />
@@ -135,13 +151,13 @@ export default function DecisionScreen({
           <div className="flex items-start justify-between">
             <div>
               <span className="text-xs font-semibold text-emerald-200/80 block">
-                {farmerInput.location}, Today's Advisory
+                {farmerInput.location}, {t.todayAdvisorySub || "Today's Advisory"}
               </span>
               <div className="mt-2">
                 <span className="text-5xl font-black tracking-tight">28°C</span>
               </div>
               <p className="text-xs font-bold text-emerald-100/90 mt-1">
-                Humidity: 76% &nbsp;•&nbsp; {farmerInput.crop}
+                {t.humidityLabel || "Humidity"}: 76% &nbsp;•&nbsp; {getLocalizedCropName(farmerInput.crop)}
               </p>
             </div>
 
@@ -172,17 +188,17 @@ export default function DecisionScreen({
                   <Cpu className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-black text-slate-900">Random Forest Classifier</h4>
-                  <span className="text-[10px] text-slate-400 font-bold">Trained Emergence Model</span>
+                  <h4 className="text-xs font-black text-slate-900">{t.mlCardTitle || "Random Forest Classifier"}</h4>
+                  <span className="text-[10px] text-slate-400 font-bold">{t.mlCardSub || "Trained Emergence Model"}</span>
                 </div>
               </div>
               <span className="text-xs font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                {ml_prediction.success_probability_pct}% Emergence Prob
+                {ml_prediction.success_probability_pct}% {t.mlEmergenceProb || "Emergence Prob"}
               </span>
             </div>
 
             <p className="text-xs text-slate-600 font-medium leading-relaxed">
-              {ml_prediction.predicted_class}: The ML model verifies that soil moisture retention on {farmerInput.soil_type} soil paired with forecasted rainfall supports uniform germination.
+              <strong>{ml_prediction.predicted_class}</strong>: {t.mlVerificationText || "The ML model verifies that soil moisture retention supports uniform germination."}
             </p>
           </div>
         )}
@@ -190,7 +206,7 @@ export default function DecisionScreen({
         {/* 4. NOTES SECTION (Screen 3 Chronological Feed) */}
         <div className="space-y-3 pt-1">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-black text-slate-900 tracking-tight">Advisory Notes</h3>
+            <h3 className="text-base font-black text-slate-900 tracking-tight">{t.advisoryNotesTitle || "Advisory Notes"}</h3>
             <button
               onClick={onGoToCompare}
               className="w-7 h-7 rounded-full bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-700 transition"
@@ -228,7 +244,7 @@ export default function DecisionScreen({
             className="w-full py-4 rounded-full bg-[#0B4628] hover:bg-[#0F5E37] text-white font-black text-sm shadow-lg shadow-[#0B4628]/25 transition flex items-center justify-center gap-2 cursor-pointer active:scale-95"
           >
             <MessageSquare className="w-4 h-4" />
-            <span>+ Add Farmer Note & Review</span>
+            <span>{t.addFarmerNoteBtn || "+ Add Farmer Note & Review"}</span>
           </button>
 
           <div className="flex items-center gap-2">
@@ -236,14 +252,14 @@ export default function DecisionScreen({
               onClick={onGoToCompare}
               className="flex-1 py-3 rounded-2xl bg-white border border-slate-200/90 hover:bg-slate-50 text-slate-800 text-xs font-bold transition shadow-xs text-center"
             >
-              {t.btnCompare || "Compare Alternative Options"}
+              {t.compareAlternativeBtn || t.btnCompare || "Compare Alternative Options"}
             </button>
             <button
               onClick={onSaveField}
               className="px-4 py-3 rounded-2xl bg-white border border-slate-200/90 hover:bg-slate-50 text-slate-800 text-xs font-bold transition shadow-xs flex items-center gap-1.5"
             >
               <Bookmark className="w-3.5 h-3.5 text-emerald-600" />
-              <span>{t.btnSaveField || "Save Plot"}</span>
+              <span>{t.savePlotBtn || t.btnSaveField || "Save Plot"}</span>
             </button>
           </div>
         </div>

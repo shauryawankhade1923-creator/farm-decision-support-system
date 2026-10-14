@@ -238,44 +238,91 @@ export async function evaluateDecisionClient(farmerInput) {
       : `Rainfall forecast is slightly below the ${minReqRain}mm threshold. A 3-day dry spell post-sowing could cause seed stress. Postponing ensures higher emergence success.`;
   }
 
+  const isMr = lang === "mr";
+  const isHi = lang === "hi";
+
   const comparisonOptions = [
     {
       option_id: "sow_now",
-      label: "Sow Now",
+      label: isMr ? "आता पेरणी करा" : isHi ? "अभी बुवाई करें" : "Sow Now",
       risk: overallRisk,
       score: totalScore,
       recommended: verdict === "SOW NOW",
       available: true,
-      reason: verdict === "SOW NOW" ? "Adequate moisture profile and favorable seedbed conditions." : "Higher risk of early dry spell stress."
+      reason: isMr
+        ? (verdict === "SOW NOW" ? "जमिनीत पुरेसा ओलावा आणि बियाणे उगवण्यासाठी अनुकूल परिस्थिती." : "सुरुवातीला पावसाचा खंड पडून बियाणे वाया जाण्याचा धोका.")
+        : isHi
+        ? (verdict === "SOW NOW" ? "मिट्टी में पर्याप्त नमी और बीजों के अंकुरण के लिए अनुकूल स्थिति।" : "शुरुआती शुष्क दौर से बीजों के खराब होने का जोखिम।")
+        : (verdict === "SOW NOW" ? "Adequate moisture profile and favorable seedbed conditions." : "Higher risk of early dry spell stress.")
     },
     {
       option_id: "wait_few_days",
-      label: "Wait a Few Days",
+      label: isMr ? "काही दिवस थांबा" : isHi ? "कुछ दिन प्रतीक्षा करें" : "Wait a Few Days",
       risk: "Low",
       score: 82,
       recommended: verdict.includes("WAIT"),
       available: true,
-      reason: "Waiting 3-4 days allows soil temperature stabilization and tracks incoming monsoon clouds."
+      reason: isMr
+        ? "३-४ दिवस थांबल्यास जमिनीचे तापमान स्थिर होते आणि पुढील पावसाच्या आगमनाची खात्री होते."
+        : isHi
+        ? "३-४ दिन रुकने से मिट्टी का तापमान स्थिर होता है और आने वाले बादलों पर नजर रहती है।"
+        : "Waiting 3-4 days allows soil temperature stabilization and tracks incoming monsoon clouds."
     },
     {
       option_id: "irrigate_first",
-      label: "Pre-Sowing Irrigation",
+      label: isMr ? "पेरणीपूर्व हलके सिंचन" : isHi ? "बुवाई पूर्व हल्की सिंचाई" : "Pre-Sowing Irrigation",
       risk: farmerInput.irrigation_available ? "Low" : "High",
       score: farmerInput.irrigation_available ? 88 : 30,
       recommended: !rainfallPassed && farmerInput.irrigation_available,
       available: !!farmerInput.irrigation_available,
-      reason: farmerInput.irrigation_available ? "Light pre-sowing irrigation guarantees uniform germination." : "No irrigation facility available on this field."
+      reason: farmerInput.irrigation_available
+        ? (isMr ? "हलके सिंचन दिल्यास पावसाची वाट न पाहता एकसमान उगवण होते." : isHi ? "हल्की सिंचाई करने से बारिश पर निर्भरता कम होती है और एकसमान अंकुरण मिलता है।" : "Light pre-sowing irrigation guarantees uniform germination.")
+        : (isMr ? "या शेतात सिंचनाची सोय उपलब्ध नाही." : isHi ? "इस खेत में सिंचाई सुविधा उपलब्ध नहीं है।" : "No irrigation facility available on this field.")
     },
     {
       option_id: "change_crop",
-      label: "Switch to Resilient Crop",
+      label: isMr ? "कमी पाण्यावरील पर्यायी पीक" : isHi ? "वैकल्पिक सहनशील फसल" : "Switch to Resilient Crop",
       risk: "Medium",
       score: 70,
       recommended: verdict.includes("CONSIDER"),
       available: true,
-      reason: `Consider planting ${cropRule.alternatives_if_dry?.[0] || "Maize"} if monsoon onset continues to fluctuate.`
+      reason: isMr
+        ? `पावसाचा लहरीपणा चालू राहिल्यास ${cropRule.alternatives_if_dry?.[0] || "मका"} यासारख्या कमी पाण्यावर येणाऱ्या पिकाचा विचार करा.`
+        : isHi
+        ? `मानसून में अनिश्चितता रहने पर ${cropRule.alternatives_if_dry?.[0] || "मक्का"} जैसी कम पानी वाली फसल पर विचार करें।`
+        : `Consider planting ${cropRule.alternatives_if_dry?.[0] || "Maize"} if monsoon onset continues to fluctuate.`
     }
   ];
+
+  const keyDrivers = isMr
+    ? [
+        `७ दिवसांचा एकूण पाऊस: ${rainfall7d.toFixed(1)} मिमी (आवश्यक: ${minReqRain} मिमी)`,
+        `जमीन सुसंगतता: ${soilMatch ? "पिकासाठी अत्यंत योग्य" : "निवडलेल्या पिकासाठी कमी योग्य"}`,
+        `पावसाचा खंड (धोका): ${hasDryGap ? "पहिल्या ६ दिवसांत पावसाचा खंड आढळला" : "सलग पावसाचा खंड नाही (सुरक्षित)"}`
+      ]
+    : isHi
+    ? [
+        `७ दिनों की कुल वर्षा: ${rainfall7d.toFixed(1)} मिमी (आवश्यक: ${minReqRain} मिमी)`,
+        `मिट्टी अनुकूलता: ${soilMatch ? "फसल के लिए उत्तम अनुकूल" : "चुनी गई फसल के लिए सामान्य"}`,
+        `शुष्क दौर (जोखिम): ${hasDryGap ? "शुरुआती ६ दिनों में सूखा दौर देखा गया" : "कोई शुष्क दौर नहीं (सुरक्षित)"}`
+      ]
+    : [
+        `7-Day Cumulative Rain: ${rainfall7d.toFixed(1)}mm (Required: ${minReqRain}mm)`,
+        `Soil Compatibility: ${soilMatch ? "Well-Matched" : "Sub-optimal for selected crop"}`,
+        `Dry-Spell Risk: ${hasDryGap ? "Dry gap detected in first 6 days" : "No consecutive dry gap"}`
+      ];
+
+  const actionableAdvice = isMr
+    ? (verdict === "SOW NOW" ? "शिफारस केलेल्या ३ दिवसांच्या कालावधीत पेरणी पूर्ण करा." : "पुढील पाऊस पडेपर्यंत पेरणी थांबवा किंवा हलके सिंचन द्या.")
+    : isHi
+    ? (verdict === "SOW NOW" ? "अनुशंसित ३ दिनों के भीतर बुवाई पूरी करें।" : "अगले बारिश के दौर तक बुवाई रोकें या हल्की सिंचाई करें।")
+    : (verdict === "SOW NOW" ? "Proceed with sowing within the recommended 3-day window." : "Hold sowing until next rain cycle or apply light pre-sowing irrigation.");
+
+  const mlPredictedClass = isMr
+    ? (mlProb >= 65 ? "उत्कृष्ट उगवण स्थिती" : "उगवणीवर ताण / ओलावा कमतरता धोका")
+    : isHi
+    ? (mlProb >= 65 ? "अनुकूल अंकुरण स्थिति" : "अंकुरण तनाव / नमी की कमी का जोखिम")
+    : (mlProb >= 65 ? "Favorable Emergence" : "Emergence Stress / Moisture Deficit Risk");
 
   return {
     assessment_id: Date.now(),
@@ -317,28 +364,38 @@ export async function evaluateDecisionClient(farmerInput) {
     comparison_options: comparisonOptions,
     explanation: {
       narrative: explanationText,
-      key_drivers: [
-        `7-Day Cumulative Rain: ${rainfall7d.toFixed(1)}mm (Required: ${minReqRain}mm)`,
-        `Soil Compatibility: ${soilMatch ? "Well-Matched" : "Sub-optimal for selected crop"}`,
-        `Dry-Spell Risk: ${hasDryGap ? "Dry gap detected in first 6 days" : "No consecutive dry gap"}`
-      ],
-      actionable_advice: verdict === "SOW NOW"
-        ? "Proceed with sowing within the recommended 3-day window."
-        : "Hold sowing until next rain cycle or apply light pre-sowing irrigation."
+      key_drivers: keyDrivers,
+      actionable_advice: actionableAdvice
     },
     ml_prediction: {
       model_name: "Random Forest Classifier v1.0",
       success_probability_pct: mlProb,
-      predicted_class: mlProb >= 65 ? "Favorable Emergence" : "Emergence Stress / Moisture Deficit Risk",
+      predicted_class: mlPredictedClass,
       model_accuracy_pct: 78.4,
       model_roc_auc: 0.84,
-      top_drivers: {
-        "Rainfall Trajectory (7-day)": "49.0%",
-        "Temperature Profile": "11.4%",
-        "Seasonal Calendar Timing": "11.3%",
-        "Dry-Spell Persistence": "11.0%",
-        "Irrigation Buffer": "10.6%"
-      }
+      top_drivers: isMr
+        ? {
+            "पाऊस संचय (७ दिवस)": "49.0%",
+            "तापमान स्थिती": "11.4%",
+            "हंगामी दिनदर्शिका": "11.3%",
+            "पावसाचा खंड सातत्य": "11.0%",
+            "सिंचन बफर": "10.6%"
+          }
+        : isHi
+        ? {
+            "वर्षा संचय (७ दिन)": "49.0%",
+            "तापमान प्रोफ़ाइल": "11.4%",
+            "मौसमी कैलेंडर": "11.3%",
+            "शुष्क दौर निरंतरता": "11.0%",
+            "सिंचाई बफर": "10.6%"
+          }
+        : {
+            "Rainfall Trajectory (7-day)": "49.0%",
+            "Temperature Profile": "11.4%",
+            "Seasonal Calendar Timing": "11.3%",
+            "Dry-Spell Persistence": "11.0%",
+            "Irrigation Buffer": "10.6%"
+          }
     }
   };
 }
@@ -352,6 +409,10 @@ export async function evaluateHarvestDecisionClient(harvestInput) {
   const today = new Date();
   const diffTime = Math.abs(today - sowingDate);
   const daysSinceSowing = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  const lang = harvestInput.language || "en";
+  const isMr = lang === "mr";
+  const isHi = lang === "hi";
 
   const isMature = daysSinceSowing >= maturityDays;
   const rainNext5d = forecast.slice(0, 5).reduce((acc, d) => acc + d.precipitation_mm, 0);
@@ -391,30 +452,88 @@ export async function evaluateHarvestDecisionClient(harvestInput) {
       field_prepared: true
     },
     comparison_options: [
-      { option_id: "harvest_now", label: "Harvest Now", risk: "Low", score: 85, recommended: verdict === "HARVEST NOW", available: true, reason: "Optimal crop maturity with favorable post-harvest drying days." },
-      { option_id: "wait", label: "Wait a Few Days", risk: "Medium", score: 65, recommended: verdict === "WAIT", available: true, reason: "Grain is still maturing and accumulating starch." }
+      {
+        option_id: "harvest_now",
+        label: isMr ? "आता कापणी करा" : isHi ? "अभी कटाई करें" : "Harvest Now",
+        risk: "Low",
+        score: 85,
+        recommended: verdict === "HARVEST NOW",
+        available: true,
+        reason: isMr
+          ? "पीक पूर्ण पक्व असून कापणीनंतर सुकवण्यासाठी हवामान उत्तम आहे."
+          : isHi
+          ? "फसल पूर्ण परिपक्व है और कटाई के बाद सुखाने के लिए मौसम अनुकूल है।"
+          : "Optimal crop maturity with favorable post-harvest drying days."
+      },
+      {
+        option_id: "wait",
+        label: isMr ? "काही दिवस थांबा" : isHi ? "कुछ दिन प्रतीक्षा करें" : "Wait a Few Days",
+        risk: "Medium",
+        score: 65,
+        recommended: verdict === "WAIT",
+        available: true,
+        reason: isMr
+          ? "दाणे अजून भरत असून पक्वता बाकी आहे."
+          : isHi
+          ? "दाने अभी परिपक्व हो रहे हैं और स्टार्च संचित हो रहा है।"
+          : "Grain is still maturing and accumulating starch."
+      }
     ],
     explanation: {
-      narrative: `Days since sowing: ${daysSinceSowing} days (Standard maturity: ${maturityDays} days). ${isMature ? "Crop is physiologically mature." : "Wait for full maturity."}`,
-      key_drivers: [
-        `Maturity Progress: ${Math.min(100, Math.round((daysSinceSowing / maturityDays) * 100))}%`,
-        `5-Day Rain Threat: ${rainNext5d.toFixed(1)}mm (Threshold: ${cropRule.harvest_rain_risk_mm}mm)`,
-        `Storage Facility: ${harvestInput.storage_available ? "Protected Dry Storage Ready" : "Open Storage"}`
-      ],
-      actionable_advice: isMature ? "Begin harvesting during the morning hours for optimal threshing." : "Allow crop to reach 95%+ pod maturity before cutting."
+      narrative: isMr
+        ? `पेरणीनंतरचे दिवस: ${daysSinceSowing} दिवस (मानक पक्वता: ${maturityDays} दिवस). ${isMature ? "पीक कापणीसाठी पूर्ण पक्व आहे." : "पीक पूर्ण पक्व होण्याची प्रतीक्षा करा."}`
+        : isHi
+        ? `बुवाई के बाद के दिन: ${daysSinceSowing} दिन (मानक परिपक्वता: ${maturityDays} दिन)। ${isMature ? "फसल कटाई के लिए पूरी तरह परिपक्व है।" : "फसल के पूर्ण परिपक्व होने की प्रतीक्षा करें।"}`
+        : `Days since sowing: ${daysSinceSowing} days (Standard maturity: ${maturityDays} days). ${isMature ? "Crop is physiologically mature." : "Wait for full maturity."}`,
+      key_drivers: isMr
+        ? [
+            `पक्वता प्रगती: ${Math.min(100, Math.round((daysSinceSowing / maturityDays) * 100))}%`,
+            `५ दिवसांचा पावसाचा धोका: ${rainNext5d.toFixed(1)} मिमी (मर्यादा: ${cropRule.harvest_rain_risk_mm} मिमी)`,
+            `साठवणूक सोय: ${harvestInput.storage_available ? "सुरक्षित कोरडे गोदाम उपलब्ध" : "उघड्यावर साठवणूक"}`
+          ]
+        : isHi
+        ? [
+            `परिपक्वता प्रगति: ${Math.min(100, Math.round((daysSinceSowing / maturityDays) * 100))}%`,
+            `५ दिनों की बारिश का खतरा: ${rainNext5d.toFixed(1)} मिमी (सीमा: ${cropRule.harvest_rain_risk_mm} मिमी)`,
+            `भंडारण सुविधा: ${harvestInput.storage_available ? "सुरक्षित सूखा गोदाम तैयार" : "खुले में भंडारण"}`
+          ]
+        : [
+            `Maturity Progress: ${Math.min(100, Math.round((daysSinceSowing / maturityDays) * 100))}%`,
+            `5-Day Rain Threat: ${rainNext5d.toFixed(1)}mm (Threshold: ${cropRule.harvest_rain_risk_mm}mm)`,
+            `Storage Facility: ${harvestInput.storage_available ? "Protected Dry Storage Ready" : "Open Storage"}`
+          ],
+      actionable_advice: isMr
+        ? (isMature ? "चांगल्या मळणीसाठी सकाळच्या वेळेत कापणी सुरू करा." : "कापणीपूर्वी शेंगा ९५%+ पक्व होण्याची वाट पहा.")
+        : isHi
+        ? (isMature ? "अच्छी गहाई के लिए सुबह के समय कटाई शुरू करें।" : "कटाई से पहले फलियों के ९५%+ परिपक्व होने की प्रतीक्षा करें।")
+        : (isMature ? "Begin harvesting during the morning hours for optimal threshing." : "Allow crop to reach 95%+ pod maturity before cutting.")
     },
     ml_prediction: {
       model_name: "Random Forest Harvest Quality Predictor",
       success_probability_pct: 88.5,
-      predicted_class: "Low Moisture Grain Quality",
+      predicted_class: isMr ? "कमी आर्द्रता धान्य प्रत" : isHi ? "कम नमी अनाज गुणवत्ता" : "Low Moisture Grain Quality",
       model_accuracy_pct: 82.0,
       model_roc_auc: 0.87,
-      top_drivers: {
-        "Maturity Index": "42.5%",
-        "Rainfall Hazard (5-day)": "31.2%",
-        "Sunlight Hours": "14.8%",
-        "Storage Defense": "11.5%"
-      }
+      top_drivers: isMr
+        ? {
+            "पक्वता निर्देशांक": "42.5%",
+            "पाऊस धोका (५ दिवस)": "31.2%",
+            "सूर्यप्रकाश तास": "14.8%",
+            "गोदाम सुरक्षा": "11.5%"
+          }
+        : isHi
+        ? {
+            "परिपक्वता सूचकांक": "42.5%",
+            "बारिश खतरा (५ दिन)": "31.2%",
+            "धूप के घंटे": "14.8%",
+            "भंडारण सुरक्षा": "11.5%"
+          }
+        : {
+            "Maturity Index": "42.5%",
+            "Rainfall Hazard (5-day)": "31.2%",
+            "Sunlight Hours": "14.8%",
+            "Storage Defense": "11.5%"
+          }
     }
   };
 }

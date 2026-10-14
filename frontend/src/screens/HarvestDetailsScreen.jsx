@@ -43,11 +43,36 @@ export default function HarvestDetailsScreen({
   };
 
   const currentCropsList = [
-    { id: "Soybean", label: "Mature Soybean Pods", maturity: "95-105 Days", rating: "4.9 (170)" },
-    { id: "Cotton", label: "Open Cotton Bolls", maturity: "150-165 Days", rating: "4.8 (130)" },
-    { id: "Maize", label: "Harvest-Ready Maize", maturity: "90-100 Days", rating: "4.7 (95)" },
-    { id: "Wheat", label: "Golden Wheat Heads", maturity: "110-125 Days", rating: "4.9 (240)" },
-    { id: "Groundnut", label: "Groundnut Mature Pods", maturity: "105-120 Days", rating: "4.6 (78)" }
+    { 
+      id: "Soybean", 
+      label: language === "mr" ? "सोयाबीन (पक्व शेंगा)" : language === "hi" ? "सोयाबीन (परिपक्व फलियां)" : "Mature Soybean Pods", 
+      maturity: language === "mr" ? "९५-१०५ दिवस" : language === "hi" ? "९५-१०५ दिन" : "95-105 Days", 
+      rating: "4.9 (170)" 
+    },
+    { 
+      id: "Cotton", 
+      label: language === "mr" ? "कापूस (उमलेले बोंडे)" : language === "hi" ? "कपास (खुली गूलर)" : "Open Cotton Bolls", 
+      maturity: language === "mr" ? "१५०-१६५ दिवस" : language === "hi" ? "१५०-१६५ दिन" : "150-165 Days", 
+      rating: "4.8 (130)" 
+    },
+    { 
+      id: "Maize", 
+      label: language === "mr" ? "मका (कापणी योग्य कणसे)" : language === "hi" ? "मक्का (कटाई योग्य भुट्टे)" : "Harvest-Ready Maize", 
+      maturity: language === "mr" ? "९०-१०० दिवस" : language === "hi" ? "९०-१०० दिन" : "90-100 Days", 
+      rating: "4.7 (95)" 
+    },
+    { 
+      id: "Wheat", 
+      label: language === "mr" ? "गहू (सोनेरी ओंब्या)" : language === "hi" ? "गेहूं (सुनहरी बालियां)" : "Golden Wheat Heads", 
+      maturity: language === "mr" ? "११०-१२५ दिवस" : language === "hi" ? "११०-१२५ दिन" : "110-125 Days", 
+      rating: "4.9 (240)" 
+    },
+    { 
+      id: "Groundnut", 
+      label: language === "mr" ? "भुईमूग (पक्व शेंगा)" : language === "hi" ? "मूंगफली (पकी फलियां)" : "Groundnut Mature Pods", 
+      maturity: language === "mr" ? "१०५-१२० दिवस" : language === "hi" ? "१०५-१२० दिन" : "105-120 Days", 
+      rating: "4.6 (78)" 
+    }
   ];
 
   const currentCropMeta = currentCropsList.find(c => c.id === harvestFormData.crop) || currentCropsList[0];
@@ -56,7 +81,7 @@ export default function HarvestDetailsScreen({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!harvestFormData.location || !harvestFormData.crop || !harvestFormData.actual_sowing_date) {
-      setValidationError("Please fill in location and actual sowing date.");
+      setValidationError(t.validationError || "Please fill in location and actual sowing date.");
       return;
     }
     setValidationError("");
@@ -76,7 +101,7 @@ export default function HarvestDetailsScreen({
           <ArrowLeft className="w-4 h-4" />
         </button>
 
-        <h2 className="text-base font-black tracking-tight text-slate-900">Harvest Details</h2>
+        <h2 className="text-base font-black tracking-tight text-slate-900">{t.harvestTitle || "Harvest Details"}</h2>
 
         <div className="w-10 h-10 rounded-full bg-white border border-slate-200/80 shadow-xs flex items-center justify-center text-slate-700 relative">
           <Bell className="w-4 h-4" />
@@ -133,7 +158,7 @@ export default function HarvestDetailsScreen({
               {currentCropMeta.label}
             </h3>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs font-bold text-amber-700">Maturity Window</span>
+              <span className="text-xs font-bold text-amber-700">{t.maturityWindow || "Maturity Window"}</span>
               <span className="text-slate-300">•</span>
               <span className="text-xs font-bold text-slate-500 flex items-center gap-1">
                 <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
@@ -151,15 +176,15 @@ export default function HarvestDetailsScreen({
 
         {/* 4. DESCRIPTION */}
         <div className="space-y-2">
-          <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Harvest Protocol</h4>
+          <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">{t.harvestProtocol || "Harvest Protocol"}</h4>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-            Pre-harvest and harvest stages are acutely vulnerable to unseasonal rainfall. Sudden rain on mature pods triggers pod shattering, fungal staining, and grain discolouration. Our Harvest Shield verifies dry harvesting windows.
+            {t.harvestDesc || "Pre-harvest and harvest stages are acutely vulnerable to unseasonal rainfall. Sudden rain on mature pods triggers pod shattering, fungal staining, and grain discolouration. Our Harvest Shield verifies dry harvesting windows."}
           </p>
         </div>
 
         {/* 5. CROP SELECTOR CHIPS */}
         <div className="space-y-2">
-          <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Select Standing Crop</h4>
+          <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">{t.selectStandingCrop || "Select Standing Crop"}</h4>
           <div className="flex flex-wrap gap-2">
             {currentCropsList.map((c) => (
               <button
@@ -175,7 +200,7 @@ export default function HarvestDetailsScreen({
                     : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
                 }`}
               >
-                {c.id}
+                {c.label}
               </button>
             ))}
           </div>
@@ -186,13 +211,13 @@ export default function HarvestDetailsScreen({
           <div className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs space-y-1.5">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block flex items-center gap-1">
               <MapPin className="w-3 h-3 text-amber-600" />
-              Target Location
+              {t.targetLocation || "Target Location"}
             </span>
             <input
               type="text"
               value={harvestFormData.location}
               onChange={(e) => setHarvestFormData(prev => ({ ...prev, location: e.target.value }))}
-              placeholder="e.g. Pune, Akola"
+              placeholder={t.phLocation || "e.g. Pune, Akola"}
               className="w-full text-xs font-bold text-slate-900 bg-transparent focus:outline-none"
             />
           </div>
@@ -200,7 +225,7 @@ export default function HarvestDetailsScreen({
           <div className="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs space-y-1.5">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block flex items-center gap-1">
               <Calendar className="w-3 h-3 text-amber-600" />
-              Actual Sowing Date
+              {t.actualSowingDate || "Actual Sowing Date"}
             </span>
             <input
               type="date"
@@ -223,10 +248,10 @@ export default function HarvestDetailsScreen({
         >
           <span className="flex items-center gap-2">
             <Warehouse className="w-4 h-4 text-amber-600" />
-            <span>Covered Dry Storage / Tarpaulins Available</span>
+            <span>{t.coveredStorage || "Covered Dry Storage / Tarpaulins Available"}</span>
           </span>
           <span className="text-xs px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-black">
-            {harvestFormData.storage_available ? "YES (Protected)" : "NO (Open Field)"}
+            {harvestFormData.storage_available ? (t.protected || "YES (Protected)") : (t.openField || "NO (Open Field)")}
           </span>
         </button>
 
@@ -237,15 +262,14 @@ export default function HarvestDetailsScreen({
           className="w-full py-4 rounded-full bg-[#0B4628] hover:bg-[#0F5E37] text-white font-black text-sm shadow-lg shadow-[#0B4628]/25 transition flex items-center justify-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
         >
           {isLoading ? (
-            <span>Analyzing Harvest Forecast...</span>
+            <span>{t.analyzingHarvest || "Analyzing Harvest Forecast..."}</span>
           ) : (
             <>
               <Plus className="w-4 h-4 stroke-[3]" />
-              <span>Evaluate Harvest Shield</span>
+              <span>{t.btnHarvestCheck || "Evaluate Harvest Shield"}</span>
             </>
           )}
         </button>
-
       </div>
 
     </div>

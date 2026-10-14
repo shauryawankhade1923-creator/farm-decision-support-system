@@ -19,45 +19,60 @@ export default function CompareOptionsScreen({
   const t = translations[language] || translations.en;
   const [activeTab, setActiveTab] = useState("comparison"); // "comparison" | "analytics"
 
+  const isMr = language === "mr";
+  const isHi = language === "hi";
+
   // Standard fallback options matrix if user accesses directly without running an assessment
   const fallbackOptions = [
     {
       id: "opt1",
-      label: "Option 1: Sow Today / Immediate Window",
+      label: isMr ? "पर्याय १: आज किंवा तातडीने पेरणी करा" : isHi ? "विकल्प १: आज ही बुवाई करें" : "Option 1: Sow Today / Immediate Window",
       risk: "Low",
       recommended: true,
       available: true,
-      reason: "Current surface soil moisture (45mm 7-day sum) satisfies ICAR threshold with no erratic dry spell in the immediate 5-day emergence window."
+      reason: isMr
+        ? "जमिनीतील ओलावा (४५ मिमी ७ दिवसांचा संचय) ICAR निकषांची पूर्तता करतो आणि पुढील ५ दिवसांत पावसाचा खंड नाही."
+        : isHi
+        ? "मिट्टी में पर्याप्त नमी (४५ मिमी ७ दिन संचय) ICAR मानक पूरा करती है और शुरुआती ५ दिनों में शुष्क दौर नहीं है।"
+        : "Current surface soil moisture (45mm 7-day sum) satisfies ICAR threshold with no erratic dry spell in the immediate 5-day emergence window."
     },
     {
       id: "opt2",
-      label: "Option 2: Postpone Sowing by 4-6 Days",
+      label: isMr ? "पर्याय २: पेरणी ४-६ दिवस पुढे ढकला" : isHi ? "विकल्प २: बुवाई ४-६ दिन आगे बढ़ाएं" : "Option 2: Postpone Sowing by 4-6 Days",
       risk: "Medium",
       recommended: false,
       available: true,
-      reason: "Secondary monsoon surge expected in 5 days. Viable if field preparation or tractor hire was delayed, with 82% emergence probability."
+      reason: isMr
+        ? "५ दिवसांनंतर मान्सूनचा दुसरा टप्पा अपेक्षित आहे. मशागत उशिरा झाली असल्यास ८२% उगवण संभाव्यतेसह हा पर्याय सुरक्षित ठरेल."
+        : isHi
+        ? "५ दिनों में बारिश का नया दौर शुरू होने की संभावना है। ८२% अंकुरण सफलता के साथ यह विकल्प सुरक्षित है।"
+        : "Secondary monsoon surge expected in 5 days. Viable if field preparation or tractor hire was delayed, with 82% emergence probability."
     },
     {
       id: "opt3",
-      label: "Option 3: Pre-sow with Micro-Irrigation",
+      label: isMr ? "पर्याय ३: सूक्ष्म सिंचन देऊन पेरणी करा" : isHi ? "विकल्प ३: सूक्ष्म सिंचाई करके बुवाई करें" : "Option 3: Pre-sow with Micro-Irrigation",
       risk: "Low",
       recommended: false,
       available: !!farmerInput?.irrigation_available,
       reason: farmerInput?.irrigation_available 
-        ? "Micro-drip irrigation enables precision moisture control independent of erratic monsoon dry gaps." 
-        : "Requires operational borewell or drip irrigation line (currently not enabled for this field)."
+        ? (isMr ? "सूक्ष्म सिंचनामुळे पावसाच्या लहरीपणावर अवलंबून न राहता अचूक ओलावा मिळतो." : isHi ? "ड्रिप/स्प्रिंकलर सिंचाई से बारिश की अनिश्चितता के बिना एकसमान नमी मिलती है।" : "Micro-drip irrigation enables precision moisture control independent of erratic monsoon dry gaps.")
+        : (isMr ? "या शेतावर सिंचन सुविधा उपलब्ध नाही." : isHi ? "इस खेत में सिंचाई सुविधा उपलब्ध नहीं है।" : "Requires operational borewell or drip irrigation line (currently not enabled for this field).")
     },
     {
       id: "opt4",
-      label: "Option 4: Switch to Short-Duration Alternative",
+      label: isMr ? "पर्याय ४: कमी कालावधीचे पर्यायी पीक निवडा" : isHi ? "विकल्प ४: कम अवधि वाली वैकल्पिक फसल चुनें" : "Option 4: Switch to Short-Duration Alternative",
       risk: "Medium",
       recommended: false,
       available: true,
-      reason: "Consider fast-ripening Soybean (JS 95-60, 85 days) or Hybrid Maize to minimize end-of-season drought vulnerability."
+      reason: isMr
+        ? "हंगामाच्या शेवटी पाण्याचा ताण टाळण्यासाठी लवकर पक्व होणारे सोयाबीन (JS 95-60) किंवा संकरित मका निवडा."
+        : isHi
+        ? "सूखे के जोखिम से बचने के लिए जल्दी पकने वाली सोयाबीन (JS 95-60) या मक्का पर विचार करें।"
+        : "Consider fast-ripening Soybean (JS 95-60, 85 days) or Hybrid Maize to minimize end-of-season drought vulnerability."
     }
   ];
 
-  const options = decision?.options || fallbackOptions;
+  const options = decision?.comparison_options || decision?.options || fallbackOptions;
 
   const getRiskStyle = (risk) => {
     switch (risk) {
@@ -98,7 +113,7 @@ export default function CompareOptionsScreen({
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div className="text-center">
-            <h2 className="text-base font-black tracking-tight text-white">Crop Statistics & Matrix</h2>
+            <h2 className="text-base font-black tracking-tight text-white">{t.compareTitle || "Crop Statistics & Matrix"}</h2>
             <span className="text-[10px] text-emerald-200 font-bold">{farmerInput.crop} • {farmerInput.location}</span>
           </div>
           <div className="w-10 h-10" />
@@ -112,7 +127,7 @@ export default function CompareOptionsScreen({
               activeTab === "comparison" ? "bg-white text-[#0B4628] shadow-sm font-black" : "text-emerald-100 hover:text-white"
             }`}
           >
-            Scenario Matrix
+            {t.scenarioMatrixTab || "Scenario Matrix"}
           </button>
           <button
             onClick={() => setActiveTab("analytics")}
@@ -120,7 +135,7 @@ export default function CompareOptionsScreen({
               activeTab === "analytics" ? "bg-white text-[#0B4628] shadow-sm font-black" : "text-emerald-100 hover:text-white"
             }`}
           >
-            Yield & Emergence Stats
+            {t.analyticsTab || "Yield & Emergence Stats"}
           </button>
         </div>
       </div>
@@ -129,9 +144,9 @@ export default function CompareOptionsScreen({
         /* TAB 1: SCENARIOS COMPARISON MATRIX */
         <div className="px-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-black text-slate-900 tracking-tight">Evaluated Decisions Ranked</h3>
+            <h3 className="text-sm font-black text-slate-900 tracking-tight">{t.evaluatedDecisionsTitle || "Evaluated Decisions Ranked"}</h3>
             <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-              4 Strategies Compared
+              {t.strategiesComparedBadge || "4 Strategies Compared"}
             </span>
           </div>
 
@@ -151,18 +166,18 @@ export default function CompareOptionsScreen({
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
-                      Option {idx + 1}
+                      {t.optionPrefix || "Option"} {idx + 1}
                     </span>
 
                     <div className="flex items-center gap-2">
                       {opt.recommended && (
                         <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-[#0B4628] text-white flex items-center gap-1">
                           <Star className="w-3 h-3 fill-amber-300 text-amber-300" />
-                          Recommended
+                          {t.recommendedBadge || "Recommended"}
                         </span>
                       )}
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${riskStyle.bg}`}>
-                        {opt.risk} Risk
+                        {opt.risk} {t.riskSuffix || "Risk"}
                       </span>
                     </div>
                   </div>
@@ -184,7 +199,7 @@ export default function CompareOptionsScreen({
             className="w-full py-4 rounded-full bg-[#0B4628] hover:bg-[#0F5E37] text-white font-black text-xs shadow-lg shadow-[#0B4628]/20 transition flex items-center justify-center gap-1.5 cursor-pointer mt-2"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            <span>Re-evaluate for Different Dates or Crops</span>
+            <span>{t.reevaluateBtn || "Re-evaluate for Different Dates or Crops"}</span>
           </button>
         </div>
       ) : (
@@ -193,21 +208,21 @@ export default function CompareOptionsScreen({
           {/* Key Stat Gauges */}
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-white p-4 rounded-3xl border border-slate-200 shadow-xs space-y-1">
-              <span className="text-[10px] font-bold text-slate-400 uppercase">ML Emergence Probability</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase">{t.mlProbLabel || "ML Emergence Probability"}</span>
               <div className="text-2xl font-black text-[#0B4628] flex items-baseline gap-1">
                 <span>92.4%</span>
-                <span className="text-[10px] text-emerald-600 font-bold">Optimal</span>
+                <span className="text-[10px] text-emerald-600 font-bold">{t.optimalLabel || "Optimal"}</span>
               </div>
-              <p className="text-[10px] text-slate-500">Trained Random Forest prediction based on 10-day rainfall</p>
+              <p className="text-[10px] text-slate-500">{t.trainedRfDesc || "Trained Random Forest prediction based on 10-day rainfall"}</p>
             </div>
 
             <div className="bg-white p-4 rounded-3xl border border-slate-200 shadow-xs space-y-1">
-              <span className="text-[10px] font-bold text-slate-400 uppercase">Yield Expectation</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase">{t.yieldExpectation || "Yield Expectation"}</span>
               <div className="text-2xl font-black text-slate-900 flex items-baseline gap-1">
                 <span>11.5</span>
-                <span className="text-xs text-slate-400 font-bold">Qtl / Acre</span>
+                <span className="text-xs text-slate-400 font-bold">{t.qtlPerAcre || "Qtl / Acre"}</span>
               </div>
-              <p className="text-[10px] text-slate-500">Above regional average (+18%) with proper sowing window</p>
+              <p className="text-[10px] text-slate-500">{t.aboveRegionalAvg || "Above regional average (+18%) with proper sowing window"}</p>
             </div>
           </div>
 
@@ -215,20 +230,20 @@ export default function CompareOptionsScreen({
           <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-xs font-black text-slate-900">7-Day Moisture Accumulation</h4>
-                <span className="text-[10px] text-slate-400 font-bold">Rainfall vs ICAR Minimum Germination</span>
+                <h4 className="text-xs font-black text-slate-900">{t.moistureAccumulationTitle || "7-Day Moisture Accumulation"}</h4>
+                <span className="text-[10px] text-slate-400 font-bold">{t.moistureAccumulationSub || "Rainfall vs ICAR Minimum Germination"}</span>
               </div>
               <span className="text-xs font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">
-                +14mm Surplus
+                +14mm {t.surplus || "Surplus"}
               </span>
             </div>
 
             {/* Visual Bar Spectrum */}
             <div className="space-y-1.5 pt-2">
               <div className="flex justify-between text-[10px] font-bold text-slate-500">
-                <span>Day 1 (Current)</span>
-                <span>Day 4 (Peak)</span>
-                <span>Day 7 (Emergence)</span>
+                <span>{t.day1Current || "Day 1 (Current)"}</span>
+                <span>{t.day4Peak || "Day 4 (Peak)"}</span>
+                <span>{t.day7Emergence || "Day 7 (Emergence)"}</span>
               </div>
               <div className="h-4 bg-slate-100 rounded-full overflow-hidden flex">
                 <div style={{ width: "35%" }} className="bg-emerald-400" />
@@ -238,42 +253,41 @@ export default function CompareOptionsScreen({
               <div className="flex justify-between text-[9px] text-slate-400 font-bold">
                 <span>12mm</span>
                 <span>28mm</span>
-                <span>54mm Total</span>
+                <span>54mm {t.total || "Total"}</span>
               </div>
             </div>
           </div>
 
           {/* Agronomic Risk Breakdown */}
           <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs space-y-3">
-            <h4 className="text-xs font-black text-slate-900">Agronomic Risk Breakdown</h4>
+            <h4 className="text-xs font-black text-slate-900">{t.agronomicRiskBreakdown || "Agronomic Risk Breakdown"}</h4>
             <div className="space-y-2 text-xs font-bold text-slate-700">
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-1.5 text-slate-600">
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  Seed Mortality Risk
+                  {t.seedMortalityRisk || "Seed Mortality Risk"}
                 </span>
-                <span className="text-emerald-700">Low (8%)</span>
+                <span className="text-emerald-700">{t.seedMortalityValue || "Low (8%)"}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-1.5 text-slate-600">
                   <span className="w-2 h-2 rounded-full bg-amber-500" />
-                  Post-Germination Dry Spell Risk
+                  {t.postGerminationDrySpellRisk || "Post-Germination Dry Spell Risk"}
                 </span>
-                <span className="text-amber-700">Moderate (22%)</span>
+                <span className="text-amber-700">{t.postGerminationDrySpellValue || "Moderate (22%)"}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-1.5 text-slate-600">
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  Soil Crusting / Waterlogging Risk
+                  {t.waterloggingRisk || "Soil Crusting / Waterlogging Risk"}
                 </span>
-                <span className="text-emerald-700">Very Low (5%)</span>
+                <span className="text-emerald-700">{t.waterloggingRiskValue || "Very Low (5%)"}</span>
               </div>
             </div>
           </div>
 
         </div>
       )}
-
     </div>
   );
 }
