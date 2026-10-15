@@ -29,6 +29,8 @@ export const translations = {
     "wind": "Wind",
     "sunrise": "Sunrise",
     "sunset": "Sunset",
+    "liveSatelliteRadar": "Live Satellite Radar",
+    "climateResiliencePill": "Climate Change & Resilience Insights",
 
     // Weather condition labels
     "weatherPartlySunny": "Partly Sunny",
@@ -306,6 +308,8 @@ export const translations = {
     "wind": "वारा",
     "sunrise": "सूर्योदय",
     "sunset": "सूर्यास्त",
+    "liveSatelliteRadar": "थेट उपग्रह रडार",
+    "climateResiliencePill": "हवामान बदल व शेती अनुकूलन",
 
     // Weather condition labels
     "weatherPartlySunny": "अंशतः सूर्यप्रकाश",
@@ -583,6 +587,8 @@ export const translations = {
     "wind": "हवा",
     "sunrise": "सूर्योदय",
     "sunset": "सूर्यास्त",
+    "liveSatelliteRadar": "लाइव सैटेलाइट रडार",
+    "climateResiliencePill": "जलवायु परिवर्तन व कृषि अनुकूलन",
 
     // Weather condition labels
     "weatherPartlySunny": "हल्की धूप",

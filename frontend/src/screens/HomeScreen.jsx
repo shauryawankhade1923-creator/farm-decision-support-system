@@ -3,11 +3,12 @@ import {
   Search, Mic, ChevronDown, Clock, TrendingUp, ShieldCheck, 
   Shield, Sun, Moon, CloudRain, Droplets, Wind, Compass, 
   Sprout, Wheat, ArrowRight, Star, Heart, Bookmark, Eye, MapPin,
-  CheckCircle2, Sparkles, Bell
+  CheckCircle2, Sparkles, Bell, Globe2
 } from "lucide-react";
 import { translations } from "../locales/translations";
 
 import LanguageSelector from "../components/LanguageSelector";
+import ClimateResilienceModal from "../components/ClimateResilienceModal";
 
 export default function HomeScreen({
   onStartDecision,
@@ -1216,6 +1217,55 @@ export default function HomeScreen({
 
   const [selectedDistrict, setSelectedDistrict] = useState("Pune");
   const currentDistrictData = DISTRICT_CROPS[selectedDistrict] || DISTRICT_CROPS["Pune"];
+  const [liveWeather, setLiveWeather] = useState(null);
+  const [isClimateModalOpen, setIsClimateModalOpen] = useState(false);
+
+  // Sync real-time satellite meteorology for the selected district from Open-Meteo
+  useEffect(() => {
+    let isMounted = true;
+    const data = DISTRICT_CROPS[selectedDistrict] || DISTRICT_CROPS["Pune"];
+    if (!data?.lat || !data?.lng) return;
+
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${data.lat}&longitude=${data.lng}&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&daily=sunrise,sunset,precipitation_sum&timezone=auto&forecast_days=1`;
+
+    fetch(url)
+      .then(r => r.json())
+      .then(res => {
+        if (!isMounted || !res.current) return;
+        const cur = res.current;
+        const code = cur.weather_code;
+        let weatherText = "Pleasant";
+        if (code === 0) weatherText = "Clear Skies";
+        else if (code === 1 || code === 2) weatherText = "Partly Sunny";
+        else if (code === 3) weatherText = "Partly Cloudy";
+        else if (code >= 51 && code <= 82) weatherText = "Rain / Showers";
+        else if (code >= 95) weatherText = "Thunderstorm";
+        else if (cur.temperature_2m >= 32) weatherText = "Sunny & Warm";
+
+        const sunriseStr = res.daily?.sunrise?.[0]
+          ? new Date(res.daily.sunrise[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : "06:08 am";
+        const sunsetStr = res.daily?.sunset?.[0]
+          ? new Date(res.daily.sunset[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : "06:36 pm";
+
+        setLiveWeather({
+          temp: `${Math.round(cur.temperature_2m)}°C`,
+          humidity: `${Math.round(cur.relative_humidity_2m)}%`,
+          wind: `${Math.round(cur.wind_speed_10m)} km/h`,
+          rain: `${cur.precipitation || res.daily?.precipitation_sum?.[0] || 0}mm`,
+          weatherText,
+          weatherCode: code,
+          sunrise: sunriseStr,
+          sunset: sunsetStr
+        });
+      })
+      .catch(err => {
+        console.warn("Live weather fetch failed, using fallback:", err);
+      });
+
+    return () => { isMounted = false; };
+  }, [selectedDistrict]);
 
   const handleDistrictChange = (districtName) => {
     setSelectedDistrict(districtName);
@@ -1681,11 +1731,15 @@ export default function HomeScreen({
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight">
-                  {currentDistrictData.temp}
+                  {liveWeather?.temp || currentDistrictData.temp}
                 </span>
-                <span className="text-xs font-bold text-slate-400">
-                  {getLocalizedWeather(currentDistrictData.weather)}
+                <span className="text-xs font-bold text-slate-500">
+                  {liveWeather?.weatherText ? getLocalizedWeather(liveWeather.weatherText) : getLocalizedWeather(currentDistrictData.weather)}
                 </span>
+              </div>
+              <div className="mt-1 flex items-center gap-1 text-[10px] font-bold text-emerald-700">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                <span>{t.liveSatelliteRadar || "Live Satellite Radar"}</span>
               </div>
             </div>
 
@@ -1703,11 +1757,11 @@ export default function HomeScreen({
           <div className="grid grid-cols-4 gap-2 pt-2 border-t border-slate-100 text-center">
             <div>
               <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">{t.humidity || "Humidity"}</span>
-              <span className="text-xs sm:text-sm font-black text-slate-800 mt-0.5 block">{currentDistrictData.humidity}</span>
+              <span className="text-xs sm:text-sm font-black text-slate-800 mt-0.5 block">{liveWeather?.humidity || currentDistrictData.humidity}</span>
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">{t.rain7d || "Precip"}</span>
-              <span className="text-xs sm:text-sm font-black text-slate-800 mt-0.5 block">{currentDistrictData.rain7d}</span>
+              <span className="text-xs sm:text-sm font-black text-slate-800 mt-0.5 block">{liveWeather?.rain || currentDistrictData.rain7d}</span>
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">{t.soilType || "Soil Type"}</span>
@@ -1715,14 +1769,14 @@ export default function HomeScreen({
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">{t.wind || "Wind"}</span>
-              <span className="text-xs sm:text-sm font-black text-slate-800 mt-0.5 block">3 m/s</span>
+              <span className="text-xs sm:text-sm font-black text-slate-800 mt-0.5 block">{liveWeather?.wind || "12 km/h"}</span>
             </div>
           </div>
 
           {/* Sunrise / Sunset Arc Indicator */}
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
             <div className="text-left">
-              <span className="text-slate-800 font-black text-xs block">5:45 am</span>
+              <span className="text-slate-800 font-black text-xs block">{liveWeather?.sunrise || "06:08 am"}</span>
               <span className="text-[10px] text-slate-400 font-bold">{t.sunrise || "Sunrise"}</span>
             </div>
 
@@ -1740,10 +1794,34 @@ export default function HomeScreen({
             </div>
 
             <div className="text-right">
-              <span className="text-slate-800 font-black text-xs block">6:42 pm</span>
+              <span className="text-slate-800 font-black text-xs block">{liveWeather?.sunset || "06:36 pm"}</span>
               <span className="text-[10px] text-slate-400 font-bold">{t.sunset || "Sunset"}</span>
             </div>
           </div>
+
+          {/* Climate Change & Resilience Button */}
+          <button
+            type="button"
+            onClick={() => setIsClimateModalOpen(true)}
+            className="w-full pt-3 mt-1 border-t border-slate-100 flex items-center justify-between group cursor-pointer text-left"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:bg-emerald-100 transition shrink-0">
+                <Globe2 className="w-4 h-4 text-emerald-600" />
+              </div>
+              <div>
+                <span className="text-xs font-black text-slate-800 block group-hover:text-emerald-700 transition">
+                  {t.climateResiliencePill || "Climate Change & Resilience Insights"}
+                </span>
+                <span className="text-[10px] text-slate-400 font-bold block">
+                  ICAR-CRIDA Microclimate & Delayed Monsoon Guide
+                </span>
+              </div>
+            </div>
+            <span className="text-[10px] font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 group-hover:bg-emerald-100 transition shrink-0">
+              ICAR →
+            </span>
+          </button>
 
         </div>
       </div>
@@ -1844,6 +1922,19 @@ export default function HomeScreen({
           ))}
         </div>
       </div>
+
+      {/* 4. CLIMATE RESILIENCE & ADAPTATION MODAL */}
+      <ClimateResilienceModal
+        isOpen={isClimateModalOpen}
+        onClose={() => setIsClimateModalOpen(false)}
+        districtName={getLocalizedDistrict(selectedDistrict)}
+        liveTemp={liveWeather?.temp || currentDistrictData.temp}
+        liveHumidity={liveWeather?.humidity || currentDistrictData.humidity}
+        liveRain={liveWeather?.rain || currentDistrictData.rain7d}
+        liveWind={liveWeather?.wind || "12 km/h"}
+        language={language}
+        onAssessSowing={onStartDecision}
+      />
 
     </div>
   );

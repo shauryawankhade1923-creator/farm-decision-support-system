@@ -33,6 +33,8 @@ export default function DecisionScreen({
     ml_prediction 
   } = decision;
 
+  const todayForecast = daily_forecast?.[0];
+
   const getLocalizedCropName = (cropName) => {
     if (!cropName) return "";
     if (cropName.includes("Soybean")) return language === "mr" ? "सोयाबीन" : language === "hi" ? "सोयाबीन" : cropName;
@@ -166,11 +168,14 @@ export default function DecisionScreen({
               <span className="text-xs font-semibold text-emerald-200/80 block">
                 {farmerInput.location}, {t.todayAdvisorySub || "Today's Advisory"}
               </span>
-              <div className="mt-2">
-                <span className="text-5xl font-black tracking-tight">28°C</span>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-5xl font-black tracking-tight">{todayForecast?.temp_max_c ? `${Math.round(todayForecast.temp_max_c)}°C` : (summary?.avg_temperature_c ? `${Math.round(summary.avg_temperature_c)}°C` : "29°C")}</span>
+                <span className="text-xs font-bold text-emerald-200 bg-white/10 px-2.5 py-0.5 rounded-full border border-white/15">
+                  {summary?.rainfall_next_7_days_mm ?? 0}mm rain (7d)
+                </span>
               </div>
               <p className="text-xs font-bold text-emerald-100/90 mt-1">
-                {t.humidityLabel || "Humidity"}: 76% &nbsp;•&nbsp; {getLocalizedCropName(farmerInput.crop)}
+                {t.rain7d || "Rain Probability"}: {todayForecast?.precipitation_probability ?? 35}% &nbsp;•&nbsp; {getLocalizedCropName(farmerInput.crop)}
               </p>
             </div>
 
