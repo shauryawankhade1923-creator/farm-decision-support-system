@@ -3,7 +3,7 @@ import {
   Search, Mic, ChevronDown, Clock, TrendingUp, ShieldCheck, 
   Shield, Sun, Moon, CloudRain, Droplets, Wind, Compass, 
   Sprout, Wheat, ArrowRight, Star, Heart, Bookmark, Eye, MapPin,
-  CheckCircle2, Sparkles
+  CheckCircle2, Sparkles, Bell
 } from "lucide-react";
 import { translations } from "../locales/translations";
 
@@ -18,7 +18,9 @@ export default function HomeScreen({
   onGoToSaved,
   setFormData,
   language = "en",
-  setLanguage
+  setLanguage,
+  onOpenNotifications,
+  unreadNotificationCount = 0
 }) {
   const t = translations[language] || translations.en;
   // Real-time live date and ticking clock
@@ -1616,6 +1618,17 @@ export default function HomeScreen({
                 variant="pill"
               />
             )}
+            <button
+              type="button"
+              onClick={onOpenNotifications}
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/10 hover:bg-white/20 border border-emerald-400/40 backdrop-blur-md shadow-md flex items-center justify-center text-white relative hover:scale-105 active:scale-95 transition cursor-pointer shrink-0"
+              title={t.notificationsTitle || "Farm Notifications & Alerts"}
+            >
+              <Bell className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-emerald-200" />
+              {unreadNotificationCount > 0 && (
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 absolute top-1.5 right-1.5 ring-2 ring-[#0B4628] animate-pulse" />
+              )}
+            </button>
             <button 
               onClick={onGoToHistory}
               className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-emerald-400/60 overflow-hidden shadow-md bg-emerald-900 flex items-center justify-center cursor-pointer hover:scale-105 transition shrink-0"

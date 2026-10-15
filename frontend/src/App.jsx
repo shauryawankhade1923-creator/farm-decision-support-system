@@ -11,12 +11,50 @@ import BottomBar from "./components/BottomBar";
 import LanguageSelector from "./components/LanguageSelector";
 import { Globe } from "lucide-react";
 import FeedbackModal from "./components/FeedbackModal";
+import NotificationModal, { DEFAULT_NOTIFICATIONS } from "./components/NotificationModal";
 import { checkDecision, checkHarvestDecision, saveField } from "./services/api";
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState("home"); // "home" | "farm_details" | "harvest_details" | "decision" | "compare" | "saved_fields" | "history"
   const [flowMode, setFlowMode] = useState("sowing"); // "sowing" | "harvest"
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+  const [readNotificationIds, setReadNotificationIds] = useState(() => {
+    try {
+      const stored = localStorage.getItem("read_notification_ids");
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const handleMarkNotificationRead = (id) => {
+    setReadNotificationIds((prev) => {
+      if (prev.includes(id)) return prev;
+      const next = [...prev, id];
+      try {
+        localStorage.setItem("read_notification_ids", JSON.stringify(next));
+      } catch (e) {
+        console.error(e);
+      }
+      return next;
+    });
+  };
+
+  const handleMarkAllNotificationsRead = () => {
+    const allIds = DEFAULT_NOTIFICATIONS.map((n) => n.id);
+    setReadNotificationIds(allIds);
+    try {
+      localStorage.setItem("read_notification_ids", JSON.stringify(allIds));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const unreadNotificationCount = DEFAULT_NOTIFICATIONS.filter(
+    (n) => !readNotificationIds.includes(n.id)
+  ).length;
+
   const [language, setLanguageState] = useState(() => {
     try {
       return localStorage.getItem("app_language") || "en";
@@ -42,6 +80,19 @@ export default function App() {
   const defaultHarvestDate = new Date();
   defaultHarvestDate.setDate(defaultHarvestDate.getDate() - 100);
   const defaultHarvestDateStr = defaultHarvestDate.toISOString().split("T")[0];
+
+  const handleNotificationAction = (actionData) => {
+    if (actionData.location && actionData.crop) {
+      const updated = {
+        ...formData,
+        location: actionData.location,
+        crop: actionData.crop,
+        intended_sowing_date: todayStr
+      };
+      setFormData(updated);
+      navigateTo("farm_details");
+    }
+  };
 
   const [formData, setFormData] = useState({
     location: "Pune",
@@ -211,6 +262,8 @@ export default function App() {
               setFormData={setFormData}
               language={language}
               setLanguage={setLanguage}
+              onOpenNotifications={() => setIsNotificationModalOpen(true)}
+              unreadNotificationCount={unreadNotificationCount}
             />
           )}
 
@@ -222,6 +275,8 @@ export default function App() {
               isLoading={isLoading}
               language={language}
               onBack={() => navigateTo("home")}
+              onOpenNotifications={() => setIsNotificationModalOpen(true)}
+              unreadNotificationCount={unreadNotificationCount}
             />
           )}
 
@@ -233,6 +288,8 @@ export default function App() {
               isLoading={isLoading}
               language={language}
               onBack={() => navigateTo("home")}
+              onOpenNotifications={() => setIsNotificationModalOpen(true)}
+              unreadNotificationCount={unreadNotificationCount}
             />
           )}
 
@@ -248,6 +305,8 @@ export default function App() {
               onOpenFeedback={() => setIsFeedbackModalOpen(true)}
               language={language}
               onBack={() => navigateTo("home")}
+              onOpenNotifications={() => setIsNotificationModalOpen(true)}
+              unreadNotificationCount={unreadNotificationCount}
             />
           )}
 
@@ -313,6 +372,17 @@ export default function App() {
             language={language}
           />
         )}
+
+        {/* Global Farm Notifications & Alerts Modal */}
+        <NotificationModal
+          isOpen={isNotificationModalOpen}
+          onClose={() => setIsNotificationModalOpen(false)}
+          language={language}
+          onAction={handleNotificationAction}
+          readIds={readNotificationIds}
+          onMarkRead={handleMarkNotificationRead}
+          onMarkAllRead={handleMarkAllNotificationsRead}
+        />
 
         {/* Floating Quick Language Switcher for secondary screens */}
         {currentScreen !== "home" && (

@@ -12,7 +12,9 @@ export default function HarvestDetailsScreen({
   onSubmit, 
   isLoading, 
   language = "en",
-  onBack 
+  onBack,
+  onOpenNotifications,
+  unreadNotificationCount = 0
 }) {
   const t = translations[language] || translations.en;
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
@@ -139,10 +141,17 @@ export default function HarvestDetailsScreen({
 
         <h2 className="text-base font-black tracking-tight text-slate-900">{t.harvestTitle || "Harvest Details"}</h2>
 
-        <div className="w-10 h-10 rounded-full bg-white border border-slate-200/80 shadow-xs flex items-center justify-center text-slate-700 relative">
+        <button 
+          type="button"
+          onClick={onOpenNotifications}
+          className="w-10 h-10 rounded-full bg-white border border-slate-200/80 shadow-xs flex items-center justify-center text-slate-700 relative hover:bg-slate-50 hover:scale-105 active:scale-95 transition cursor-pointer"
+          title={t.notificationsTitle || "Farm Notifications & Alerts"}
+        >
           <Bell className="w-4 h-4" />
-          <span className="w-2 h-2 rounded-full bg-amber-500 absolute top-2 right-2" />
-        </div>
+          {unreadNotificationCount > 0 && (
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 absolute top-2 right-2 ring-2 ring-white animate-pulse" />
+          )}
+        </button>
       </div>
 
       {validationError && (

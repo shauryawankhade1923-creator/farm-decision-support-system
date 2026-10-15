@@ -257,7 +257,23 @@ export const translations = {
     "farmerNotesLabel": "Farmer Notes / Additional Field Insights",
     "farmerNotesPlaceholder": "Mention soil moisture depth, seed variety used, or monsoon delay...",
     "submitFeedbackBtn": "Submit Farmer Observation ->",
-    "submittingFeedback": "Recording Feedback..."
+    "submittingFeedback": "Recording Feedback...",
+
+    // Notification Modal
+    "notificationsTitle": "Farm Notifications & Alerts",
+    "notificationsSub": "Real-time weather alerts, ICAR advisories & market prices",
+    "unreadCountLabel": "Unread",
+    "markAllRead": "Mark all as read",
+    "allAlerts": "All",
+    "weatherAlerts": "Weather",
+    "agriAdvisories": "Advisories",
+    "marketAlerts": "Market & MSP",
+    "noNotifications": "No alerts at this moment. Field conditions are normal.",
+    "clearAll": "Clear All",
+    "close": "Close",
+    "takeAction": "Check Sowing ->",
+    "alertTimeNow": "Just now",
+    "alertTimeToday": "Today"
   },
 
   "mr": {
@@ -518,7 +534,23 @@ export const translations = {
     "farmerNotesLabel": "शेतकरी टिप्पणी / शेतातील अनुभव",
     "farmerNotesPlaceholder": "जमिनीतील ओलावा, बियाणे वाण किंवा पावसाचा खंड याबद्दल लिहा...",
     "submitFeedbackBtn": "अभिप्राय सबमिट करा ->",
-    "submittingFeedback": "नोंद होत आहे..."
+    "submittingFeedback": "नोंद होत आहे...",
+
+    // Notification Modal
+    "notificationsTitle": "कृषी सूचना व सतर्कता संदेश",
+    "notificationsSub": "थेट हवामान इशारे, ICAR कृषी सल्ला व बाजारभाव",
+    "unreadCountLabel": "न वाचलेले",
+    "markAllRead": "सर्व वाचलेले करा",
+    "allAlerts": "सर्व",
+    "weatherAlerts": "हवामान",
+    "agriAdvisories": "सल्ला",
+    "marketAlerts": "बाजारभाव",
+    "noNotifications": "सध्या कोणतीही नवीन सूचना नाही. शेतातील परिस्थिती सामान्य आहे.",
+    "clearAll": "सर्व हटवा",
+    "close": "बंद करा",
+    "takeAction": "पेरणी तपासा ->",
+    "alertTimeNow": "आत्ताच",
+    "alertTimeToday": "आज"
   },
 
   "hi": {
@@ -779,6 +811,22 @@ export const translations = {
     "farmerNotesLabel": "किसान टिप्पणी / अतिरिक्त अनुभव",
     "farmerNotesPlaceholder": "मिट्टी में नमी की गहराई, प्रयुक्त बीज की किस्म, या बारिश के बारे में लिखें...",
     "submitFeedbackBtn": "प्रतिक्रिया सबमिट करें ->",
-    "submittingFeedback": "दर्ज किया जा रहा है..."
+    "submittingFeedback": "दर्ज किया जा रहा है...",
+
+    // Notification Modal
+    "notificationsTitle": "कृषि सूचनाएँ व अलर्ट",
+    "notificationsSub": "मौसम अलर्ट, ICAR कृषि सलाह व मंडी समर्थन मूल्य",
+    "unreadCountLabel": "अपठित",
+    "markAllRead": "सभी पढ़ा हुआ मार्क करें",
+    "allAlerts": "सभी",
+    "weatherAlerts": "मौसम",
+    "agriAdvisories": "सलाह",
+    "marketAlerts": "बाजार",
+    "noNotifications": "इस समय कोई नया अलर्ट नहीं है। खेत की स्थिति सामान्य है।",
+    "clearAll": "सभी हटाएं",
+    "close": "बंद करें",
+    "takeAction": "बुवाई जांचें ->",
+    "alertTimeNow": "अभी",
+    "alertTimeToday": "आज"
   }
 };
