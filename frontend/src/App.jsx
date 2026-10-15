@@ -382,6 +382,10 @@ export default function App() {
           readIds={readNotificationIds}
           onMarkRead={handleMarkNotificationRead}
           onMarkAllRead={handleMarkAllNotificationsRead}
+          liveDistrict={formData.location || "Pune"}
+          liveLat={formData.lat || 18.5204}
+          liveLng={formData.lng || 73.8567}
+          liveCrop={formData.crop || "Soybean"}
         />
 
         {/* Floating Quick Language Switcher for secondary screens */}

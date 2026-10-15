@@ -1,55 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { 
   Bell, X, CheckCheck, CloudRain, ShieldAlert, Sparkles, 
-  TrendingUp, ArrowRight, Trash2, Sprout, Info, AlertTriangle
+  TrendingUp, ArrowRight, Trash2, Sprout, Info, AlertTriangle,
+  RefreshCw, CheckCircle2
 } from "lucide-react";
 import { translations } from "../locales/translations";
+import { 
+  generateLiveDistrictAlerts, 
+  requestBrowserNotificationPermission, 
+  sendBrowserPushNotification 
+} from "../services/liveNotificationEngine";
 
 export const DEFAULT_NOTIFICATIONS = [
   {
-    id: "notif-1",
-    type: "weather",
-    category: "IMD Forecast",
-    severity: "optimal", // "optimal" | "warning" | "danger" | "info"
-    timestamp: "10m ago",
-    targetDistrict: "Pune",
-    targetCrop: "Soybean",
-    title: {
-      en: "IMD Rain Advisory: 48-Hour Dry Window for Sowing",
-      mr: "हवामान इशारा: पश्चिम महाराष्ट्रात पुढील ४८ तास पेरणीसाठी अनुकूल",
-      hi: "मौसम सलाह: अगले 48 घंटे बुवाई के लिए मौसम बिल्कुल अनुकूल"
-    },
-    message: {
-      en: "Dry spell forecast creates an optimal sowing window for Soybean and Groundnut in Western Maharashtra. Ensure 3-4 cm seed depth.",
-      mr: "पावसाची उघडीप असल्याने पश्चिम महाराष्ट्रात सोयाबीन व भुईमूग पेरणीसाठी योग्य संधी आहे. बियाणे ३-४ सेंमी खोलीवर पेरावे.",
-      hi: "बारिश थमने के कारण पश्चिम महाराष्ट्र में सोयाबीन व मूंगफली की बुवाई का उत्तम अवसर है। 3-4 सेमी गहराई पर बुवाई करें।"
-    }
-  },
-  {
-    id: "notif-2",
+    id: "notif-seed-treatment",
     type: "advisory",
     category: "ICAR Seed Protocol",
     severity: "warning",
-    timestamp: "1h ago",
+    timestamp: "Seasonal Advisory",
     targetDistrict: "Akola",
     targetCrop: "Gram",
     title: {
-      en: "ICAR Advisory: Mandatory Seed Treatment for Gram (Chickpea)",
-      mr: "ICAR कृषी सल्ला: हरभरा पिकासाठी ट्रायकोडर्मा बीजप्रक्रिया करा",
+      en: "ICAR Protocol: Mandatory Trichoderma Seed Treatment for Gram (Harbhara)",
+      mr: "ICAR कृषी सल्ला: हरभरा पिकासाठी ट्रायकोडर्मा व रायझोबियम बीजप्रक्रिया अनिवार्य",
       hi: "ICAR कृषि सलाह: चना (हरभरा) के लिए ट्राइकोडर्मा बीज उपचार जरूरी"
     },
     message: {
-      en: "To prevent collar rot and wilt in heavy regur soils, treat certified Digvijay/Jaki 9218 gram seed with Trichoderma viride (5g/kg).",
-      mr: "काळी कसदार जमिनीत मर रोग टाळण्यासाठी प्रमाणित दिग्विजय/जाकी ९२१८ हरभरा बियाण्यास ट्रायकोडर्मा (५ ग्रॅ/किलो) चोळावे.",
-      hi: "काली मिट्टी में उकठा रोग से बचाव के लिए प्रमाणित दिग्विजय/जाकी 9218 चने के बीज को ट्राइकोडर्मा (5 ग्रा/किग्रा) से उपचारित करें।"
+      en: "To prevent collar rot and vascular wilt in heavy regur soils, treat certified Digvijay/Jaki 9218 gram seed with Trichoderma viride (5g/kg) and Rhizobium culture before drilling.",
+      mr: "काळी कसदार जमिनीत मर रोग व मूळकूज टाळण्यासाठी पेरणीपूर्वी प्रमाणित दिग्विजय/जाकी ९२१८ हरभरा बियाण्यास ट्रायकोडर्मा (५ ग्रॅ/किलो) व रायझोबियम जीवाणू संवर्धकाची प्रक्रिया करावी.",
+      hi: "काली मिट्टी में उकठा रोग व जड़ सड़न से बचाव के लिए प्रमाणित दिग्विजय/जाकी 9218 चने के बीज को ट्राइकोडर्मा (5 ग्रा/किग्रा) से उपचारित करें।"
     }
   },
   {
-    id: "notif-3",
+    id: "notif-cotton-pest",
     type: "advisory",
     category: "Pest & Crop Watch",
     severity: "warning",
-    timestamp: "3h ago",
+    timestamp: "Seasonal Advisory",
     targetDistrict: "Yavatmal",
     targetCrop: "Cotton",
     title: {
@@ -59,46 +46,27 @@ export const DEFAULT_NOTIFICATIONS = [
     },
     message: {
       en: "High humidity across Vidarbha cotton tracts requires monitoring. Install 5 pheromone traps per acre to keep bollworm ETL below 5%.",
-      mr: "विदर्भातील कापूस पट्ट्यात हवेतील आर्द्रतेमुळे बोंडअळीचा धोका वाढू नये म्हणून एकरी ५ कामगंध सापळे लावावेत.",
-      hi: "विदर्भ के कपास क्षेत्रों में नमी के कारण सुंडी से बचाव हेतु प्रति एकड़ 5 फेरोमोन ट्रैप लगाएं।"
+      mr: "विदर्भातील कापूस पट्ट्यात हवेतील आर्द्रतेमुळे बोंडअळीचा धोका वाढू नये म्हणून एकरी ५ कामगंध सापळे लावावेत व कामगंध सापळ्यात पतंग आढळल्यास निंबोळी अर्काची फवारणी करावी.",
+      hi: "विदर्भ के कपास क्षेत्रों में नमी के कारण सुंडी से बचाव हेतु प्रति एकड़ 5 फेरोमोन ट्रैप लगाएं और नीम अर्क का छिड़काव करें।"
     }
   },
   {
-    id: "notif-4",
+    id: "notif-msp-rates",
     type: "market",
     category: "Govt MSP Update",
     severity: "info",
-    timestamp: "Today, 6:00 AM",
+    timestamp: "Government Gazette",
     targetDistrict: "Latur",
     targetCrop: "Gram",
     title: {
       en: "MSP Support Announcement: Gram at ₹5,440/Qtl, Wheat at ₹2,275/Qtl",
-      mr: "शासकीय हमीभाव: हरभरा ₹५,४४०/क्विंटल व गहू ₹२,२७५/क्विंटल घोषित",
+      mr: "शासकीय हमीभाव: हरभरा ₹५,४४०/क्विंटल व गहू ₹२,२७५/क्विंटल हमीभाव जाहीर",
       hi: "सरकारी समर्थन मूल्य: चना ₹5,440/क्विंटल व गेहूं ₹2,275/क्विंटल घोषित"
     },
     message: {
-      en: "Central government announced revised procurement minimum support rates. Plan timely sowing to benefit from official purchase centers.",
-      mr: "केंद्र शासनाने रब्बी हमीभाव जाहीर केले असून हमीभाव केंद्रांचा लाभ घेण्यासाठी वेळीच पेरणीचे नियोजन करा.",
-      hi: "केंद्र सरकार द्वारा रबी एमएसपी की घोषणा। सरकारी खरीद केंद्रों का लाभ लेने के लिए समय पर बुवाई करें।"
-    }
-  },
-  {
-    id: "notif-5",
-    type: "weather",
-    category: "Soil Moisture Watch",
-    severity: "optimal",
-    timestamp: "Yesterday",
-    targetDistrict: "Solapur",
-    targetCrop: "Jowar",
-    title: {
-      en: "Soil Moisture Status: Rabi Jowar (Maldandi) Ready for Sowing",
-      mr: "जमीन ओलावा स्थिती: रब्बी ज्वारी (मालदांडी) पेरणीयोग्य वाफसा तयार",
-      hi: "मिट्टी में नमी: रबी ज्वार (मालदांडी) बुवाई के लिए वाप्सा तैयार"
-    },
-    message: {
-      en: "Adequate conserved root-zone moisture recorded in Solapur & Sangli. Rainfed farmers can begin sowing Maldandi M 35-1 immediately.",
-      mr: "सोलापूर व सांगली भागात जमिनीत मुळांच्या खोलीपर्यंत चांगला ओलावा आहे. कोरडवाहू शेतकरी मालदांडी ज्वारीची पेरणी करू शकतात.",
-      hi: "सोलापुर व सांगली में मिट्टी में पर्याप्त नमी उपलब्ध है। किसान मालदांडी ज्वार की बुवाई तुरंत शुरू कर सकते हैं।"
+      en: "Central government announced revised procurement minimum support rates. Plan timely sowing of certified varieties to benefit from official purchase centers.",
+      mr: "केंद्र शासनाने रब्बी हमीभाव जाहीर केले असून हमीभाव केंद्रांचा लाभ घेण्यासाठी वेळीच प्रमाणित वाणांच्या पेरणीचे नियोजन करा.",
+      hi: "केंद्र सरकार द्वारा रबी एमएसपी की घोषणा। सरकारी खरीद केंद्रों का लाभ लेने के लिए समय पर प्रमाणित किस्मों की बुवाई करें।"
     }
   }
 ];
@@ -110,14 +78,59 @@ export default function NotificationModal({
   onAction,
   readIds = [],
   onMarkRead,
-  onMarkAllRead
+  onMarkAllRead,
+  liveDistrict = "Pune",
+  liveLat = 18.5204,
+  liveLng = 73.8567,
+  liveCrop = "Soybean"
 }) {
   const t = translations[language] || translations.en;
   const [activeTab, setActiveTab] = useState("all");
   const [notifications, setNotifications] = useState(DEFAULT_NOTIFICATIONS);
+  const [isScanningLive, setIsScanningLive] = useState(false);
+  const [pushPermission, setPushPermission] = useState(() => {
+    if (typeof window !== "undefined" && "Notification" in window) {
+      return Notification.permission;
+    }
+    return "unsupported";
+  });
+
+  // Fetch live weather-based notifications on open or district change
+  useEffect(() => {
+    let isMounted = true;
+    async function loadLiveAlerts() {
+      setIsScanningLive(true);
+      try {
+        const liveList = await generateLiveDistrictAlerts(liveDistrict, liveLat, liveLng, liveCrop);
+        if (isMounted && liveList && liveList.length > 0) {
+          setNotifications(liveList);
+
+          // If push notification is granted, send push for new danger alerts
+          if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
+            const dangerAlert = liveList.find(a => a.severity === "danger" && !readIds.includes(a.id));
+            if (dangerAlert) {
+              const pushTitle = dangerAlert.title[language] || dangerAlert.title.en;
+              const pushBody = dangerAlert.message[language] || dangerAlert.message.en;
+              sendBrowserPushNotification(pushTitle, pushBody);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Live notification fetch error:", e);
+      } finally {
+        if (isMounted) setIsScanningLive(false);
+      }
+    }
+
+    if (isOpen) {
+      loadLiveAlerts();
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [isOpen, liveDistrict, liveLat, liveLng, liveCrop]);
 
   useEffect(() => {
-    // Lock background scroll when open
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
@@ -129,6 +142,31 @@ export default function NotificationModal({
   }, [isOpen]);
 
   if (!isOpen) return null;
+
+  const handleEnablePush = async () => {
+    const res = await requestBrowserNotificationPermission();
+    setPushPermission(res);
+    if (res === "granted") {
+      const welcomeTitle = language === "mr" 
+        ? "✅ थेट कृषी सूचना सक्रिय झाल्या आहेत!" 
+        : language === "hi" 
+        ? "✅ लाइव कृषि अलर्ट सक्रिय हो गए हैं!" 
+        : "✅ Live Farm Alerts Activated!";
+      const welcomeBody = language === "mr"
+        ? `${liveDistrict} साठी थेट पाऊस व पेरणी इशारे तत्काळ मिळतील.`
+        : language === "hi"
+        ? `${liveDistrict} के लिए लाइव बारिश व बुवाई अलर्ट तुरंत मिलेंगे।`
+        : `You will receive instant alerts for live rainfall and sowing windows in ${liveDistrict}.`;
+      sendBrowserPushNotification(welcomeTitle, welcomeBody);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setIsScanningLive(true);
+    const liveList = await generateLiveDistrictAlerts(liveDistrict, liveLat, liveLng, liveCrop);
+    setNotifications(liveList);
+    setIsScanningLive(false);
+  };
 
   const handleClearItem = (e, id) => {
     e.stopPropagation();
@@ -177,7 +215,7 @@ export default function NotificationModal({
       <div className="absolute inset-0" onClick={onClose} />
 
       <div 
-        className="relative z-10 w-full max-w-lg bg-white rounded-t-[2.5rem] sm:rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[85vh] animate-slideUp"
+        className="relative z-10 w-full max-w-lg bg-white rounded-t-[2.5rem] sm:rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[88vh] animate-slideUp"
         onClick={(e) => e.stopPropagation()}
       >
         
@@ -204,13 +242,26 @@ export default function NotificationModal({
                   </span>
                 )}
               </div>
-              <p className="text-[11px] text-slate-500 font-medium">
-                {t.notificationsSub || "Real-time weather alerts, ICAR advisories & market prices"}
+              <p className="text-[11px] text-slate-500 font-medium flex items-center gap-1.5">
+                <span>{liveDistrict}</span>
+                <span>•</span>
+                <span className="text-emerald-700 font-bold">
+                  {isScanningLive ? (language === "mr" ? "उपग्रह रडार स्कॅन होत आहे..." : language === "hi" ? "मौसम रडार स्कैन हो रहा है..." : "Scanning radar...") : (language === "mr" ? "थेट हवामान सक्रिय" : language === "hi" ? "लाइव मौसम सक्रिय" : "Live Satellite Active")}
+                </span>
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={handleRefresh}
+              disabled={isScanningLive}
+              className="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 flex items-center justify-center transition disabled:opacity-50"
+              title="Refresh Live Weather Alerts"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isScanningLive ? "animate-spin text-emerald-600" : ""}`} />
+            </button>
             {unreadCount > 0 && onMarkAllRead && (
               <button
                 type="button"
@@ -231,6 +282,42 @@ export default function NotificationModal({
             </button>
           </div>
         </div>
+
+        {/* Live Push Notification Banner */}
+        {pushPermission !== "granted" && pushPermission !== "unsupported" && (
+          <div className="mx-4 sm:mx-6 mt-3 p-3 rounded-2xl bg-gradient-to-r from-emerald-800 to-[#0B4628] text-white flex items-center justify-between shadow-md">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                <Bell className="w-4 h-4 text-emerald-200 animate-bounce" />
+              </div>
+              <div>
+                <p className="text-xs font-black leading-tight">
+                  {language === "mr" ? "थेट पावसाचे अलर्ट मोबाईलवर मिळवा" : language === "hi" ? "बारिश व बुवाई के रियल-टाइम अलर्ट पाएं" : "Enable Live Device Push Alerts"}
+                </p>
+                <p className="text-[10px] text-emerald-200">
+                  {language === "mr" ? "मुसळधार पाऊस व पेरणी कालावधीच्या तत्काळ सूचना" : language === "hi" ? "भारी बारिश और बुवाई समय की तत्काल सूचना" : "Get instant alerts when rain or sowing windows open"}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleEnablePush}
+              className="px-3 py-1.5 rounded-xl bg-white text-emerald-950 text-xs font-black hover:bg-emerald-50 transition shrink-0 cursor-pointer shadow-xs ml-2"
+            >
+              {language === "mr" ? "चालू करा" : language === "hi" ? "चालू करें" : "Enable"}
+            </button>
+          </div>
+        )}
+
+        {pushPermission === "granted" && (
+          <div className="mx-4 sm:mx-6 mt-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-between text-[11px] font-bold">
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span>{language === "mr" ? "थेट मोबाईल/ब्राउझर सूचना सक्रिय आहेत" : language === "hi" ? "लाइव मोबाइल/ब्राउज़र अलर्ट सक्रिय हैं" : "Live Device Push Alerts Active"}</span>
+            </span>
+            <span className="text-[10px] bg-emerald-600 text-white px-1.5 py-0.5 rounded-md font-mono">LIVE</span>
+          </div>
+        )}
 
         {/* Filter Tabs */}
         <div className="px-6 py-2.5 bg-white border-b border-slate-100 flex items-center gap-2 overflow-x-auto no-scrollbar">
@@ -292,7 +379,7 @@ export default function NotificationModal({
                             {item.category}
                           </span>
                           {!isRead && (
-                            <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0" />
+                            <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0 animate-ping" />
                           )}
                         </div>
                         <span className="text-[10px] text-slate-400 font-semibold shrink-0">
