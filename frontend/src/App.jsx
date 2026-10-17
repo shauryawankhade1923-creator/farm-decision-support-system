@@ -8,8 +8,6 @@ import CompareOptionsScreen from "./screens/CompareOptionsScreen";
 import SavedFieldsScreen from "./screens/SavedFieldsScreen";
 import HistoryScreen from "./screens/HistoryScreen";
 import BottomBar from "./components/BottomBar";
-import LanguageSelector from "./components/LanguageSelector";
-import { Globe } from "lucide-react";
 import FeedbackModal from "./components/FeedbackModal";
 import NotificationModal, { DEFAULT_NOTIFICATIONS } from "./components/NotificationModal";
 import { checkDecision, checkHarvestDecision, saveField } from "./services/api";
@@ -17,7 +15,6 @@ import { checkDecision, checkHarvestDecision, saveField } from "./services/api";
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState("home"); // "home" | "farm_details" | "harvest_details" | "decision" | "compare" | "saved_fields" | "history"
   const [flowMode, setFlowMode] = useState("sowing"); // "sowing" | "harvest"
-  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [readNotificationIds, setReadNotificationIds] = useState(() => {
     try {
@@ -388,27 +385,6 @@ export default function App() {
           liveCrop={formData.crop || "Soybean"}
         />
 
-        {/* Floating Quick Language Switcher for secondary screens */}
-        {currentScreen !== "home" && (
-          <button
-            type="button"
-            onClick={() => setIsLanguageModalOpen(true)}
-            className="fixed top-4 right-4 z-40 bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-md px-3 py-1.5 rounded-full text-xs font-black text-slate-800 flex items-center gap-1.5 hover:bg-white hover:scale-105 transition cursor-pointer"
-            title="Change Language / भाषा बदला / भाषा बदलें"
-          >
-            <Globe className="w-3.5 h-3.5 text-emerald-600" />
-            <span>{language === "mr" ? "मराठी" : language === "hi" ? "हिंदी" : "English"}</span>
-          </button>
-        )}
-
-        {/* Global Language Modal */}
-        <LanguageSelector
-          language={language}
-          setLanguage={setLanguage}
-          variant="modal"
-          isOpen={isLanguageModalOpen}
-          onClose={() => setIsLanguageModalOpen(false)}
-        />
 
         {/* Toast Notification */}
         {toastMessage && (
