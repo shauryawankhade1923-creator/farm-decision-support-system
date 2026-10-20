@@ -7,7 +7,7 @@ export const translations = {
     "navHome": "Home",
     "navDecide": "Sowing Decision",
     "navSaved": "All Farms",
-    "navStatistic": "Statistic",
+    "navStatistic": "Statistics",
     "navProfile": "My Profile",
     "chooseLanguage": "Language / भाषा",
     "langEnglish": "English",

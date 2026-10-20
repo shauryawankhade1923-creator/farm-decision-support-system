@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F5132"/>
+      <stop offset="50%" stop-color="#198754"/>
+      <stop offset="100%" stop-color="#20c997"/>
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#DE9E6E"/>
+      <stop offset="100%" stop-color="#C68150"/>
+    </linearGradient>
+    <linearGradient id="turbanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDF7"/>
+      <stop offset="100%" stop-color="#EADDC7"/>
+    </linearGradient>
+    <linearGradient id="saffronGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9933"/>
+      <stop offset="100%" stop-color="#E67300"/>
+    </linearGradient>
+    <linearGradient id="kurtaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E2E8F0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Circular background -->
+  <circle cx="64" cy="64" r="64" fill="url(#bgGrad)"/>
+
+  <!-- Field silhouette / landscape background -->
+  <path d="M0 88 Q32 80 64 88 T128 88 L128 128 L0 128 Z" fill="#0A3622" opacity="0.3"/>
+  <circle cx="98" cy="38" r="14" fill="#FDE047" opacity="0.25"/>
+
+  <!-- Torso & Kurta -->
+  <path d="M26 128 C28 106 42 98 64 98 C86 98 100 106 102 128 Z" fill="url(#kurtaGrad)"/>
+  <!-- Kurta collar & placket -->
+  <path d="M56 98 L64 116 L72 98 Z" fill="#CBD5E1"/>
+  <line x1="64" y1="116" x2="64" y2="128" stroke="#94A3B8" stroke-width="2"/>
+  <!-- Traditional Gamcha / Angavastram (cotton scarf) over shoulder -->
+  <path d="M34 104 C40 108 46 118 48 128 L32 128 C30 120 31 110 34 104 Z" fill="url(#saffronGrad)"/>
+
+  <!-- Neck -->
+  <path d="M54 84 L54 98 C58 101 70 101 74 98 L74 84 Z" fill="#C68150"/>
+
+  <!-- Head / Face -->
+  <ellipse cx="64" cy="68" rx="20" ry="24" fill="url(#skinGrad)"/>
+
+  <!-- Ears -->
+  <ellipse cx="43" cy="69" rx="3.5" ry="6" fill="#C68150"/>
+  <ellipse cx="85" cy="69" rx="3.5" ry="6" fill="#C68150"/>
+
+  <!-- Eyes -->
+  <ellipse cx="56" cy="65" rx="3" ry="2" fill="#292524"/>
+  <circle cx="57" cy="64.5" r="0.8" fill="#FFFFFF"/>
+  <ellipse cx="72" cy="65" rx="3" ry="2" fill="#292524"/>
+  <circle cx="73" cy="64.5" r="0.8" fill="#FFFFFF"/>
+
+  <!-- Eyebrows -->
+  <path d="M51 60 Q56 58 60 61" stroke="#292524" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M68 61 Q72 58 77 60" stroke="#292524" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+
+  <!-- Nose -->
+  <path d="M64 64 L62 73 L66 73" stroke="#B46E3D" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+
+  <!-- Friendly Farmer Mustache -->
+  <path d="M53 76 Q64 74 64 77 Q64 74 75 76 Q78 81 74 81 Q64 79 64 81 Q64 79 54 81 Q50 81 53 76 Z" fill="#292524"/>
+
+  <!-- Gentle Smile underneath -->
+  <path d="M59 83 Q64 86 69 83" stroke="#78350F" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+
+  <!-- Traditional Topi / Feta (Turban) -->
+  <!-- Base wrap -->
+  <ellipse cx="64" cy="48" rx="23" ry="14" fill="url(#turbanGrad)"/>
+  <!-- Folds of the safa/turban -->
+  <path d="M41 51 Q64 36 87 51 Q89 44 82 38 Q64 32 46 38 Q39 44 41 51 Z" fill="url(#turbanGrad)"/>
+  <path d="M44 44 Q64 34 84 44" stroke="#D1C3A5" stroke-width="1.5" fill="none"/>
+  <path d="M42 48 Q64 39 86 48" stroke="#D1C3A5" stroke-width="1.5" fill="none"/>
+
+  <!-- Saffron accent strip on turban -->
+  <path d="M52 35 Q64 33 76 35 L75 39 Q64 37 53 39 Z" fill="url(#saffronGrad)"/>
+
+  <!-- Auspicious small red tilak on forehead -->
+  <line x1="64" y1="53" x2="64" y2="57" stroke="#DC2626" stroke-width="1.6" stroke-linecap="round"/>
+
+  <!-- Wheat grain stalk emblem near bottom-right -->
+  <g transform="translate(86, 92) scale(0.65)">
+    <path d="M12 28 Q18 16 28 6" stroke="#FEF08A" stroke-width="2.5" fill="none"/>
+    <ellipse cx="28" cy="6" rx="4" ry="2.5" transform="rotate(-30 28 6)" fill="#FDE047"/>
+    <ellipse cx="23" cy="11" rx="4" ry="2.5" transform="rotate(-40 23 11)" fill="#FDE047"/>
+    <ellipse cx="25" cy="16" rx="4" ry="2.5" transform="rotate(30 25 16)" fill="#FACC15"/>
+    <ellipse cx="19" cy="19" rx="4" ry="2.5" transform="rotate(-40 19 19)" fill="#FACC15"/>
+  </g>
+</svg>

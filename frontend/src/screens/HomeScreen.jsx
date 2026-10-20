@@ -1700,7 +1700,7 @@ export default function HomeScreen({
               title="View Profile & Farmer Account"
             >
               <img 
-                src="/user_avatar.jpg" 
+                src="/farmer_avatar.svg" 
                 alt="Farmer Profile" 
                 className="w-full h-full object-cover"
               />

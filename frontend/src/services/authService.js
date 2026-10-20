@@ -361,3 +361,29 @@ export async function deleteAccount() {
   logout();
   return true;
 }
+
+// 7. Instant Demo Login (for judging / reviews)
+export function loginDemoUser() {
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + 7);
+  const session = {
+    userId: DEFAULT_DEMO_USER.id,
+    token: `token_demo_${Date.now()}`,
+    expiresAt: expiresAt.toISOString(),
+    user: {
+      id: DEFAULT_DEMO_USER.id,
+      name: DEFAULT_DEMO_USER.name,
+      email: DEFAULT_DEMO_USER.email,
+      phone: DEFAULT_DEMO_USER.phone,
+      isVerified: DEFAULT_DEMO_USER.isVerified,
+      district: DEFAULT_DEMO_USER.district,
+      role: DEFAULT_DEMO_USER.role
+    }
+  };
+  try {
+    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+  } catch (e) {
+    console.error("Failed to store demo session:", e);
+  }
+  return session.user;
+}

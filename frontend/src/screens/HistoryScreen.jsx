@@ -179,7 +179,7 @@ export default function HistoryScreen({ onNewCheck, language = "en", onBack }) {
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-full border-2 border-emerald-400 overflow-hidden shadow-lg bg-emerald-900 shrink-0">
             <img 
-              src="/user_avatar.jpg" 
+              src="/farmer_avatar.svg" 
               alt="Farmer Profile" 
               className="w-full h-full object-cover"
             />
