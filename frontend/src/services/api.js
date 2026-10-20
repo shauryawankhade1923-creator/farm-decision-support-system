@@ -1,4 +1,5 @@
 import { evaluateDecisionClient, evaluateHarvestDecisionClient } from "./clientDecisionEngine";
+import { getCurrentSession } from "./authService";
 import { 
   getScopedSavedFields, 
   saveScopedField, 
@@ -9,11 +10,20 @@ import {
 
 const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : "http://localhost:8000/api";
 
+function getAuthHeaders() {
+  const headers = { "Content-Type": "application/json" };
+  const session = getCurrentSession();
+  if (session && session.token) {
+    headers["Authorization"] = `Bearer ${session.token}`;
+  }
+  return headers;
+}
+
 export async function checkDecision(payload) {
   try {
     const response = await fetch(`${API_BASE}/decision`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(3000)
     });
@@ -24,7 +34,7 @@ export async function checkDecision(payload) {
     try {
       const resp2 = await fetch(`/api/decision`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getAuthHeaders(),
         body: JSON.stringify(payload),
         signal: AbortSignal.timeout(3000)
       });
@@ -41,7 +51,7 @@ export async function checkHarvestDecision(payload) {
   try {
     const response = await fetch(`${API_BASE}/harvest-decision`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(3000)
     });
@@ -52,7 +62,7 @@ export async function checkHarvestDecision(payload) {
     try {
       const resp2 = await fetch(`/api/harvest-decision`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getAuthHeaders(),
         body: JSON.stringify(payload),
         signal: AbortSignal.timeout(3000)
       });
@@ -69,7 +79,7 @@ export async function geocodeLocation(location) {
   try {
     const response = await fetch(`${API_BASE}/geocode`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ location }),
       signal: AbortSignal.timeout(2000)
     });
@@ -103,7 +113,10 @@ export async function getCrops() {
 
 export async function getSavedFields() {
   try {
-    const response = await fetch(`${API_BASE}/fields`, { signal: AbortSignal.timeout(2000) });
+    const response = await fetch(`${API_BASE}/fields`, {
+      headers: getAuthHeaders(),
+      signal: AbortSignal.timeout(2000)
+    });
     if (response.ok) return await response.json();
   } catch (e) {}
 
@@ -114,7 +127,7 @@ export async function saveField(field) {
   try {
     const response = await fetch(`${API_BASE}/fields`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(field),
       signal: AbortSignal.timeout(2000)
     });
@@ -126,7 +139,11 @@ export async function saveField(field) {
 
 export async function deleteField(id) {
   try {
-    await fetch(`${API_BASE}/fields/${id}`, { method: "DELETE", signal: AbortSignal.timeout(2000) });
+    await fetch(`${API_BASE}/fields/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(),
+      signal: AbortSignal.timeout(2000)
+    });
   } catch (e) {}
 
   return deleteScopedField(id);
@@ -134,7 +151,10 @@ export async function deleteField(id) {
 
 export async function getHistory() {
   try {
-    const response = await fetch(`${API_BASE}/history`, { signal: AbortSignal.timeout(2000) });
+    const response = await fetch(`${API_BASE}/history`, {
+      headers: getAuthHeaders(),
+      signal: AbortSignal.timeout(2000)
+    });
     if (response.ok) return await response.json();
   } catch (e) {}
 
@@ -142,6 +162,14 @@ export async function getHistory() {
 }
 
 export async function getHistoryStats() {
+  try {
+    const response = await fetch(`${API_BASE}/history/stats`, {
+      headers: getAuthHeaders(),
+      signal: AbortSignal.timeout(2000)
+    });
+    if (response.ok) return await response.json();
+  } catch (e) {}
+
   const history = await getHistory();
   const rated = history.filter(h => h.rating);
   const avg = rated.length ? (rated.reduce((acc, h) => acc + h.rating, 0) / rated.length).toFixed(1) : "4.8";
@@ -159,7 +187,7 @@ export async function submitFeedback(payload) {
   try {
     const response = await fetch(`${API_BASE}/feedback`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(2000)
     });
@@ -188,7 +216,11 @@ export async function submitFeedback(payload) {
 
 export async function deleteHistory(id) {
   try {
-    await fetch(`${API_BASE}/history/${id}`, { method: "DELETE", signal: AbortSignal.timeout(2000) });
+    await fetch(`${API_BASE}/history/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(),
+      signal: AbortSignal.timeout(2000)
+    });
   } catch (e) {}
 
   return true;

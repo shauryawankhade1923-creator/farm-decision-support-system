@@ -150,6 +150,11 @@ export const CROP_RULES = {
 };
 
 export async function fetchLiveOrSyntheticWeather(lat = 18.5204, lng = 73.8567) {
+  let isLive = false;
+  let source = "Open-Meteo Weather API (ECMWF/GFS Grid)";
+  let warning = null;
+  let list = [];
+
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=precipitation_sum,precipitation_probability_max,temperature_2m_max,temperature_2m_min,temperature_2m_mean&timezone=auto&forecast_days=10`;
     const res = await fetch(url, { signal: AbortSignal.timeout(3500) });
@@ -163,42 +168,60 @@ export async function fetchLiveOrSyntheticWeather(lat = 18.5204, lng = 73.8567) 
       const tmin = daily.temperature_2m_min || [];
       const tmean = daily.temperature_2m_mean || [];
 
-      return time.map((d, i) => ({
+      list = time.map((d, i) => ({
         date: d,
-        precipitation_mm: precip[i] ?? 0.0,
-        precipitation_probability: prob[i] ?? 0,
-        temp_max_c: tmax[i] ?? 30.0,
-        temp_min_c: tmin[i] ?? 22.0,
-        temp_mean_c: tmean[i] ?? 26.0
+        precipitation_mm: precip[i] != null ? Math.round(Number(precip[i]) * 10) / 10 : 0.0,
+        precipitation_probability: prob[i] != null ? Number(prob[i]) : 0,
+        temp_max_c: tmax[i] != null ? Math.round(Number(tmax[i]) * 10) / 10 : 30.0,
+        temp_min_c: tmin[i] != null ? Math.round(Number(tmin[i]) * 10) / 10 : 22.0,
+        temp_mean_c: tmean[i] != null ? Math.round(Number(tmean[i]) * 10) / 10 : 26.0
       }));
+      if (list.length > 0) {
+        isLive = true;
+      }
     }
   } catch (e) {
-    console.warn("Direct Open-Meteo fetch failed or timed out, generating local forecast:", e);
+    console.warn("Direct Open-Meteo fetch failed or timed out:", e);
   }
 
-  // Graceful realistic 10-day forecast for Maharashtra Agro-Climatic Zone
-  const today = new Date();
-  const list = [];
-  const baseRain = [4.5, 8.2, 12.0, 18.4, 6.0, 1.2, 0.4, 0.0, 2.5, 7.0];
-  for (let i = 0; i < 10; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() + i);
-    list.push({
-      date: d.toISOString().split("T")[0],
-      precipitation_mm: baseRain[i] || 3.0,
-      precipitation_probability: Math.min(90, Math.round(baseRain[i] * 5 + 20)),
-      temp_max_c: 31.0 - (i % 3) * 0.5,
-      temp_min_c: 22.0 + (i % 2) * 0.4,
-      temp_mean_c: 26.5
-    });
+  // If live fetch failed, return explicitly flagged offline fallback — never masquerade as real weather
+  if (!isLive || list.length === 0) {
+    isLive = false;
+    source = "Offline Demonstration Scenario (Live Weather Unreachable)";
+    warning = "Live Open-Meteo meteorological connection could not be loaded. Displaying an offline demonstration scenario for interface testing. Do not base field investments on this simulated data.";
+    const today = new Date();
+    const baseRain = [4.5, 8.2, 12.0, 18.4, 6.0, 1.2, 0.4, 0.0, 2.5, 7.0];
+    list = [];
+    for (let i = 0; i < 10; i++) {
+      const d = new Date(today);
+      d.setDate(d.getDate() + i);
+      list.push({
+        date: d.toISOString().split("T")[0],
+        precipitation_mm: baseRain[i] || 0.0,
+        precipitation_probability: Math.min(90, Math.round(baseRain[i] * 5 + 20)),
+        temp_max_c: 31.0 - (i % 3) * 0.5,
+        temp_min_c: 22.0 + (i % 2) * 0.4,
+        temp_mean_c: 26.5
+      });
+    }
   }
-  return list;
+
+  return {
+    forecast: list,
+    metadata: {
+      is_live: isLive,
+      source: source,
+      forecast_period: "10-Day Daily Forecast",
+      fetched_at: new Date().toISOString(),
+      warning: warning
+    }
+  };
 }
 
 function detectDryGap(slice, germDays = 6, threshold = 1.5) {
   let consecutiveDry = 0;
   for (let i = 0; i < Math.min(slice.length, germDays); i++) {
-    if (slice[i].precipitation_mm < threshold) {
+    if ((slice[i].precipitation_mm || 0) < threshold) {
       consecutiveDry++;
       if (consecutiveDry >= 3) return true;
     } else {
@@ -206,6 +229,33 @@ function detectDryGap(slice, germDays = 6, threshold = 1.5) {
     }
   }
   return false;
+}
+
+function calculateWaitPeriodClient(allForecast, cropRule, startOffset = 0) {
+  const germDays = cropRule.germination_days || 6;
+  const minReq = cropRule.min_rainfall_mm_7day || 35.0;
+
+  for (let offset = startOffset + 1; offset <= allForecast.length - germDays; offset++) {
+    const sliceAhead = allForecast.slice(offset, offset + germDays);
+    if (sliceAhead.length >= germDays) {
+      const hasGap = detectDryGap(sliceAhead, germDays);
+      const sliceRain = sliceAhead.reduce((acc, d) => acc + (d.precipitation_mm || 0), 0);
+      if (!hasGap && sliceRain >= 0.7 * minReq) {
+        const waitDays = offset - startOffset;
+        return {
+          waitDays,
+          validated: true,
+          note: `Favorable window identified in ${waitDays} day(s) with ${sliceRain.toFixed(1)}mm rain and zero emergence dry-spells.`
+        };
+      }
+    }
+  }
+
+  return {
+    waitDays: 3,
+    validated: false,
+    note: "Current 10-day forecast does not show an optimal emergence window. Re-evaluate as updated forecasts arrive."
+  };
 }
 
 function checkDateInWindow(dateStr, startMD, endMD) {
@@ -224,9 +274,34 @@ function checkDateInWindow(dateStr, startMD, endMD) {
 
 export async function evaluateDecisionClient(farmerInput) {
   const cropRule = CROP_RULES[farmerInput.crop] || CROP_RULES.Soybean;
-  const forecast = await fetchLiveOrSyntheticWeather(farmerInput.lat, farmerInput.lng);
+  const weatherResult = await fetchLiveOrSyntheticWeather(farmerInput.lat, farmerInput.lng);
+  const forecast = weatherResult.forecast;
+  const weatherMetadata = weatherResult.metadata;
 
-  const sevenDay = forecast.slice(0, 7);
+  // Horizon and date validation
+  let startIdx = 0;
+  let horizonWarning = null;
+  const intendedDateStr = farmerInput.intended_sowing_date;
+  if (intendedDateStr) {
+    const idx = forecast.findIndex(d => d.date === intendedDateStr);
+    if (idx !== -1) {
+      startIdx = idx;
+    } else if (forecast.length > 0) {
+      const reqDate = new Date(intendedDateStr);
+      const firstDate = new Date(forecast[0].date);
+      const lastDate = new Date(forecast[forecast.length - 1].date);
+      if (reqDate < firstDate) {
+        horizonWarning = `Selected date (${intendedDateStr}) is in the past. Evaluation uses current and upcoming forecasts.`;
+      } else if (reqDate > lastDate) {
+        horizonWarning = `Selected date (${intendedDateStr}) is beyond the 10-day forecast horizon (available up to ${forecast[forecast.length - 1].date}). Numerical weather predictions beyond 10 days carry high uncertainty.`;
+      }
+    }
+  }
+
+  const sevenDay = forecast.slice(startIdx, startIdx + 7).length >= 7
+    ? forecast.slice(startIdx, startIdx + 7)
+    : forecast.slice(0, 7);
+
   const rainfall7d = sevenDay.reduce((acc, d) => acc + (d.precipitation_mm || 0), 0);
   const avgTemp = sevenDay.reduce((acc, d) => acc + (d.temp_mean_c || 26), 0) / Math.max(sevenDay.length, 1);
 
@@ -260,7 +335,7 @@ export async function evaluateDecisionClient(farmerInput) {
     verdictBadge = "Green";
     overallRisk = "Low";
   } else if (totalScore >= 45) {
-    verdict = "WAIT A FEW DAYS";
+    verdict = "WAIT";
     verdictBadge = "Amber";
     overallRisk = "Medium";
   } else {
@@ -270,17 +345,32 @@ export async function evaluateDecisionClient(farmerInput) {
   }
 
   const today = new Date();
-  const recStart = new Date(today);
-  const recEnd = new Date(today);
+  const waitResult = calculateWaitPeriodClient(forecast, cropRule, startIdx);
+  let recStart = new Date(today);
+  let recEnd = new Date(today);
+  let windowValidated = true;
+  let evaluationNote = null;
 
   if (verdict === "SOW NOW") {
     recEnd.setDate(recEnd.getDate() + 3);
+    evaluationNote = "Immediate 3-day sowing window favorable based on current forecast.";
   } else if (verdict.includes("WAIT")) {
-    recStart.setDate(recStart.getDate() + 3);
-    recEnd.setDate(recEnd.getDate() + 7);
+    if (waitResult.validated) {
+      recStart.setDate(recStart.getDate() + waitResult.waitDays);
+      recEnd.setDate(recEnd.getDate() + waitResult.waitDays + 3);
+      windowValidated = true;
+      evaluationNote = waitResult.note;
+    } else {
+      recStart.setDate(recStart.getDate() + 3);
+      recEnd.setDate(recEnd.getDate() + 7);
+      windowValidated = false;
+      evaluationNote = waitResult.note;
+    }
   } else {
     recStart.setDate(recStart.getDate() + 7);
     recEnd.setDate(recEnd.getDate() + 14);
+    windowValidated = false;
+    evaluationNote = "Unfavorable conditions for selected crop. Consider switching to lower-water alternative crops.";
   }
 
   // ML Emergence Probability Simulation
@@ -393,10 +483,16 @@ export async function evaluateDecisionClient(farmerInput) {
     verdict,
     verdict_badge: verdictBadge,
     confidence_pct: Math.min(95, Math.max(50, totalScore)),
+    suitability_score_label: "Rule-Based Agronomic Suitability Score",
     recommended_window: {
       start: recStart.toISOString().split("T")[0],
-      end: recEnd.toISOString().split("T")[0]
+      end: recEnd.toISOString().split("T")[0],
+      window_validated: windowValidated,
+      evaluation_note: evaluationNote
     },
+    weather_metadata: weatherMetadata,
+    sowing_date_horizon_warning: horizonWarning,
+    daily_forecast: sevenDay,
     summary: {
       rainfall_next_7_days_mm: Math.round(rainfall7d * 10) / 10,
       avg_temperature_c: Math.round(avgTemp * 10) / 10,
@@ -466,7 +562,9 @@ export async function evaluateDecisionClient(farmerInput) {
 
 export async function evaluateHarvestDecisionClient(harvestInput) {
   const cropRule = CROP_RULES[harvestInput.crop] || CROP_RULES.Soybean;
-  const forecast = await fetchLiveOrSyntheticWeather(harvestInput.lat, harvestInput.lng);
+  const weatherResult = await fetchLiveOrSyntheticWeather(harvestInput.lat, harvestInput.lng);
+  const forecast = weatherResult.forecast;
+  const weatherMetadata = weatherResult.metadata;
 
   const maturityDays = cropRule.maturity_days || 100;
   const sowingDate = new Date(harvestInput.actual_sowing_date || "2026-05-15");

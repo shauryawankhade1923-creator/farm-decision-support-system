@@ -1,15 +1,20 @@
-﻿import httpx
+import httpx
 from datetime import datetime, timedelta
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 from .models import WeatherDay
 
 OPEN_METEO_BASE_URL = "https://api.open-meteo.com/v1/forecast"
 
-async def fetch_weather_forecast(lat: float, lng: float, days: int = 10) -> List[WeatherDay]:
+async def fetch_weather_forecast(lat: float, lng: float, days: int = 10) -> Tuple[List[WeatherDay], Dict[str, Any]]:
     """
     Fetches real-time multi-day weather forecast from Open-Meteo API.
-    Provides precipitation_sum, probability, and temperatures.
+    Returns (days_list, metadata).
+    Clearly distinguishes live data from cached or simulated scenarios.
     """
+    # 1. Coordinate range validation
+    if not (-90.0 <= lat <= 90.0) or not (-180.0 <= lng <= 180.0):
+        raise ValueError(f"Invalid geographical coordinates: lat={lat}, lng={lng}. Latitude must be between -90 and 90, longitude between -180 and 180.")
+
     params = {
         "latitude": lat,
         "longitude": lng,
@@ -22,6 +27,14 @@ async def fetch_weather_forecast(lat: float, lng: float, days: int = 10) -> List
         ],
         "timezone": "auto",
         "forecast_days": max(days, 10)
+    }
+
+    metadata = {
+        "is_live": True,
+        "source": "Open-Meteo Weather API (ECMWF/GFS Grid)",
+        "forecast_period": f"{days}-Day Daily Forecast",
+        "fetched_at": datetime.now().isoformat(),
+        "warning": None
     }
     
     try:
@@ -54,16 +67,19 @@ async def fetch_weather_forecast(lat: float, lng: float, days: int = 10) -> List
                         temp_min_c=round(t_min, 1),
                         temp_mean_c=round(t_mean, 1)
                     ))
-                return results
+                return results, metadata
     except Exception as e:
-        print(f"[WeatherService] Open-Meteo request failed: {e}. Generating realistic synthetic forecast.")
+        print(f"[WeatherService] Open-Meteo request failed: {e}. Returning flagged offline fallback.")
 
-    # Offline / presentation fallback forecast
-    return _generate_fallback_forecast()
+    # Explicitly flagged fallback scenario — never masquerade as live weather
+    metadata["is_live"] = False
+    metadata["source"] = "Offline Demonstration Scenario (Live Weather Unreachable)"
+    metadata["warning"] = "Live Open-Meteo weather service could not be reached. Displaying an offline demonstration forecast for interface preview only. Do not make actual sowing investments based on this simulated weather."
+    
+    return _generate_fallback_forecast(), metadata
 
 def _generate_fallback_forecast() -> List[WeatherDay]:
     today = datetime.now()
-    # Scenario: rainfall today, followed by dry spell (classic Maharashtra monsoon break dilemma)
     sample_rain = [18.0, 1.2, 0.0, 0.0, 0.5, 4.0, 12.0, 16.5, 22.0, 14.0]
     sample_prob = [75, 30, 10, 10, 20, 50, 65, 80, 85, 70]
     

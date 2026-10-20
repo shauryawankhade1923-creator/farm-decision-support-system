@@ -120,33 +120,58 @@ def detect_dry_gap(forecast_slice: List[WeatherDay], germination_days: int, thre
             consecutive_dry = 0
     return False
 
-def calculate_wait_period(all_forecast: List[WeatherDay], crop_rule: Dict[str, Any]) -> int:
+def calculate_wait_period(
+    all_forecast: List[WeatherDay],
+    crop_rule: Dict[str, Any],
+    start_offset: int = 0
+) -> Tuple[Optional[int], bool, str]:
     """
-    Scans days forward (1 to 5 days ahead) to find the first sowing offset
-    where rainfall stabilizes and the dry-gap clears or improved rainfall arrives.
-    Defaults to 3-4 days if no perfect window is found within 7 days.
+    Scans forward from start_offset to find the first candidate sowing date
+    where rainfall stabilizes, meets at least 70% of crop requirement, and has zero dry-gap during emergence.
+    Returns (wait_days, is_validated, explanation).
     """
-    germ_days = crop_rule["germination_days"]
-    for offset in range(1, 6):
-        if offset + germ_days <= len(all_forecast):
-            slice_ahead = all_forecast[offset:offset + germ_days]
-            if not detect_dry_gap(slice_ahead, germ_days):
-                # Found clean germination window!
-                return offset
-    return 3  # Realistic default recommendation for break monsoon spells
+    germ_days = crop_rule.get("germination_days", 6)
+    min_req = crop_rule.get("min_rainfall_mm_7day", 35.0)
+    
+    for offset in range(start_offset + 1, len(all_forecast) - germ_days + 1):
+        slice_ahead = all_forecast[offset:offset + germ_days]
+        if len(slice_ahead) >= germ_days:
+            has_gap = detect_dry_gap(slice_ahead, germ_days)
+            slice_rain = sum(d.precipitation_mm for d in slice_ahead)
+            if not has_gap and slice_rain >= 0.7 * min_req:
+                wait_days = offset - start_offset
+                return wait_days, True, f"Favorable window identified in {wait_days} day(s) with {round(slice_rain, 1)}mm rainfall and no emergence dry gap."
+                
+    return None, False, "No verified favorable germination window found within the available 10-day weather forecast."
 
 def evaluate_decision(
     farmer_input: FarmerInput,
-    forecast: List[WeatherDay]
+    forecast: List[WeatherDay],
+    weather_metadata: Optional[Dict[str, Any]] = None
 ) -> DecisionResponse:
     crop_rule = get_crop_rule(farmer_input.crop)
     
-    # 1. Align forecast with intended sowing date if available, or use first 7 days
+    # 1. Align forecast with intended sowing date & validate forecast horizon
+    horizon_warning = None
     start_idx = 0
+    found_date = False
     for idx, day in enumerate(forecast):
         if day.date == farmer_input.intended_sowing_date:
             start_idx = idx
+            found_date = True
             break
+            
+    if not found_date and forecast:
+        try:
+            req_dt = datetime.strptime(farmer_input.intended_sowing_date, "%Y-%m-%d").date()
+            first_dt = datetime.strptime(forecast[0].date, "%Y-%m-%d").date()
+            last_dt = datetime.strptime(forecast[-1].date, "%Y-%m-%d").date()
+            if req_dt < first_dt:
+                horizon_warning = f"Selected date ({farmer_input.intended_sowing_date}) is in the past. Sowing decisions are evaluated using current and forward weather forecasts."
+            elif req_dt > last_dt:
+                horizon_warning = f"Selected date ({farmer_input.intended_sowing_date}) exceeds the 10-day meteorological forecast horizon (available up to {forecast[-1].date}). Numerical weather prediction beyond 10 days carries high uncertainty; evaluation is based on current forecast trends."
+        except Exception:
+            horizon_warning = "Sowing date could not be verified against the forecast horizon."
             
     seven_day_forecast = forecast[start_idx:start_idx + 7]
     if len(seven_day_forecast) < 7:
@@ -198,8 +223,10 @@ def evaluate_decision(
         verdict_badge = "Red"
         overall_risk = "High"
 
-    # 4. Wait days calculation & recommended window
-    wait_days = calculate_wait_period(forecast, crop_rule)
+    # 4. Wait days calculation & verified recommended window
+    wait_days, wait_validated, wait_note = calculate_wait_period(forecast, crop_rule, start_idx)
+    wait_days_int = wait_days if (wait_validated and wait_days is not None) else 3
+    
     try:
         intended_dt = datetime.strptime(farmer_input.intended_sowing_date, "%Y-%m-%d")
     except Exception:
@@ -208,15 +235,20 @@ def evaluate_decision(
     if verdict == "SOW NOW":
         rec_start = intended_dt.strftime("%Y-%m-%d")
         rec_end = (intended_dt + timedelta(days=3)).strftime("%Y-%m-%d")
+        recommended_window = RecommendedWindow(start=rec_start, end=rec_end, window_validated=True, evaluation_note="Immediate 3-day sowing window favorable based on current forecast.")
     elif verdict == "WAIT":
-        rec_start = (intended_dt + timedelta(days=wait_days)).strftime("%Y-%m-%d")
-        rec_end = (intended_dt + timedelta(days=wait_days + 4)).strftime("%Y-%m-%d")
+        if wait_validated and wait_days is not None:
+            rec_start = (intended_dt + timedelta(days=wait_days)).strftime("%Y-%m-%d")
+            rec_end = (intended_dt + timedelta(days=wait_days + 3)).strftime("%Y-%m-%d")
+            recommended_window = RecommendedWindow(start=rec_start, end=rec_end, window_validated=True, evaluation_note=wait_note)
+        else:
+            rec_start = (intended_dt + timedelta(days=3)).strftime("%Y-%m-%d")
+            rec_end = (intended_dt + timedelta(days=7)).strftime("%Y-%m-%d")
+            recommended_window = RecommendedWindow(start=rec_start, end=rec_end, window_validated=False, evaluation_note="Current 10-day forecast does not show an optimal emergence window. Re-evaluate as updated forecasts arrive.")
     else:
-        # For alternate crop, suggest next seasonal window
         rec_start = (intended_dt + timedelta(days=7)).strftime("%Y-%m-%d")
         rec_end = (intended_dt + timedelta(days=14)).strftime("%Y-%m-%d")
-        
-    recommended_window = RecommendedWindow(start=rec_start, end=rec_end)
+        recommended_window = RecommendedWindow(start=rec_start, end=rec_end, window_validated=False, evaluation_note="Sowing conditions unfavorable for selected crop. Consider switching to lower-water alternative crops.")
     
     # 5. Build Summary Object
     summary = DecisionSummary(
@@ -249,7 +281,7 @@ def evaluate_decision(
         min_req_rain=min_req_rain,
         has_dry_gap=has_dry_gap,
         germ_days=crop_rule["germination_days"],
-        wait_days=wait_days,
+        wait_days=wait_days_int,
         irrigation_available=farmer_input.irrigation_available,
         field_prepared=farmer_input.field_prepared,
         soil_match=soil_match,
@@ -265,7 +297,7 @@ def evaluate_decision(
         rainfall_7d=rainfall_7d,
         min_req_rain=min_req_rain,
         has_dry_gap=has_dry_gap,
-        wait_days=wait_days,
+        wait_days=wait_days_int,
         irrigation_available=farmer_input.irrigation_available,
         field_prepared=farmer_input.field_prepared,
         in_sowing_window=in_sowing_window,
@@ -287,6 +319,7 @@ def evaluate_decision(
         verdict=verdict,
         verdict_badge=verdict_badge,
         confidence_pct=confidence_pct,
+        suitability_score_label="Rule-Based Agronomic Suitability Score",
         recommended_window=recommended_window,
         summary=summary,
         explanation=explanation,
@@ -294,6 +327,8 @@ def evaluate_decision(
         daily_forecast=seven_day_forecast,
         score_breakdown=score_breakdown,
         crop_info=crop_rule,
+        weather_metadata=weather_metadata,
+        sowing_date_horizon_warning=horizon_warning,
         ml_prediction=ml_prediction
     )
 
@@ -469,7 +504,8 @@ def _generate_comparison_options(
 def score_harvest_decision(
     harvest_input: HarvestInput,
     forecast: List[WeatherDay],
-    current_date_str: str = None
+    current_date_str: str = None,
+    weather_metadata: Optional[Dict[str, Any]] = None
 ) -> DecisionResponse:
     """
     Evaluates harvest readiness, incoming rainfall damage risk, and post-harvest drying window.
@@ -689,13 +725,15 @@ def score_harvest_decision(
         verdict=verdict,
         verdict_badge=verdict_badge,
         confidence_pct=confidence_pct,
+        suitability_score_label="Harvest Safety Index",
         recommended_window=recommended_window,
         summary=summary,
         explanation=explanation,
         options=options,
         daily_forecast=seven_day_forecast,
         score_breakdown=score_breakdown,
-        crop_info=crop_rule
+        crop_info=crop_rule,
+        weather_metadata=weather_metadata
     )
 
 def _generate_harvest_explanation(
