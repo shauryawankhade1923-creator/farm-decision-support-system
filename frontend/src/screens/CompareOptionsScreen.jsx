@@ -206,24 +206,13 @@ export default function CompareOptionsScreen({
         /* TAB 2: CROP EMERGENCE & YIELD ANALYTICS */
         <div className="px-6 space-y-4">
           {/* Key Stat Gauges */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-white p-4 rounded-3xl border border-slate-200 shadow-xs space-y-1">
-              <span className="text-[10px] font-bold text-slate-400 uppercase">{t.mlProbLabel || "ML Emergence Probability"}</span>
-              <div className="text-2xl font-black text-[#0B4628] flex items-baseline gap-1">
-                <span>92.4%</span>
-                <span className="text-[10px] text-emerald-600 font-bold">{t.optimalLabel || "Optimal"}</span>
-              </div>
-              <p className="text-[10px] text-slate-500">{t.trainedRfDesc || "Trained Random Forest prediction based on 10-day rainfall"}</p>
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs space-y-1.5">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t.yieldExpectation || "Yield Expectation"}</span>
+            <div className="text-3xl font-black text-slate-900 flex items-baseline gap-1.5">
+              <span>11.5</span>
+              <span className="text-sm text-slate-400 font-bold">{t.qtlPerAcre || "Qtl / Acre"}</span>
             </div>
-
-            <div className="bg-white p-4 rounded-3xl border border-slate-200 shadow-xs space-y-1">
-              <span className="text-[10px] font-bold text-slate-400 uppercase">{t.yieldExpectation || "Yield Expectation"}</span>
-              <div className="text-2xl font-black text-slate-900 flex items-baseline gap-1">
-                <span>11.5</span>
-                <span className="text-xs text-slate-400 font-bold">{t.qtlPerAcre || "Qtl / Acre"}</span>
-              </div>
-              <p className="text-[10px] text-slate-500">{t.aboveRegionalAvg || "Above regional average (+18%) with proper sowing window"}</p>
-            </div>
+            <p className="text-xs text-slate-500 font-medium">{t.aboveRegionalAvg || "Above regional average (+18%) with proper sowing window"}</p>
           </div>
 
           {/* Moisture Saturation Curve */}
