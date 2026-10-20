@@ -116,3 +116,36 @@ class HistoryRecord(BaseModel):
     germination_outcome: Optional[str] = None
     comment: Optional[str] = None
     created_at: str
+
+class UserRegister(BaseModel):
+    name: str
+    email: str
+    phone: str
+    password: str
+    district: Optional[str] = "Pune"
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class UserResponse(BaseModel):
+    id: str
+    name: str
+    email: str
+    phone: str
+    is_verified: bool
+    district: str
+    created_at: str
+
+class VerifyEmailRequest(BaseModel):
+    email: str
+    code: str
+
+class ForgotPasswordRequest(BaseModel):
+    email: str
+
+class ResetPasswordRequest(BaseModel):
+    email: str
+    code: str
+    new_password: str
+

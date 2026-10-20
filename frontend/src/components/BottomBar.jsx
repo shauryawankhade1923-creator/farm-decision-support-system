@@ -8,7 +8,7 @@ export default function BottomBar({ currentScreen, onNavigate, flowMode, languag
     { id: "home", label: t.navHome || "Home", icon: Home, screen: "home" },
     { id: "farms", label: t.navSaved || "All Farms", icon: Sprout, screen: "saved_fields" },
     { id: "statistic", label: t.navStatistic || "Statistic", icon: BarChart2, screen: "compare" },
-    { id: "profile", label: t.navProfile || "My Profile", icon: User, screen: "history" }
+    { id: "profile", label: t.navProfile || "My Profile", icon: User, screen: "profile" }
   ];
 
   return (

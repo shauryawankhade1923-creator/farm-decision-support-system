@@ -17,6 +17,10 @@ export default function HomeScreen({
   onQuickHarvestPreset,
   onGoToHistory,
   onGoToSaved,
+  onGoToProfile,
+  onOpenAuth,
+  onOpenOnboarding,
+  currentUser = null,
   setFormData,
   language = "en",
   setLanguage,
@@ -1650,7 +1654,9 @@ export default function HomeScreen({
         {/* Top Greeting, Clickable Profile Avatar & Language Switcher */}
         <div className="flex items-center justify-between gap-2">
           <div>
-            <h2 className="text-lg sm:text-2xl font-black tracking-tight text-white">{getGreeting()}</h2>
+            <h2 className="text-lg sm:text-2xl font-black tracking-tight text-white">
+              {getGreeting()}{currentUser?.name ? `, ${currentUser.name.split(" ")[0]}` : ""}
+            </h2>
             <div className="flex items-center gap-2 text-emerald-200/90 text-[11px] font-semibold mt-1">
               <span>{formattedDate}</span>
               <span className="text-emerald-400/80">•</span>
@@ -1661,6 +1667,15 @@ export default function HomeScreen({
           </div>
           
           <div className="flex items-center gap-2">
+            {!currentUser && onOpenAuth && (
+              <button
+                type="button"
+                onClick={() => onOpenAuth("login")}
+                className="px-2.5 py-1 rounded-full bg-white/15 hover:bg-white/25 border border-emerald-400/30 text-white text-[11px] font-bold backdrop-blur-md transition cursor-pointer"
+              >
+                Sign In
+              </button>
+            )}
             {setLanguage && (
               <LanguageSelector
                 language={language}
@@ -1680,15 +1695,18 @@ export default function HomeScreen({
               )}
             </button>
             <button 
-              onClick={onGoToHistory}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-emerald-400/60 overflow-hidden shadow-md bg-emerald-900 flex items-center justify-center cursor-pointer hover:scale-105 transition shrink-0"
-              title="View Profile & Farmer Feedback History"
+              onClick={onGoToProfile || onGoToHistory}
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-emerald-400/60 overflow-hidden shadow-md bg-emerald-900 flex items-center justify-center cursor-pointer hover:scale-105 transition shrink-0 relative"
+              title="View Profile & Farmer Account"
             >
               <img 
                 src="/user_avatar.jpg" 
                 alt="Farmer Profile" 
                 className="w-full h-full object-cover"
               />
+              {currentUser?.isVerified && (
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 border border-[#0B4628] absolute bottom-0.5 right-0.5" />
+              )}
             </button>
           </div>
         </div>

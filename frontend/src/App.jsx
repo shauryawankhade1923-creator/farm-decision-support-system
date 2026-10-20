@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HomeScreen from "./screens/HomeScreen";
 import FarmDetailsScreen from "./screens/FarmDetailsScreen";
 import HarvestDetailsScreen from "./screens/HarvestDetailsScreen";
@@ -7,14 +7,32 @@ import ExplanationScreen from "./screens/ExplanationScreen";
 import CompareOptionsScreen from "./screens/CompareOptionsScreen";
 import SavedFieldsScreen from "./screens/SavedFieldsScreen";
 import HistoryScreen from "./screens/HistoryScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import PrivacyPolicyScreen from "./screens/PrivacyPolicyScreen";
+import TermsScreen from "./screens/TermsScreen";
+import NotFoundScreen from "./screens/NotFoundScreen";
 import BottomBar from "./components/BottomBar";
 import FeedbackModal from "./components/FeedbackModal";
 import NotificationModal, { DEFAULT_NOTIFICATIONS } from "./components/NotificationModal";
+import AuthModal from "./components/AuthModal";
+import OnboardingModal from "./components/OnboardingModal";
+import { getCurrentUser } from "./services/authService";
+import { trackPageView, trackDecisionAssessment } from "./services/analyticsService";
 import { checkDecision, checkHarvestDecision, saveField } from "./services/api";
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState("home"); // "home" | "farm_details" | "harvest_details" | "decision" | "compare" | "saved_fields" | "history"
+  const [currentScreen, setCurrentScreen] = useState("home"); // "home" | "farm_details" | "harvest_details" | "decision" | "compare" | "saved_fields" | "history" | "profile" | "privacy" | "terms"
   const [flowMode, setFlowMode] = useState("sowing"); // "sowing" | "harvest"
+  const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState("login");
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(() => {
+    try {
+      return !localStorage.getItem("fdss_onboarding_completed");
+    } catch {
+      return false;
+    }
+  });
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [readNotificationIds, setReadNotificationIds] = useState(() => {
     try {
@@ -256,6 +274,13 @@ export default function App() {
               onQuickHarvestPreset={handleQuickHarvestPreset}
               onGoToHistory={() => navigateTo("history")}
               onGoToSaved={() => navigateTo("saved_fields")}
+              onGoToProfile={() => navigateTo("profile")}
+              onOpenAuth={(mode = "login") => {
+                setAuthModalMode(mode);
+                setIsAuthModalOpen(true);
+              }}
+              onOpenOnboarding={() => setIsOnboardingOpen(true)}
+              currentUser={currentUser}
               setFormData={setFormData}
               language={language}
               setLanguage={setLanguage}
@@ -346,6 +371,42 @@ export default function App() {
               onBack={() => navigateTo("home")}
             />
           )}
+
+          {currentScreen === "profile" && (
+            <ProfileScreen
+              onBack={() => navigateTo("home")}
+              onOpenAuth={(mode = "login") => {
+                setAuthModalMode(mode);
+                setIsAuthModalOpen(true);
+              }}
+              onOpenOnboarding={() => setIsOnboardingOpen(true)}
+              onOpenPrivacy={() => navigateTo("privacy")}
+              onOpenTerms={() => navigateTo("terms")}
+              showToast={showToast}
+              language={language}
+            />
+          )}
+
+          {currentScreen === "privacy" && (
+            <PrivacyPolicyScreen
+              onBack={() => navigateTo("profile")}
+              language={language}
+            />
+          )}
+
+          {currentScreen === "terms" && (
+            <TermsScreen
+              onBack={() => navigateTo("profile")}
+              language={language}
+            />
+          )}
+
+          {!["home", "farm_details", "harvest_details", "decision", "explanation", "compare", "saved_fields", "history", "profile", "privacy", "terms"].includes(currentScreen) && (
+            <NotFoundScreen
+              onGoHome={() => navigateTo("home")}
+              language={language}
+            />
+          )}
         </main>
 
         {/* 4-Tab Bottom Navigation Bar matching Screen 1 */}
@@ -353,6 +414,33 @@ export default function App() {
           currentScreen={currentScreen}
           onNavigate={navigateTo}
           flowMode={flowMode}
+          language={language}
+        />
+
+        {/* Farmer Authentication Modal */}
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          initialMode={authModalMode}
+          onClose={() => setIsAuthModalOpen(false)}
+          onAuthSuccess={(user) => {
+            setCurrentUser(user);
+            showToast(`Welcome back, ${user.name}!`);
+          }}
+          language={language}
+        />
+
+        {/* 3-Step Interactive Onboarding Walkthrough */}
+        <OnboardingModal
+          isOpen={isOnboardingOpen}
+          onClose={() => {
+            setIsOnboardingOpen(false);
+            try { localStorage.setItem("fdss_onboarding_completed", "true"); } catch {}
+          }}
+          onFinish={() => {
+            setIsOnboardingOpen(false);
+            try { localStorage.setItem("fdss_onboarding_completed", "true"); } catch {}
+            navigateTo("farm_details");
+          }}
           language={language}
         />
 

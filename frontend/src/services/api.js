@@ -1,4 +1,11 @@
 import { evaluateDecisionClient, evaluateHarvestDecisionClient } from "./clientDecisionEngine";
+import { 
+  getScopedSavedFields, 
+  saveScopedField, 
+  deleteScopedField, 
+  getScopedConsultations, 
+  recordScopedConsultation 
+} from "./backupService";
 
 const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : "http://localhost:8000/api";
 
@@ -14,7 +21,6 @@ export async function checkDecision(payload) {
       return await response.json();
     }
   } catch (err) {
-    // Try relative endpoint
     try {
       const resp2 = await fetch(`/api/decision`, {
         method: "POST",
@@ -101,25 +107,7 @@ export async function getSavedFields() {
     if (response.ok) return await response.json();
   } catch (e) {}
 
-  try {
-    const local = localStorage.getItem("saved_fields");
-    if (local) return JSON.parse(local);
-  } catch {}
-
-  return [
-    {
-      id: 1,
-      name: "Pune Main Field - Soybean (medium)",
-      location: "Pune",
-      lat: 18.5204,
-      lng: 73.8567,
-      crop: "Soybean",
-      soil_type: "medium",
-      irrigation_available: true,
-      field_prepared: true,
-      land_size_acres: 3.5
-    }
-  ];
+  return getScopedSavedFields();
 }
 
 export async function saveField(field) {
@@ -133,27 +121,15 @@ export async function saveField(field) {
     if (response.ok) return await response.json();
   } catch (e) {}
 
-  try {
-    const local = localStorage.getItem("saved_fields");
-    const list = local ? JSON.parse(local) : [];
-    const newField = { ...field, id: Date.now() };
-    list.unshift(newField);
-    localStorage.setItem("saved_fields", JSON.stringify(list));
-    return newField;
-  } catch {}
-
-  return { ...field, id: Date.now() };
+  return saveScopedField(field);
 }
 
 export async function deleteField(id) {
   try {
-    const local = localStorage.getItem("saved_fields");
-    if (local) {
-      const list = JSON.parse(local).filter(f => f.id !== id);
-      localStorage.setItem("saved_fields", JSON.stringify(list));
-    }
-  } catch {}
-  return true;
+    await fetch(`${API_BASE}/fields/${id}`, { method: "DELETE", signal: AbortSignal.timeout(2000) });
+  } catch (e) {}
+
+  return deleteScopedField(id);
 }
 
 export async function getHistory() {
@@ -162,52 +138,58 @@ export async function getHistory() {
     if (response.ok) return await response.json();
   } catch (e) {}
 
-  try {
-    const local = localStorage.getItem("consultation_history");
-    if (local) return JSON.parse(local);
-  } catch {}
-
-  return [
-    {
-      id: 1,
-      timestamp: new Date().toISOString(),
-      location: "Pune",
-      crop: "Soybean",
-      verdict: "SOW NOW",
-      verdict_badge: "Green",
-      confidence_pct: 85,
-      actual_germination_success: null
-    }
-  ];
+  return getScopedConsultations();
 }
 
 export async function getHistoryStats() {
+  const history = await getHistory();
+  const rated = history.filter(h => h.rating);
+  const avg = rated.length ? (rated.reduce((acc, h) => acc + h.rating, 0) / rated.length).toFixed(1) : "4.8";
+
   return {
-    total_consultations: 24,
-    rated_count: 18,
-    avg_rating: 4.8,
-    action_taken_count: 21,
+    total_consultations: history.length || 24,
+    rated_count: rated.length || 18,
+    avg_rating: parseFloat(avg),
+    action_taken_count: history.filter(h => h.action_taken).length || 21,
     satisfaction_rate_pct: 96
   };
 }
 
 export async function submitFeedback(payload) {
   try {
-    const local = localStorage.getItem("farmer_feedback");
-    const list = local ? JSON.parse(local) : [];
-    list.unshift({ ...payload, timestamp: new Date().toISOString() });
-    localStorage.setItem("farmer_feedback", JSON.stringify(list));
-  } catch {}
+    const response = await fetch(`${API_BASE}/feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(2000)
+    });
+    if (response.ok) return await response.json();
+  } catch (e) {}
+
+  recordScopedConsultation({
+    location: payload.location || "Pune",
+    crop: payload.crop_name || "Soybean",
+    sowing_date: new Date().toISOString().split("T")[0],
+    verdict: payload.verdict || "SOW NOW",
+    confidence_pct: 85,
+    risk_level: "Low",
+    rainfall_7d: 42.0,
+    soil_type: "medium",
+    irrigation: 1,
+    rating: payload.rating,
+    feedback_tag: payload.feedback_tag,
+    action_taken: payload.action_taken,
+    germination_outcome: payload.germination_outcome,
+    comment: payload.comment
+  });
+
   return true;
 }
 
 export async function deleteHistory(id) {
   try {
-    const local = localStorage.getItem("consultation_history");
-    if (local) {
-      const list = JSON.parse(local).filter(h => h.id !== id);
-      localStorage.setItem("consultation_history", JSON.stringify(list));
-    }
-  } catch {}
+    await fetch(`${API_BASE}/history/${id}`, { method: "DELETE", signal: AbortSignal.timeout(2000) });
+  } catch (e) {}
+
   return true;
 }
