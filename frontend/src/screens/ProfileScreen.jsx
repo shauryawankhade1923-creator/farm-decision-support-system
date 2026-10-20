@@ -254,38 +254,6 @@ export default function ProfileScreen({
           </div>
         )}
 
-        {/* Row Level Security (RLS) Status Banner */}
-        <div className="bg-slate-900 text-white rounded-2xl p-4.5 shadow-xs space-y-1.5">
-          <div className="flex items-center gap-2">
-            <Lock className="w-4 h-4 text-emerald-400 shrink-0" />
-            <h3 className="text-xs font-black uppercase tracking-wider text-emerald-300">
-              {currentUser 
-                ? (isMr ? "रो लेव्हल सुरक्षा (RLS) सक्रिय" : isHi ? "रो लेवल सुरक्षा (RLS) सक्रिय" : "Row Level Security (RLS) Active")
-                : (isMr ? "डिव्हाइस स्टोरेज सुरक्षा (गेस्ट मोड)" : isHi ? "डिवाइस स्टोरेज सुरक्षा (अतिथि मोड)" : "Device Storage Isolation (Guest Mode)")}
-            </h3>
-          </div>
-          <p className="text-xs text-slate-300 font-medium leading-relaxed">
-            {currentUser ? (
-              <>
-                {isMr 
-                  ? "तुमचे सर्व शेत प्लॉट्स, सल्ले आणि माती माहिती खाते आयडीशी " 
-                  : isHi 
-                  ? "आपके सभी खेत प्लॉट्स, सलाह और मिट्टी डेटा खाता आईडी से " 
-                  : "All your farm plots, consultations, and soil inputs are cryptographically isolated to user ID "}
-                <span className="font-mono text-emerald-400 font-bold">{currentUser.id}</span>
-                {isMr ? " सुरक्षितपणे जोडलेली आहे. इतर कोणीही तुमचा डेटा पाहू शकत नाही." : isHi ? " सुरक्षित रूप से जुड़े हैं। अन्य कोई आपका डेटा नहीं देख सकता।" : ". Other accounts cannot query your plots."}
-              </>
-            ) : (
-              <>
-                {isMr 
-                  ? "तुमचे पेरणीचे निर्णय आणि शेत प्लॉट्स सध्या फक्त या फोनमध्ये सुरक्षित आहेत. इतर उपकरणांवर सिंक करण्यासाठी लॉगिन करा." 
-                  : isHi 
-                  ? "आपके बुवाई के निर्णय और खेत प्लॉट्स वर्तमान में केवल इस फोन में सुरक्षित हैं। अन्य उपकरणों पर सिंक के लिए लॉगिन करें।" 
-                  : "All farm plots and decision consultations are stored safely on this phone. Sign in to sync across devices with cloud-enforced Row Level Security."}
-              </>
-            )}
-          </p>
-        </div>
 
         {/* Database Backup & Restore Management (Item 9) */}
         <div className="bg-white rounded-2xl p-4.5 border border-slate-200/80 shadow-xs space-y-3">
