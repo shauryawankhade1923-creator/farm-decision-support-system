@@ -255,40 +255,6 @@ export default function ProfileScreen({
         )}
 
 
-        {/* Database Backup & Restore Management (Item 9) */}
-        <div className="bg-white rounded-2xl p-4.5 border border-slate-200/80 shadow-xs space-y-3">
-          <div>
-            <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">
-              {isMr ? "डेटा बॅकअप व रिस्टोर" : isHi ? "डेटा बैकअप एवं रिस्टोर" : "Data Portability & Database Backups"}
-            </h3>
-            <p className="text-[11px] text-slate-500 font-medium mt-0.5">
-              {isMr ? "JSON फाईल डाऊनलोड करा किंवा मागील शेत नोंदी रिस्टोर करा" : isHi ? "JSON फाइल डाउनलोड करें या पिछले खेत रिकॉर्ड्स रिस्टोर करें" : "Download JSON snapshots or restore previous records"}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2.5 pt-0.5">
-            <button
-              type="button"
-              onClick={handleExportBackup}
-              className="py-2.5 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-900 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
-            >
-              <Download className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-              <span>{isMr ? "बॅकअप डाऊनलोड (.JSON)" : isHi ? "बैकअप डाउनलोड (.JSON)" : "Export JSON Backup"}</span>
-            </button>
-
-            <label className="py-2.5 px-3 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-              <Upload className="w-3.5 h-3.5 text-slate-600 shrink-0" />
-              <span>{restoring ? (isMr ? "रिस्टोर होत आहे..." : isHi ? "रिस्टोर हो रहा..." : "Restoring...") : (isMr ? "बॅकअप रिस्टोर" : isHi ? "बैकअप रिस्टोर" : "Restore Backup")}</span>
-              <input
-                type="file"
-                accept=".json"
-                onChange={handleFileRestore}
-                disabled={restoring}
-                className="hidden"
-              />
-            </label>
-          </div>
-        </div>
 
         {/* Legal, Help & Documentation Links */}
         <div className="bg-white rounded-2xl p-2 border border-slate-200/80 shadow-xs divide-y divide-slate-100">
